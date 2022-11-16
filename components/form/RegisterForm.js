@@ -33,10 +33,10 @@ const RegisterForm = () => {
     });
   };
 
-  const submitForm = (formData) => {
-    console.log(formData)
+  const submitForm = (formData,clear) => {
     setPopup(true)
     setTimeout(()=> setPopup(false),1000)
+    clear()
       }
 
   return (
@@ -60,7 +60,7 @@ const RegisterForm = () => {
           "Las contraseñas deben coincidir"
         ),
       })}
-      onSubmit={(values) => submitForm(values)}
+      onSubmit={(values,{ resetForm }) =>  submitForm(values,resetForm)}
     >
       {({
         handleChange,
