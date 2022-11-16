@@ -33,10 +33,10 @@ const RegisterForm = () => {
     });
   };
 
-  const submitForm = (formData,clear) => {
+  const submitForm = (formData) => {
+    console.log(formData)
     setPopup(true)
     setTimeout(()=> setPopup(false),1000)
-    clear()
       }
 
   return (
@@ -60,7 +60,7 @@ const RegisterForm = () => {
           "Las contraseñas deben coincidir"
         ),
       })}
-      onSubmit={(values,{ resetForm }) =>  submitForm(values,resetForm)}
+      onSubmit={(values) => submitForm(values)}
     >
       {({
         handleChange,
@@ -170,7 +170,7 @@ const RegisterForm = () => {
           )}
           <View style={styles.buttonContainer}>
             <Button
-              titleStyle={{ color: "#000" }}
+              titleStyle={{ color: "#000",fontSize:18 }}
               buttonStyle={styles.button}
               onPress={handleSubmit}
               title="Guardar"
@@ -191,15 +191,18 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   textInput: {
+    
     paddingHorizontal: 10,
-    backgroundColor: "#F1F1F3",
+    backgroundColor: "#F1F1F2",
     height: 35,
     width: "100%",
     color: "#000000",
     fontSize: 18,
     flex: 1,
+    borderRadius:10,
   },
   button: {
+    borderRadius:10,
     marginVertical: 50,
     width: 200,
     backgroundColor: "#A1D6E2",
