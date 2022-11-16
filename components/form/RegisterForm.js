@@ -11,8 +11,8 @@ const RegisterForm = () => {
 
  
     const [showPassword, setShowPassword] = useState({
-      password: false,
-      passwordConfirmation: false,
+      password: true,
+      passwordConfirmation: true,
     });
 
     const [popup, setPopup] = useState(false)
