@@ -2,13 +2,33 @@ import { StyleSheet, TextInput, Text, View, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Button } from "@rneui/themed";
+import { Button,Icon } from "@rneui/themed";
 
 
 
 const RegisterForm = () => {
-  
 
+ 
+    const [showPassword, setShowPassword] = useState({
+      password: false,
+      passwordConfirmation: false,
+    });
+  
+  const toggleInput = (element) => {
+    setShowPassword((prev) => {
+      if (element === "password") {
+        return {
+          ...prev,
+          password: !prev.password,
+        };
+      } else {
+        return {
+          ...prev,
+          passwordConfirmation: !prev.passwordConfirmation,
+        };
+      }
+    });
+  };
 
   return (
     <Formik
@@ -99,10 +119,17 @@ const RegisterForm = () => {
               style={styles.textInput}
               onChangeText={handleChange("password")}
               value={values.password}
-              secureTextEntry={false}
+              secureTextEntry={showPassword.password?true:false}
               selectionColor={"#000"}
             />
-            
+            <Icon
+             
+             name={showPassword.password?"eye":"eye-off"}
+             type="feather"
+             size={20}
+             color="#000"
+             onPress={() => toggleInput("password")}
+           />
           </View>
           {errors.password && touched.password && (
             <Text style={styles.error}>{errors.password}</Text>
@@ -116,9 +143,17 @@ const RegisterForm = () => {
               onChangeText={handleChange("passwordConfirmation")}
              
               value={values.passwordConfirmation}
-              secureTextEntry={false}
+              secureTextEntry={showPassword.passwordConfirmation?true:false}
               selectionColor={"#000"}
             />
+             <Icon
+          
+          name={showPassword.passwordConfirmation?"eye":"eye-off"}
+          type="feather"
+          size={20}
+          color="#000"
+          onPress={() => toggleInput("passwordConfirmation")}
+        />
             
           </View>
           {errors.passwordConfirmation && touched.passwordConfirmation && (
