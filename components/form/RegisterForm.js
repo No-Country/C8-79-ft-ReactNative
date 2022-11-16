@@ -3,38 +3,12 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@rneui/themed";
-import { Icon } from "@rneui/themed";
-import PopUp from "./PopUp";
+
+
 
 const RegisterForm = () => {
-  const [showPassword, setShowPassword] = useState({
-    password: false,
-    passwordConfirmation: false,
-  });
+  
 
-  const [popup, setPopup] = useState(false)
-
-  const toggleInput = (element) => {
-    setShowPassword((prev) => {
-      if (element === "password") {
-        return {
-          ...prev,
-          password: !prev.password,
-        };
-      } else {
-        return {
-          ...prev,
-          passwordConfirmation: !prev.passwordConfirmation,
-        };
-      }
-    });
-  };
-
-  const submitForm = (formData) => {
-console.log(formData)
-setPopup(true)
-setTimeout(()=> setPopup(false),1000)
-  }
 
   return (
     <Formik
@@ -57,7 +31,7 @@ setTimeout(()=> setPopup(false),1000)
           "Las contraseñas deben coincidir"
         ),
       })}
-      onSubmit={(values) => submitForm(values)}
+      onSubmit={(values) => console.log(values)}
     >
       {({
         handleChange,
@@ -76,7 +50,6 @@ setTimeout(()=> setPopup(false),1000)
           <TextInput
             style={styles.textInput}
             onChangeText={handleChange("user")}
-            // onBlur={handleBlur("user")}
             value={values.user}
             selectionColor={"#000"}
           />
@@ -126,17 +99,10 @@ setTimeout(()=> setPopup(false),1000)
               style={styles.textInput}
               onChangeText={handleChange("password")}
               value={values.password}
-              secureTextEntry={showPassword.password?true:false}
+              secureTextEntry={false}
               selectionColor={"#000"}
             />
-            <Icon
-             
-              name={showPassword.password?"eye":"eye-off"}
-              type="feather"
-              size={20}
-              color="#000"
-              onPress={() => toggleInput("password")}
-            />
+            
           </View>
           {errors.password && touched.password && (
             <Text style={styles.error}>{errors.password}</Text>
@@ -150,17 +116,10 @@ setTimeout(()=> setPopup(false),1000)
               onChangeText={handleChange("passwordConfirmation")}
              
               value={values.passwordConfirmation}
-              secureTextEntry={showPassword.passwordConfirmation?true:false}
+              secureTextEntry={false}
               selectionColor={"#000"}
             />
-            <Icon
-          
-              name={showPassword.passwordConfirmation?"eye":"eye-off"}
-              type="feather"
-              size={20}
-              color="#000"
-              onPress={() => toggleInput("passwordConfirmation")}
-            />
+            
           </View>
           {errors.passwordConfirmation && touched.passwordConfirmation && (
             <Text style={styles.error}>{errors.passwordConfirmation}</Text>
@@ -174,7 +133,7 @@ setTimeout(()=> setPopup(false),1000)
             />
           </View>
 
-  <PopUp visibility={popup}></PopUp>
+       
         </ScrollView>
       )}
     </Formik>
@@ -202,7 +161,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#A1D6E2",
     color: "#000000",
   },
-
   passwordInput: {
     flex: 1,
     flexDirection: "row",
@@ -223,5 +181,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  
 });
