@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button,Icon } from "@rneui/themed";
+import PopUp from "../PopUp";
 
 
 
@@ -13,6 +14,8 @@ const RegisterForm = () => {
       password: false,
       passwordConfirmation: false,
     });
+
+    const [popup, setPopup] = useState(false)
   
   const toggleInput = (element) => {
     setShowPassword((prev) => {
@@ -29,6 +32,12 @@ const RegisterForm = () => {
       }
     });
   };
+
+  const submitForm = (formData) => {
+    console.log(formData)
+    setPopup(true)
+    setTimeout(()=> setPopup(false),1000)
+      }
 
   return (
     <Formik
@@ -51,7 +60,7 @@ const RegisterForm = () => {
           "Las contraseñas deben coincidir"
         ),
       })}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={(values) => submitForm(values)}
     >
       {({
         handleChange,
@@ -168,7 +177,7 @@ const RegisterForm = () => {
             />
           </View>
 
-       
+          <PopUp visibility={popup}></PopUp>
         </ScrollView>
       )}
     </Formik>
