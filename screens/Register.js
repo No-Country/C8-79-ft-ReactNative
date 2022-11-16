@@ -1,6 +1,6 @@
 import { StyleSheet, SafeAreaView, Text,View } from "react-native";
 import React from "react";
-import RegisterForm from "../components/RegisterForm";
+import RegisterForm from "../components/form/RegisterForm"
 
 const Register = () => {
   return (
@@ -24,7 +24,6 @@ top:{
   backgroundColor: "#EFEFEF",
   height:14,
   width:"100%"
-
 }
   ,
   title: {
