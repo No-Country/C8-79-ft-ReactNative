@@ -4,14 +4,17 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
+import { useNavigation } from '@react-navigation/native';
 
 const PaswordRecoveryForm = () => {
+
+  const nav = useNavigation();
   const [popup, setPopup] = useState(false);
 
   const submitForm = (formData, clear) => {
     setPopup(true);
-    setTimeout(() => setPopup(false), 2500);
-    clear();
+    setTimeout(() => {setPopup(false) , nav.navigate("Login") }, 2500)
+    clear()
   };
 
   return (

@@ -4,11 +4,13 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button,Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
+import { useNavigation } from '@react-navigation/native';
 
 
 
 const RegisterForm = () => {
 
+  const nav = useNavigation();
  
     const [showPassword, setShowPassword] = useState({
       password: true,
@@ -37,7 +39,7 @@ const RegisterForm = () => {
     console.log(formData)
     setPopup(true)
     clear()
-    setTimeout(()=> setPopup(false),1000)
+    setTimeout(()=> {setPopup(false) ,nav.navigate("Login")},1000)
       }
 
   return (

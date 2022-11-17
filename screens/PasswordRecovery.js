@@ -3,15 +3,15 @@ import React from "react";
 import { Button } from "@rneui/base";
 import PaswordRecoveryForm from "../components/form/PaswordRecoveryForm";
 
-const PasswordRecovery = () => {
+const PasswordRecovery = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Recupera tu contraseña</Text>
-      <PaswordRecoveryForm></PaswordRecoveryForm>
+      <PaswordRecoveryForm  ></PaswordRecoveryForm>
       <Button
         titleStyle={{ color: "#000", fontSize: 18 }}
         buttonStyle={styles.button}
-        onPress={()=>console.log("Volver")}
+        onPress={()=>navigation.goBack()}
         title="Volver"
       />
     </SafeAreaView>
