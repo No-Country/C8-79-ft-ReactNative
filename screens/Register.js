@@ -1,5 +1,6 @@
 import { StyleSheet, SafeAreaView, Text,View } from "react-native";
 import React from "react";
+
 import RegisterForm from "../components/form/RegisterForm"
 
 const Register = () => {
@@ -8,6 +9,7 @@ const Register = () => {
       <View style={styles.top}></View>
       <Text style={styles.title}>Por favor , registrate</Text>
       <RegisterForm></RegisterForm>
+      
     </SafeAreaView>
   );
 };
