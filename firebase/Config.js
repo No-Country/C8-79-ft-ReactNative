@@ -11,6 +11,5 @@ const firebaseConfig = {
   appId: Constants.manifest.extra.appId
 };
 
-
 initializeApp(firebaseConfig);
 export const database = getFirestore()  
