@@ -33,9 +33,10 @@ const RegisterForm = () => {
     });
   };
 
-  const submitForm = (formData) => {
+  const submitForm = (formData,clear) => {
     console.log(formData)
     setPopup(true)
+    clear()
     setTimeout(()=> setPopup(false),1000)
       }
 
@@ -60,7 +61,7 @@ const RegisterForm = () => {
           "Las contraseñas deben coincidir"
         ),
       })}
-      onSubmit={(values) => submitForm(values)}
+      onSubmit={(values  ,{ resetForm }) => submitForm(values,resetForm)}
     >
       {({
         handleChange,
@@ -177,7 +178,7 @@ const RegisterForm = () => {
             />
           </View>
 
-          <PopUp visibility={popup}></PopUp>
+          <PopUp visibility={popup} message="¡Los cambios se guardaron con exito!" ></PopUp>
         </ScrollView>
       )}
     </Formik>

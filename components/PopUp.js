@@ -19,4 +19,3 @@ const styles = StyleSheet.create({
   },
 });
 
-// ¡Los cambios se guardaron con exito!
