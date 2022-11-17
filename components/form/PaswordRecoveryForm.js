@@ -6,7 +6,13 @@ import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
 
 const PaswordRecoveryForm = () => {
-  
+  const [popup, setPopup] = useState(false);
+
+  const submitForm = (formData, clear) => {
+    setPopup(true);
+    setTimeout(() => setPopup(false), 2500);
+    clear();
+  };
 
   return (
     <Formik
@@ -16,7 +22,7 @@ const PaswordRecoveryForm = () => {
           .email("Direccion invalida")
           .required("Debe completar este campo"),
       })}
-      onSubmit={(values) => console.log(values)}
+      onSubmit={(values, { resetForm }) => submitForm(values, resetForm)}
     >
       {({ handleChange, handleSubmit, values, errors, touched }) => (
         <View style={styles.form}>
@@ -41,7 +47,11 @@ const PaswordRecoveryForm = () => {
             />
           </View>
 
-          <PopUp visibility={popup}></PopUp>
+          <PopUp
+            visibility={popup}
+            message="Hemos enviado un mail a tu correo eléctronico 
+                    para recuperar tu contraseña"
+          ></PopUp>
         </View>
       )}
     </Formik>

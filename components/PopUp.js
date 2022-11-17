@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Dialog } from "@rneui/themed";
 import {  Text, StyleSheet } from "react-native";
 
-const PopUp = ({ visibility }) => {
+const PopUp = ({ visibility,message }) => {
   return (
     <Dialog isVisible={visibility} overlayStyle={styles.dialog}>
-      <Text>¡Los cambios se guardaron con exito!</Text>
+      <Text>{message} </Text>
     </Dialog>
   );
 };
@@ -18,3 +18,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+
+// ¡Los cambios se guardaron con exito!
