@@ -43,7 +43,7 @@ const PaswordRecoveryForm = () => {
 
           <View style={styles.buttonContainer}>
             <Button
-              titleStyle={{ color: "#000", fontSize: 18 }}
+              titleStyle={{ color: "#000", fontSize: 16 }}
               buttonStyle={styles.button}
               onPress={handleSubmit}
               title="Recuperar"

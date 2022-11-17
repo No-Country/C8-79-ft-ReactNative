@@ -9,7 +9,7 @@ const PasswordRecovery = ({navigation}) => {
       <Text style={styles.title}>Recupera tu contraseña</Text>
       <PaswordRecoveryForm  ></PaswordRecoveryForm>
       <Button
-        titleStyle={{ color: "#000", fontSize: 18 }}
+        titleStyle={{ color: "#000", fontSize: 16 }}
         buttonStyle={styles.button}
         onPress={()=>navigation.goBack()}
         title="Volver"
@@ -23,12 +23,12 @@ export default PasswordRecovery;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: '#fff',
     alignItems: "center",
   },
   title: {
     marginVertical: 100,
-    fontSize: 24,
+    fontSize: 20,
   },
   button: {
     borderRadius: 10,
