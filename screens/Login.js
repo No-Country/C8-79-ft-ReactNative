@@ -22,6 +22,7 @@ export const Login = ( {navigation} ) => {
         alert("Se logeo")
         const user = userCredential.user;
         console.log(user)
+          navigation.navigate('Menu') 
       })
       .catch(error => {
         alert("Usuario incorrecto")

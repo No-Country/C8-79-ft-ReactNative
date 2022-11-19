@@ -19,10 +19,11 @@ export default function App() {
           headerShown: false,
         }}
       >
+       <Stack.Screen name="Menu" component={Menu} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
-        <Stack.Screen name="Menu" component={Menu} />
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

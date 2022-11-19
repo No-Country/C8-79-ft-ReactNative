@@ -15,7 +15,7 @@ const Menu = () => {
       drawerContent={(props) => <CustomMenu {...props} />}
       screenOptions={{ headerStyle: { backgroundColor: "#A1D6E2" } }}
       useLegacyImplementation
-      initialRouteName="Home"
+      initialRouteName="Clients"
     >
       
       <Drawer.Screen name="Clients" component={Clients} />
