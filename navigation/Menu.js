@@ -13,7 +13,8 @@ const Menu = () => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomMenu {...props} />}
-      screenOptions={{ headerStyle: { backgroundColor: "#A1D6E2" } }}
+      screenOptions={{ 
+      headerStyle: { backgroundColor: "#A1D6E2" } }}
       useLegacyImplementation
       initialRouteName="Clients"
     >

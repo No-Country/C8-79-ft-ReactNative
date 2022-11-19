@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { SearchBar } from "@rneui/themed";
 import { clients } from "../helpers/devData";
 import Client from "../components/Client";
+import { FAB ,Icon} from '@rneui/themed';
 
 const sortData = (arr) => {
   const sortedArray = arr.sort(function (a, b) {
@@ -56,6 +57,13 @@ const Clients = () => {
             />
           );
         }}
+        
+      />
+      <FAB
+        visible={true}
+        icon={{ name: 'add', color: 'white' }}
+        color="#A1D6E2"
+        placement="right"
         
       />
     </View>
