@@ -7,6 +7,7 @@ import PasswordRecovery from "./screens/PasswordRecovery";
 import Register from "./screens/Register";
 import Menu from "./navigation/Menu";
 import Login from "./screens/Login";
+import NewClient from "./screens/NewClient";
 
 const Stack = createNativeStackNavigator();
 

@@ -20,7 +20,6 @@ const navigation=useNavigation()
 
   return (<TouchableOpacity
     activeOpacity={1}
-   
     onPressIn={isPress}
     onPress={()=>navigation.navigate("ClientDetail",item) }
     style={[

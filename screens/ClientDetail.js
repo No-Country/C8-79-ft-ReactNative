@@ -35,7 +35,7 @@ const ClientDetail = ({ navigation, route }) => {
     <View style={styles.container}>
       <FAB
         visible={true}
-        onPress={() => console.log("visible")}
+        onPress={() => navigation.navigate("EditClient",client)}
         style={{ position: "absolute", right: 15, top: 10 }}
         icon={{ name: "edit", color: "black" }}
         color="white"

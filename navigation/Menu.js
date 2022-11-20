@@ -7,8 +7,10 @@ import Products from "../screens/Products";
 import Clients from "../screens/Clients";
 import { Image, View } from "react-native";
 import ClientDetail from "../screens/ClientDetail";
-import CreateClient from "../screens/CreateClient";
+
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import NewClient from "../screens/NewClient";
+import EditClient from "../screens/EditClient";
 
 
 const Stack = createNativeStackNavigator();
@@ -25,7 +27,8 @@ return <Stack.Navigator
 >
  <Stack.Screen name="ClientsScreen" component={Clients} />
   <Stack.Screen name="ClientDetail" component={ClientDetail} />
-  <Stack.Screen name="NewClient" component={CreateClient} />
+  <Stack.Screen name="NewClient" component={NewClient} />
+  <Stack.Screen name="EditClient" component={EditClient} />
 </Stack.Navigator>}
 
 const Menu = () => {
