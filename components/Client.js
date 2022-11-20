@@ -14,13 +14,14 @@ export const getInitials = (client) => {
   return firstName + firstLastName;
 };
 
-const Client = ({ fontSz,textColor, item, onPress, index }) => {
+const Client = ({ fontSz,textColor, item, isPress, index }) => {
 
 const navigation=useNavigation()
 
   return (<TouchableOpacity
-    activeOpacity={0.2}
-    onPressIn={onPress}
+    activeOpacity={1}
+   
+    onPressIn={isPress}
     onPress={()=>navigation.navigate("ClientDetail",item) }
     style={[
       index % 2 === 0

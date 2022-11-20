@@ -1,10 +1,11 @@
 import {FlatList, StyleSheet, View } from "react-native";
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState,useCallback} from "react";
 import { SearchBar } from "@rneui/themed";
 import { clients } from "../helpers/devData";
 import Client from "../components/Client";
 import { FAB ,Icon} from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from '@react-navigation/native'
 
 
 const sortData = (arr) => {
@@ -26,15 +27,27 @@ const Clients = ({navigation}) => {
   const [filter, setFilter] = useState("");
   const [click, setClick] = useState(null);
 
-  useEffect(() => {
-    
+  useFocusEffect(
+    useCallback(() => {
+   
+      return () => {
+        setClick(null)
+      
+      };
+    }, [])
+  );
   
-    return () => {
-     setClick(null)
-    }
-  })
-  
-
+const renderItem=({ item, index }) => {
+  return (
+    <Client
+      item={item}
+      isPress={() => setClick(index)}
+      index={index}
+      textColor = {index === click? "#A1D6E2":"#000"}
+      fontSz={index === click? 22:20}
+    />
+  );
+}
   return (
     <View style={styles.viewContainer}>
       <SearchBar
@@ -50,6 +63,9 @@ const Clients = ({navigation}) => {
       />
 
       <FlatList
+       removeClippedSubviews={true} // Unmount components when outside of window 
+    
+     
         overScrollMode={"never"}
         style={styles.flatlist}
         data={sortData(clients).filter(
@@ -59,17 +75,7 @@ const Clients = ({navigation}) => {
         )}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => {
-          return (
-            <Client
-              item={item}
-              onPress={() => setClick(index)}
-              index={index}
-              textColor = {index === click? "#A1D6E2":"#000"}
-              fontSz={index === click? 22:20}
-            />
-          );
-        }}
+        renderItem={renderItem}
         
       />
       <FAB
