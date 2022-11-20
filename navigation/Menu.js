@@ -6,8 +6,27 @@ import CustomMenu from "./CustomMenu";
 import Products from "../screens/Products";
 import Clients from "../screens/Clients";
 import { Image, View } from "react-native";
+import ClientDetail from "../screens/ClientDetail";
+import CreateClient from "../screens/CreateClient";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+
+const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
+
+
+
+const ClientsStack=()=>{
+return <Stack.Navigator
+  screenOptions={{
+    headerShown: false,
+  }}
+>
+ <Stack.Screen name="ClientsScreen" component={Clients} />
+  <Stack.Screen name="ClientDetail" component={ClientDetail} />
+  <Stack.Screen name="NewClient" component={CreateClient} />
+</Stack.Navigator>}
 
 const Menu = () => {
   return (
@@ -19,7 +38,7 @@ const Menu = () => {
       initialRouteName="Clients"
     >
       
-      <Drawer.Screen name="Clients" component={Clients} />
+      <Drawer.Screen name="Clients" component={ClientsStack} />
       <Drawer.Screen name="Products" component={Products} />
     </Drawer.Navigator>
   );

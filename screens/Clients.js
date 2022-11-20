@@ -1,9 +1,11 @@
 import {FlatList, StyleSheet, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState} from "react";
 import { SearchBar } from "@rneui/themed";
 import { clients } from "../helpers/devData";
 import Client from "../components/Client";
 import { FAB ,Icon} from '@rneui/themed';
+import { useNavigation } from "@react-navigation/native";
+
 
 const sortData = (arr) => {
   const sortedArray = arr.sort(function (a, b) {
@@ -18,9 +20,20 @@ const sortData = (arr) => {
   return sortedArray;
 }
 
-const Clients = () => {
+const Clients = ({navigation}) => {
+
+
   const [filter, setFilter] = useState("");
   const [click, setClick] = useState(null);
+
+  useEffect(() => {
+    
+  
+    return () => {
+     setClick(null)
+    }
+  })
+  
 
   return (
     <View style={styles.viewContainer}>
@@ -64,6 +77,7 @@ const Clients = () => {
         icon={{ name: 'add', color: 'white' }}
         color="#A1D6E2"
         placement="right"
+        onPress={()=>navigation.navigate("NewClient")}
         
       />
     </View>

@@ -6,17 +6,22 @@ import {
   View,
 } from "react-native";
 import { Avatar, Icon } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
 
-const getInitials = (client) => {
+export const getInitials = (client) => {
   const firstName = client.Nombre[0].toUpperCase();
   const firstLastName = client.Apellido[0].toUpperCase();
   return firstName + firstLastName;
 };
 
-const Client = ({ fontSz,textColor, item, onPress, index }) => (
-  <TouchableOpacity
+const Client = ({ fontSz,textColor, item, onPress, index }) => {
+
+const navigation=useNavigation()
+
+  return (<TouchableOpacity
     activeOpacity={0.2}
     onPressIn={onPress}
+    onPress={()=>navigation.navigate("ClientDetail",item) }
     style={[
       index % 2 === 0
         ? { backgroundColor: "#A1D6E266" }
@@ -41,8 +46,8 @@ const Client = ({ fontSz,textColor, item, onPress, index }) => (
       type="feather"
       color="#BCBABB"
     />
-  </TouchableOpacity>
-);
+  </TouchableOpacity>)
+}
 
 export default Client;
 
@@ -57,9 +62,7 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     marginHorizontal: 0,
   },
-
   title: {
-    
     paddingLeft: 20,
   },
   contact: {
