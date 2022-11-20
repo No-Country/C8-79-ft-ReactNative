@@ -1,12 +1,35 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { getInitials } from "../components/Client";
-import { ButtonGroup, Icon, FAB ,Avatar} from "@rneui/themed";
+import { ButtonGroup, Icon, FAB, Avatar, Button } from "@rneui/themed";
+import PopUp from "../components/PopUp";
+import PopUpInfo from "../components/PopUpInfo";
 
 const ClientDetail = ({ navigation, route }) => {
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [deletePopUp, setDeletePopUp] = useState(false);
+  const [deleted, setDeleted] = useState(false);
+
   const client = route.params;
+
+  const deleteClient = (client) => {
+    console.log("Intenta BORRAR " + client.Nombre);
+    setDeletePopUp(true);
+  };
+
+  const confirmationDelete = (remove, client) => {
+    remove
+      ? (console.log("BORRAR " + client.Nombre),
+    setDeletePopUp(false),
+    setDeleted(true),
+    setTimeout(() => {
+      setDeleted(false), navigation.navigate("ClientsScreen");
+    }, 2000))
+    : (console.log("NO BORRAR " + client.Nombre),
+    setDeletePopUp(false)
+    )
+  };
 
   return (
     <View style={styles.container}>
@@ -28,7 +51,7 @@ const ClientDetail = ({ navigation, route }) => {
         {client.Nombre} {client.Apellido}
       </Text>
       <ButtonGroup
-      activeOpacity={0}
+        activeOpacity={0}
         selectedButtonStyle={styles.selectedButton}
         containerStyle={styles.actionsButtons}
         buttonStyle={{
@@ -36,31 +59,15 @@ const ClientDetail = ({ navigation, route }) => {
           borderRadius: 20,
           marginHorizontal: 10,
           borderColor: "#A1D6E2",
-          display:"flex",
-          alignItems:"center",
+          display: "flex",
+          alignItems: "center",
         }}
         buttonContainerStyle={{ borderWidth: 0, borderRightWidth: 0 }}
         buttons={[
-          <Icon
-            name="phone"
-            type="feather"
-            color="#BCBABB"
-          />,
-          <Icon
-            name="mail"
-            type="feather"
-            color="#BCBABB"
-          />,
-          <Icon
-            name="map"
-            type="feather"
-            color="#BCBABB"
-          />,
-          <Icon
-            name="dollar-sign"
-            type="feather"
-            color="#BCBABB"
-          />,
+          <Icon name="phone" type="feather" color="#BCBABB" />,
+          <Icon name="mail" type="feather" color="#BCBABB" />,
+          <Icon name="map" type="feather" color="#BCBABB" />,
+          <Icon name="dollar-sign" type="feather" color="#BCBABB" />,
         ]}
         selectedIndex={selectedIndex}
         onPress={(value) => {
@@ -77,37 +84,60 @@ const ClientDetail = ({ navigation, route }) => {
         </View>
         <View style={styles.itemInfo}>
           <Text style={styles.text}>Email: </Text>
-          <Text style={styles.value}>
-            {client.email} 
-          </Text>
+          <Text style={styles.value}>{client.email}</Text>
         </View>
         <View style={styles.itemInfo}>
           <Text style={styles.text}>Telefono: </Text>
-          <Text style={styles.value}>
-            {client.telefono} 
-          </Text>
+          <Text style={styles.value}>{client.telefono}</Text>
         </View>
         <View style={styles.itemInfo}>
           <Text style={styles.text}>Direccion: </Text>
-          <Text style={styles.value}>
-            Calle Falsa 123
-          </Text>
+          <Text style={styles.value}>Calle Falsa 123</Text>
         </View>
         <View style={styles.itemInfo}>
           <Text style={styles.text}>id: </Text>
-          <Text style={styles.value}>
-            {client.id} 
-          </Text>
+          <Text style={styles.value}>{client.id}</Text>
         </View>
       </View>
 
       <FAB
         visible={true}
-        onPress={() => console.log("visible")}
+        onPress={() => deleteClient(client)}
         placement="right"
         icon={{ name: "delete", color: "black" }}
         color="white"
         titleStyle={{ color: "black" }}
+      />
+      {deleted && (
+        <PopUpInfo
+          visibility={deleted}
+          message={"Cliente eliminado"}
+        ></PopUpInfo>
+      )}
+      <PopUp
+        visibility={deletePopUp}
+        message={"¿ Estas seguro que quieres borrar este cliente ?"}
+        child={
+          <View style={styles.buttonContainer}>
+            <Button
+              titleStyle={styles.buttonText}
+              buttonStyle={[styles.buttonDialog, { backgroundColor: "#fff" }]}
+              onPress={() => confirmationDelete(true, client)}
+            >
+              SI
+            </Button>
+            <Button
+              titleStyle={styles.buttonText}
+              buttonStyle={[
+                styles.buttonDialog,
+                { backgroundColor: "#A1D6E2" },
+              ]}
+              onPress={() => confirmationDelete(false, client)}
+            >
+              No
+            </Button>
+          </View>
+        }
       />
     </View>
   );
@@ -150,7 +180,22 @@ const styles = StyleSheet.create({
   itemInfo: {
     flexDirection: "row",
   },
-  value:{
-    fontSize:16
-  }
+  value: {
+    fontSize: 16,
+  },
+  buttonDialog: {
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "#A1D6E2",
+    width: 100,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginVertical: 20,
+  },
+  buttonText: {
+    color: "#000",
+    fontWeight: "bold",
+  },
 });

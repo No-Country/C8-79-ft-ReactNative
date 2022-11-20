@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { Dialog } from "@rneui/themed";
+import { Dialog, Icon } from "@rneui/themed";
 import { Text, StyleSheet } from "react-native";
 
-const PopUp = ({ visibility, message, child }) => {
+const PopUpInfo = ({ visibility, message, child }) => {
   return (
     <Dialog isVisible={visibility} overlayStyle={styles.dialog}>
-      <Text style={{ fontSize: 16,textAlign:"center" }}>{message} </Text>
-      {child}
+      <Icon name="check" type="feather" color="#000" />
+      <Text style={{ fontSize: 20 ,textAlign:"center"}}>{message} </Text>
     </Dialog>
   );
 };
 
-export default PopUp;
+export default PopUpInfo;
 
 const styles = StyleSheet.create({
   dialog: {
