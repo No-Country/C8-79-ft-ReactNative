@@ -5,7 +5,7 @@ export const clients = [
     Apellido: "Hernandez",
     email: "test@com.com",
     telefono: 541127601041,
-    direccion:"",
+    direccion: {"address": "Padre Stoppler, Grand Bourg, Buenos Aires Province, Argentina", "cordiantes": {"lat": -34.489213, "lng": -58.7243104}},
   },
   {
     id: "3ac68afc-c605-48d3-a4f8-fbd91aa975ghg65",
@@ -13,7 +13,7 @@ export const clients = [
     Apellido: "Olivera",
     email: "test@com.com",
     telefono: 112233445566,
-    direccion:"",
+    direccion: {"address": "Padre Stoppler, Grand Bourg, Buenos Aires Province, Argentina", "cordiantes": {"lat": -34.489213, "lng": -58.7243104}},
   },
   {
     id: "3ac68afc-c605-48d3-a4f8-fbd91aa975ghgh65",
@@ -21,7 +21,7 @@ export const clients = [
     Apellido: "T",
     email: "test@com.com",
     telefono: 112233445566,
-    direccion:"",
+    direccion: {"address": "Padre Stoppler, Grand Bourg, Buenos Aires Province, Argentina", "cordiantes": {"lat": -34.489213, "lng": -58.7243104}},
   },
   {
     id: "3ac68afc-c605-48d3-a4f8-fbd91aa9yt7565",

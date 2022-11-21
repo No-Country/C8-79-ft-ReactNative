@@ -1,10 +1,9 @@
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { API_KEY} from '@env'
 
-import { SafeAreaView, View, Text } from "react-native"; //import {apiKey} from './config'; // your google cloud api key
-
-const MapSearchInput = ({ ref }) => {
+const MapSearchInput = ({ isPress ,refer}) => {
   return (
-    <SafeAreaView>
+    
       <GooglePlacesAutocomplete
         styles={{
           textInput: {
@@ -18,19 +17,22 @@ const MapSearchInput = ({ ref }) => {
             color: "#000",
           },
         }}
-        query={{ key: "" }}
+        GooglePlacesDetailsQuery={{ fields: "geometry" }}
+ref={refer}
+        query={{ key: API_KEY }}
         fetchDetails={true}
         keepResultsAfterBlur={true}
         onFail={(error) => console.log(error)}
         onNotFound={() => console.log("no results")}
-        listEmptyComponent={() => (
-          <View style={{ flex: 1 }}>
-            <Text>No results were found</Text>
-          </View>
-        )}
-        onPress={(data, details = null) => console.log(data, details)}
+        //inserta mensaje que no se encontro direccion
+        // listEmptyComponent={() => (
+        //   <View style={{ flex: 1 }}>
+        //     <Text>No results were found</Text>
+        //   </View>
+        // )}
+        onPress={(data, details = null) => isPress(data, details,(details?.geometry?.location))}
       />
-    </SafeAreaView>
+    
   );
 };
 

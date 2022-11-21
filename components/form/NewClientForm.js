@@ -1,31 +1,45 @@
-import { StyleSheet, LogBox, TextInput, Text, View } from "react-native";
-import React, { useState, useRef } from "react";
+import {
+  StyleSheet,
+  TextInput,
+  Text,
+  View,
+  ScrollView,
+  FlatList,
+} from "react-native";
+import React, { useState, useRef, useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation } from "@react-navigation/native";
 import MapSearchInput from "../MapsSearchInput";
-import { ScrollView } from "react-native-virtualized-view";
 
 const NewClientForm = () => {
   const nav = useNavigation();
 
   const [popup, setPopup] = useState(false);
+  const [location, setLocation] = useState({cordiantes:"" ,address:""})
 
   const placesRef = useRef();
   const getAddress = () => {
-    console.log(placesRef.current?.getAddressText());
+    return (placesRef.current.getAddressText());
   };
 
-  const submitForm = (formData, clear) => {
-    console.log(formData);
-    setPopup(true);
-    clear();
-    setTimeout(() => {
-      setPopup(false), nav.navigate("ClientsScreen");
-    }, 1000);
+  const submitForm = (values, clear) => {
+    console.log(values);
+    console.log(location)
+    
+    // setPopup(true);
+    // clear();
+    // setTimeout(() => {
+    //   setPopup(false), nav.navigate("ClientsScreen");
+    // }, 1000);
   };
+
+  const getLocation = (data,details,cordiantes)=> {
+
+    setLocation({cordiantes:cordiantes ,address:getAddress()})
+  }
 
   return (
     <Formik
@@ -34,26 +48,34 @@ const NewClientForm = () => {
         lastName: "",
         email: "",
         phone: "",
-        adress: "",
+        address: location.address,
       }}
       validationSchema={Yup.object({
         user: Yup.string()
           .max(20, "Must be 20 characters or less")
-          .required("Debe completar este campo"),
+         // .required("Debe completar este campo"),
+         ,
         lastName: Yup.string().max(20, "Must be 20 characters or less"),
         email: Yup.string()
           .email("Direccion invalida")
-          .required("Debe completar este campo"),
-        // phone: Yup.string(),
-
-        //adress: Yup.string(),
+          //.required("Debe completar este campo"),
+          ,
+        phone: Yup.string(),
+        address: Yup.string()
+          .min(5, "Must be 5 characters or more")
+          //.required("Debe completar este campo"),
       })}
       onSubmit={(values, { resetForm }) => {
         submitForm(values, resetForm);
       }}
     >
       {({ handleChange, handleSubmit, values, errors, touched }) => (
-        <ScrollView style={styles.form}>
+        <FlatList 
+        overScrollMode={"never"}
+          showsVerticalScrollIndicator={false}
+         style={styles.form}
+         ListHeaderComponent={
+          <>
           <Text style={styles.label}>Nombre</Text>
           <TextInput
             style={styles.textInput}
@@ -102,12 +124,14 @@ const NewClientForm = () => {
           <Text style={styles.label}>Direccion</Text>
 
           <MapSearchInput
-            onChangeText={handleChange("adress")}
-            value={getAddress}
+            onChangeText={(handleChange("address"))}
+            value={location.address}
+            isPress={getLocation}
+            refer={placesRef}
           ></MapSearchInput>
 
-          {errors.adress && touched.adress && (
-            <Text style={styles.error}>{errors.adress}</Text>
+          {errors.address && touched.address && (
+            <Text style={styles.error}>{errors.address}</Text>
           )}
 
           <View style={styles.buttonContainer}>
@@ -123,7 +147,12 @@ const NewClientForm = () => {
             visibility={popup}
             message="¡Se creo el Cliente con exito!"
           ></PopUp>
-        </ScrollView>
+          
+          </>
+         }
+         >
+          
+        </FlatList>
       )}
     </Formik>
   );

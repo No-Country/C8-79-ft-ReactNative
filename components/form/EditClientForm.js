@@ -7,15 +7,13 @@ import PopUp from "../PopUp";
 import { useNavigation } from '@react-navigation/native';
 
 
-
-
 const EditClientForm = ({client}) => {
+  console.log(client.direccion.address.split(",")[0])
 
   const nav = useNavigation();
  
   const [popup, setPopup] = useState(false)
-  
-  
+
 
   const submitForm = (formData,clear) => {
     setPopup(true)
@@ -25,7 +23,7 @@ const EditClientForm = ({client}) => {
 
   return (
     <Formik
-      initialValues={{ user: client.Nombre ,lastName:client.Apellido,email:client.email, phone:client.telefono ,adress:client.direccion }}
+      initialValues={{ user: client.Nombre ,lastName:client.Apellido,email:client.email, phone:client.telefono,address:client.direccion.address.split(",")[0] }}
       validationSchema={Yup.object({
         user: Yup.string()
           .max(20, "Must be 20 characters or less")
@@ -33,10 +31,9 @@ const EditClientForm = ({client}) => {
           lastName: Yup.string()
           .max(20, "Must be 20 characters or less"),
           email: Yup.string().email("Direccion invalida")
-          .required("Debe completar este campo")
-         // phone: Yup.string(),
-          
-          //adress: Yup.string(),
+          .required("Debe completar este campo"),
+          phone: Yup.string(),
+          address: Yup.string(),
       })}
       onSubmit={(values  ,{ resetForm }) => {submitForm(values,resetForm); } }
     >
@@ -90,26 +87,26 @@ const EditClientForm = ({client}) => {
           <TextInput
             keyboardType={"numeric"}
             style={styles.textInput}
-            onChangeText={handleChange("phoneNumber")}
-            value={values.phoneNumber}
+            onChangeText={handleChange("phone")}
+            value={values.phone}
             selectionColor={"#000"}
           />
-          {errors.phoneNumber && touched.phoneNumber && (
-            <Text style={styles.error}>{errors.phoneNumber}</Text>
+          {errors.phone && touched.phone && (
+            <Text style={styles.error}>{errors.phone}</Text>
           )}
 
           <Text style={styles.label}>Direccion</Text>
           
             <TextInput
               style={styles.textInput}
-              onChangeText={handleChange("adress")}
-              value={values.adress}
+              onChangeText={handleChange("address")}
+              value={values.address}
               selectionColor={"#000"}
             />
             
          
-          {errors.adress && touched.adress && (
-            <Text style={styles.error}>{errors.adress}</Text>
+          {errors.address && touched.address && (
+            <Text style={styles.error}>{errors.address}</Text>
           )}
 
           

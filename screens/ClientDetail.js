@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View ,Linking} from "react-native";
 import React, { useState } from "react";
-import { getInitials } from "../components/Client";
+import { StyleSheet, Text, View, Linking } from "react-native";
 import { ButtonGroup, Icon, FAB, Avatar, Button } from "@rneui/themed";
 import PopUp from "../components/PopUp";
 import PopUpInfo from "../components/PopUpInfo";
+import { getInitials } from "../components/Client";
+
 
 const ClientDetail = ({ navigation, route }) => {
 
@@ -21,79 +22,69 @@ const ClientDetail = ({ navigation, route }) => {
   const confirmationDelete = (remove, client) => {
     remove
       ? (console.log("BORRAR " + client.Nombre),
-    setDeletePopUp(false),
-    setDeleted(true),
-    setTimeout(() => {
-      setDeleted(false), navigation.navigate("ClientsScreen");
-    }, 2000))
-    : (console.log("NO BORRAR " + client.Nombre),
-    setDeletePopUp(false)
-    )
+        setDeletePopUp(false),
+        setDeleted(true),
+        setTimeout(() => {
+          setDeleted(false), navigation.navigate("ClientsScreen");
+        }, 2000))
+      : (console.log("NO BORRAR " + client.Nombre), setDeletePopUp(false));
   };
 
-  const makeCall=()=>{
-    Linking.openURL(`tel:${client.telefono}`)
-  }
 
-  const sendMessage=()=>{
-    Linking.openURL(`whatsapp://send?text=hello&phone=${client.telefono}`)
-  }
+  const makeCall = (client) => {
+    Linking.openURL(`tel:${client.telefono}`);
+  };
 
-  const openMap=()=>{
+  const sendMessage = async (client) => {
 
-//funciona con coordenadas
-    // const openAddressOnMap = ( lat, lng) => {
-    //   const scheme = 'geo:0,0?q='
-    //   const latLng = `${lat},${lng}`;
-    //   const label = label;
-    //   const url = `${scheme}${latLng}(${label})`
-    //   Linking.openURL(url);
-    // };
-    // openAddressOnMap(37.484847,-122.148386)
+    const link=`whatsapp://send?text=hello&phone=${client.telefono}`
 
-    const openMap = async (address, city, zipCode, ) => {
-      const destination = encodeURIComponent(`${address} ${zipCode}, ${city}`);  
-      const provider = 'google'
-      const link = `http://maps.${provider}.com/?destination=${destination}`;
-  
-      try {
-        
-          const supported = await Linking.canOpenURL(link);
-  
-          if (supported) console.log(link),Linking.openURL(link);
-      } catch (error) {
-          console.log(error);
-      }
-  }
-  openMap("padre stoppler 3600" ,"pablo nogues","1613")
-    
-  }
+    try {
+            const supported = await Linking.canOpenURL(link);
+              if (supported) Linking.openURL(link);
+          } catch (error) {
+              console.log(error)
+          }
+          Linking.openURL(`sms:${client.telefono}?body=`);
+  };
 
-  const openReport=()=>{
-    alert("abris alguna seccion")
-  }
+  const openMap = (client) => {
+    //funciona con coordenadas
+    const openAddressOnMap = (lat, lng) => {
+      const scheme = "geo:0,0?q=";
+      const latLng = `${lat},${lng}`;
+      const label = label;
+      const url = `${scheme}${latLng}(${label})`;
+      Linking.openURL(url);
+    };
+    openAddressOnMap(
+      client.direccion.cordiantes.lat,
+      client.direccion.cordiantes.lng
+    );
 
-  const actions={
-    0:makeCall,
-    1:sendMessage,
-    2:openMap,
-    3:openReport,
-  }
-  
-  
+  };
 
+  const openReport = () => {
+    alert("abris alguna seccion");
+  };
 
-  const handleButtonAction=(value) => {
+  const actions = {
+    0: makeCall,
+    1: sendMessage,
+    2: openMap,
+    3: openReport,
+  };
+
+  const handleButtonAction = (value) => {
     setSelectedIndex(value),
-    actions[value]()
-    
-  }
+    setTimeout(()=>{setSelectedIndex(-1),actions[value](client)},200)
+  };
 
   return (
     <View style={styles.container}>
       <FAB
         visible={true}
-        onPress={() => navigation.navigate("EditClient",client)}
+        onPress={() => navigation.navigate("EditClient", client)}
         style={{ position: "absolute", right: 15, top: 10 }}
         icon={{ name: "edit", color: "black" }}
         color="white"
@@ -217,7 +208,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     borderWidth: 0,
-    marginBottom:15
+    marginBottom: 15,
   },
   selectedButton: {
     backgroundColor: "#A1D6E2",

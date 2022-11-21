@@ -19,9 +19,9 @@ const Client = ({ fontSz,textColor, item, isPress, index }) => {
 const navigation=useNavigation()
 
   return (<TouchableOpacity
-    activeOpacity={1}
-    onPressIn={isPress}
-    onPress={()=>navigation.navigate("ClientDetail",item) }
+    activeOpacity={.2}
+    //onPressIn={isPress}
+    onPress={()=>{isPress,navigation.navigate("ClientDetail",item)} }
     style={[
       index % 2 === 0
         ? { backgroundColor: "#A1D6E266" }
