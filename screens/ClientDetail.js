@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View ,Linking} from "react-native";
 import React, { useState } from "react";
 import { getInitials } from "../components/Client";
 import { ButtonGroup, Icon, FAB, Avatar, Button } from "@rneui/themed";
@@ -31,6 +31,39 @@ const ClientDetail = ({ navigation, route }) => {
     )
   };
 
+  const makeCall=()=>{
+    Linking.openURL(`tel:${client.telefono}`)
+  }
+
+  const sendMessage=()=>{
+    Linking.openURL(`whatsapp://send?text=hello&phone=${client.telefono}`)
+  }
+
+  const openMap=()=>{
+
+    
+  }
+
+  const openReport=()=>{
+    alert("abris alguna seccion")
+  }
+
+  const actions={
+    0:makeCall,
+    1:sendMessage,
+    2:openMap,
+    3:openReport,
+  }
+  
+  
+
+
+  const handleButtonAction=(value) => {
+    setSelectedIndex(value),
+    actions[value]()
+    
+  }
+
   return (
     <View style={styles.container}>
       <FAB
@@ -42,10 +75,10 @@ const ClientDetail = ({ navigation, route }) => {
         titleStyle={{ color: "black" }}
       />
       <Avatar
-        size={100}
+        size={90}
         rounded
         title={getInitials(client)}
-        containerStyle={{ marginVertical: 15, backgroundColor: "#676f72" }}
+        containerStyle={{ marginVertical: 5, backgroundColor: "#676f72" }}
       />
       <Text style={styles.name}>
         {client.Nombre} {client.Apellido}
@@ -64,14 +97,14 @@ const ClientDetail = ({ navigation, route }) => {
         }}
         buttonContainerStyle={{ borderWidth: 0, borderRightWidth: 0 }}
         buttons={[
-          <Icon name="phone" type="feather" color="#BCBABB" />,
-          <Icon name="mail" type="feather" color="#BCBABB" />,
-          <Icon name="map" type="feather" color="#BCBABB" />,
-          <Icon name="dollar-sign" type="feather" color="#BCBABB" />,
+          <Icon name="phone" type="feather" color="#000" />,
+          <Icon name="mail" type="feather" color="#000" />,
+          <Icon name="map" type="feather" color="#000" />,
+          <Icon name="dollar-sign" type="feather" color="#000" />,
         ]}
         selectedIndex={selectedIndex}
         onPress={(value) => {
-          setSelectedIndex(value);
+          handleButtonAction(value);
         }}
       />
 
@@ -152,13 +185,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   name: {
-    fontSize: 36,
+    fontSize: 32,
     marginVertical: 5,
   },
   actionsButtons: {
     width: "100%",
     height: 50,
     borderWidth: 0,
+    marginBottom:15
   },
   selectedButton: {
     backgroundColor: "#A1D6E2",

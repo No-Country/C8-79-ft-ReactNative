@@ -11,6 +11,7 @@ import {firebaseConfig} from '../firebase/Config'
 export const Login = ( {navigation} ) => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('')
+    const [incorrect, setIncorrect] = useState(false)
 
 
     const app = initializeApp(firebaseConfig);
@@ -19,13 +20,14 @@ export const Login = ( {navigation} ) => {
     const handleSignIn = () => {
       signInWithEmailAndPassword(auth, name, password)
       .then((userCredential) => {
-        alert("Se logeo")
+        setIncorrect(false)
         const user = userCredential.user;
         console.log(user)
           navigation.navigate('Menu') 
       })
       .catch(error => {
-        alert("Usuario incorrecto")
+        console.log(error)
+        setIncorrect(true)
       })
     }
 
@@ -56,7 +58,7 @@ export const Login = ( {navigation} ) => {
           placeholder="Contraseña"
           style={ styles.inputs}   
         />
-        
+        {incorrect && <Text style={ styles.error }>Credenciales incorrectas</Text>}
         <TouchableOpacity      
           style= { styles.button }
           onPress={ ()=> {
@@ -146,6 +148,9 @@ const styles = StyleSheet.create({
     },
     icon: {
        color: '#a1a1a2' 
+    },
+    error:{
+      color:"red"
     }
   });
   export default Login;

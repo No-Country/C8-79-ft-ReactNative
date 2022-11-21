@@ -4,7 +4,7 @@ export const clients = [
     Nombre: "Raul",
     Apellido: "Hernandez",
     email: "test@com.com",
-    telefono: 112233445566,
+    telefono: 541127601041,
     direccion:"",
   },
   {
