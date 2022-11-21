@@ -9,8 +9,8 @@ import { Avatar, Icon } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 
 export const getInitials = (client) => {
-  const firstName = client.Nombre[0].toUpperCase();
-  const firstLastName = client.Apellido[0].toUpperCase();
+  const firstName = client.firstName[0].toUpperCase();
+  const firstLastName = client.lastName[0].toUpperCase();
   return firstName + firstLastName;
 };
 
@@ -37,7 +37,7 @@ const navigation=useNavigation()
         containerStyle={{ backgroundColor: "#676f72" }}
       />
       <Text style={[styles.title, { color: textColor,fontSize:fontSz }]}>
-        {item.Nombre} {item.Apellido}
+        {item.firstName} {item.lastName}
       </Text>
     </View>
     <Icon

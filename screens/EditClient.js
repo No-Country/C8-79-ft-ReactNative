@@ -7,7 +7,7 @@ const EditClient = (route) => {
   return (
     <SafeAreaView style={styles.container}>
      
-      <Text style={styles.title}>Editar Cliente</Text>
+      
       <EditClientForm client={route.route.params}></EditClientForm>
       
     </SafeAreaView>

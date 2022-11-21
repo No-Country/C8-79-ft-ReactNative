@@ -10,10 +10,10 @@ import { useFocusEffect } from '@react-navigation/native'
 
 const sortData = (arr) => {
   const sortedArray = arr.sort(function (a, b) {
-    if (a.Nombre.toLowerCase() < b.Nombre.toLowerCase()) {
+    if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) {
       return -1;
     }
-    if (a.Nombre.toLowerCase() > b.Nombre.toLowerCase()) {
+    if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) {
       return 1;
     }
     return 0;
@@ -63,15 +63,15 @@ const renderItem=({ item, index }) => {
       />
 
       <FlatList
-       removeClippedSubviews={true} // Unmount components when outside of window 
+       removeClippedSubviews={true}
     
      
         overScrollMode={"never"}
         style={styles.flatlist}
         data={sortData(clients).filter(
           (client) =>
-            client.Nombre.toLowerCase().includes(filter.toLocaleLowerCase()) ||
-            client.Apellido.toLowerCase().includes(filter.toLocaleLowerCase())
+            client.firstName.toLowerCase().includes(filter.toLocaleLowerCase()) ||
+            client.lastName.toLowerCase().includes(filter.toLocaleLowerCase())
         )}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}

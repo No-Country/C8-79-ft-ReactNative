@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const EditClientForm = ({client}) => {
-  console.log(client.direccion.address.split(",")[0])
+  console.log(client.address.address)
 
   const nav = useNavigation();
  
@@ -23,7 +23,7 @@ const EditClientForm = ({client}) => {
 
   return (
     <Formik
-      initialValues={{ user: client.Nombre ,lastName:client.Apellido,email:client.email, phone:client.telefono,address:client.direccion.address.split(",")[0] }}
+      initialValues={{ user: client.firstName ,lastName:client.lastName,email:client.email, phone:client.phone,address:client.address.address}}
       validationSchema={Yup.object({
         user: Yup.string()
           .max(20, "Must be 20 characters or less")

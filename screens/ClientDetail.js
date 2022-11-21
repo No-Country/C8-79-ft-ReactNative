@@ -14,30 +14,31 @@ const ClientDetail = ({ navigation, route }) => {
 
   const client = route.params;
 
+
   const deleteClient = (client) => {
-    console.log("Intenta BORRAR " + client.Nombre);
+    console.log("Intenta BORRAR " + client.firstName );
     setDeletePopUp(true);
   };
 
   const confirmationDelete = (remove, client) => {
     remove
-      ? (console.log("BORRAR " + client.Nombre),
+      ? (console.log("BORRAR " + client.firstName),
         setDeletePopUp(false),
         setDeleted(true),
         setTimeout(() => {
           setDeleted(false), navigation.navigate("ClientsScreen");
         }, 2000))
-      : (console.log("NO BORRAR " + client.Nombre), setDeletePopUp(false));
+      : (console.log("NO BORRAR " + client.firstName), setDeletePopUp(false));
   };
 
 
   const makeCall = (client) => {
-    Linking.openURL(`tel:${client.telefono}`);
+    Linking.openURL(`tel:${client.phone}`);
   };
 
   const sendMessage = async (client) => {
 
-    const link=`whatsapp://send?text=hello&phone=${client.telefono}`
+    const link=`whatsapp://send?text=hello&phone=${client.phone}`
 
     try {
             const supported = await Linking.canOpenURL(link);
@@ -45,7 +46,7 @@ const ClientDetail = ({ navigation, route }) => {
           } catch (error) {
               console.log(error)
           }
-          Linking.openURL(`sms:${client.telefono}?body=`);
+          Linking.openURL(`sms:${client.phone}?body=`);
   };
 
   const openMap = (client) => {
@@ -58,8 +59,8 @@ const ClientDetail = ({ navigation, route }) => {
       Linking.openURL(url);
     };
     openAddressOnMap(
-      client.direccion.cordiantes.lat,
-      client.direccion.cordiantes.lng
+      client.address.coordinates.lat,
+      client.address.coordinates.lng
     );
 
   };
@@ -97,7 +98,7 @@ const ClientDetail = ({ navigation, route }) => {
         containerStyle={{ marginVertical: 5, backgroundColor: "#676f72" }}
       />
       <Text style={styles.name}>
-        {client.Nombre} {client.Apellido}
+        {client.firstName} {client.lastName}
       </Text>
       <ButtonGroup
         activeOpacity={0}
@@ -128,7 +129,7 @@ const ClientDetail = ({ navigation, route }) => {
         <View style={styles.itemInfo}>
           <Text style={styles.text}>Nombre Y Apellido: </Text>
           <Text style={styles.value}>
-            {client.Nombre} {client.Apellido}
+            {client.firstName} {client.lastName}
           </Text>
         </View>
         <View style={styles.itemInfo}>
@@ -137,11 +138,11 @@ const ClientDetail = ({ navigation, route }) => {
         </View>
         <View style={styles.itemInfo}>
           <Text style={styles.text}>Telefono: </Text>
-          <Text style={styles.value}>{client.telefono}</Text>
+          <Text style={styles.value}>{client.phone}</Text>
         </View>
         <View style={styles.itemInfo}>
           <Text style={styles.text}>Direccion: </Text>
-          <Text style={styles.value}>Calle Falsa 123</Text>
+          <Text style={styles.value}>{client.address.address}</Text>
         </View>
         <View style={styles.itemInfo}>
           <Text style={styles.text}>id: </Text>

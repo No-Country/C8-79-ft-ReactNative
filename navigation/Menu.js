@@ -22,7 +22,8 @@ const Drawer = createDrawerNavigator();
 const ClientsStack=()=>{
 return <Stack.Navigator
   screenOptions={{
-    headerShown: false,
+    headerShown: true,
+    headerStyle: { backgroundColor: "#A1D6E2" } 
   }}
 >
  <Stack.Screen name="ClientsScreen" component={Clients} />
@@ -36,6 +37,7 @@ const Menu = () => {
     <Drawer.Navigator
       drawerContent={(props) => <CustomMenu {...props} />}
       screenOptions={{ 
+        headerShown: false,
       headerStyle: { backgroundColor: "#A1D6E2" } }}
       useLegacyImplementation
       initialRouteName="Clients"
