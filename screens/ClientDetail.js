@@ -41,6 +41,31 @@ const ClientDetail = ({ navigation, route }) => {
 
   const openMap=()=>{
 
+//funciona con coordenadas
+    // const openAddressOnMap = ( lat, lng) => {
+    //   const scheme = 'geo:0,0?q='
+    //   const latLng = `${lat},${lng}`;
+    //   const label = label;
+    //   const url = `${scheme}${latLng}(${label})`
+    //   Linking.openURL(url);
+    // };
+    // openAddressOnMap(37.484847,-122.148386)
+
+    const openMap = async (address, city, zipCode, ) => {
+      const destination = encodeURIComponent(`${address} ${zipCode}, ${city}`);  
+      const provider = 'google'
+      const link = `http://maps.${provider}.com/?destination=${destination}`;
+  
+      try {
+        
+          const supported = await Linking.canOpenURL(link);
+  
+          if (supported) console.log(link),Linking.openURL(link);
+      } catch (error) {
+          console.log(error);
+      }
+  }
+  openMap("padre stoppler 3600" ,"pablo nogues","1613")
     
   }
 

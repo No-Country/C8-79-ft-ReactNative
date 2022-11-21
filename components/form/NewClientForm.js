@@ -1,57 +1,59 @@
-import { StyleSheet, TextInput, Text, View, ScrollView } from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, LogBox, TextInput, Text, View } from "react-native";
+import React, { useState, useRef } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Button,Icon } from "@rneui/themed";
+import { Button, Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
-import { useNavigation } from '@react-navigation/native';
-
-
-
+import { useNavigation } from "@react-navigation/native";
+import MapSearchInput from "../MapsSearchInput";
+import { ScrollView } from "react-native-virtualized-view";
 
 const NewClientForm = () => {
-
   const nav = useNavigation();
- 
-  const [popup, setPopup] = useState(false)
-  
-  
 
-  const submitForm = (formData,clear) => {
-    setPopup(true)
-    clear()
-    setTimeout(()=> {setPopup(false) ,nav.navigate("ClientsScreen")},1000)
-      }
+  const [popup, setPopup] = useState(false);
+
+  const placesRef = useRef();
+  const getAddress = () => {
+    console.log(placesRef.current?.getAddressText());
+  };
+
+  const submitForm = (formData, clear) => {
+    console.log(formData);
+    setPopup(true);
+    clear();
+    setTimeout(() => {
+      setPopup(false), nav.navigate("ClientsScreen");
+    }, 1000);
+  };
 
   return (
     <Formik
-      initialValues={{ user: "",lastName:"",email:"", phone: "",adress: "" }}
+      initialValues={{
+        user: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        adress: "",
+      }}
       validationSchema={Yup.object({
         user: Yup.string()
           .max(20, "Must be 20 characters or less")
           .required("Debe completar este campo"),
-          lastName: Yup.string()
-          .max(20, "Must be 20 characters or less"),
-          email: Yup.string().email("Direccion invalida")
-          .required("Debe completar este campo")
-         // phone: Yup.string(),
-          
-          //adress: Yup.string(),
+        lastName: Yup.string().max(20, "Must be 20 characters or less"),
+        email: Yup.string()
+          .email("Direccion invalida")
+          .required("Debe completar este campo"),
+        // phone: Yup.string(),
+
+        //adress: Yup.string(),
       })}
-      onSubmit={(values  ,{ resetForm }) => {submitForm(values,resetForm); } }
+      onSubmit={(values, { resetForm }) => {
+        submitForm(values, resetForm);
+      }}
     >
-      {({
-        handleChange,
-        handleSubmit,
-        values,
-        errors,
-        touched,
-      }) => (
-        <ScrollView
-          overScrollMode={"never"}
-          showsVerticalScrollIndicator={false}
-          style={styles.form}
-        >
+      {({ handleChange, handleSubmit, values, errors, touched }) => (
+        <ScrollView style={styles.form}>
           <Text style={styles.label}>Nombre</Text>
           <TextInput
             style={styles.textInput}
@@ -78,7 +80,6 @@ const NewClientForm = () => {
             autoCorrect={false}
             style={styles.textInput}
             onChangeText={handleChange("email")}
-           
             value={values.email}
             selectionColor={"#000"}
           />
@@ -99,30 +100,29 @@ const NewClientForm = () => {
           )}
 
           <Text style={styles.label}>Direccion</Text>
-          
-            <TextInput
-              style={styles.textInput}
-              onChangeText={handleChange("adress")}
-              value={values.adress}
-              selectionColor={"#000"}
-            />
-            
-         
+
+          <MapSearchInput
+            onChangeText={handleChange("adress")}
+            value={getAddress}
+          ></MapSearchInput>
+
           {errors.adress && touched.adress && (
             <Text style={styles.error}>{errors.adress}</Text>
           )}
 
-          
           <View style={styles.buttonContainer}>
             <Button
-              titleStyle={{ color: "#000",fontSize:18 }}
+              titleStyle={{ color: "#000", fontSize: 18 }}
               buttonStyle={styles.button}
               onPress={handleSubmit}
               title="Guardar"
             />
           </View>
 
-          <PopUp visibility={popup} message="¡Se creo el Cliente con exito!" ></PopUp>
+          <PopUp
+            visibility={popup}
+            message="¡Se creo el Cliente con exito!"
+          ></PopUp>
         </ScrollView>
       )}
     </Formik>
@@ -136,18 +136,17 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   textInput: {
-    
     paddingHorizontal: 10,
     backgroundColor: "#F1F1F2",
-    height: 35,
+    height: 44,
     width: "100%",
     color: "#000000",
     fontSize: 18,
     flex: 1,
-    borderRadius:10,
+    borderRadius: 10,
   },
   button: {
-    borderRadius:10,
+    borderRadius: 10,
     marginVertical: 50,
     width: 200,
     backgroundColor: "#A1D6E2",
