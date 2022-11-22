@@ -22,6 +22,7 @@ export const Login = ( {navigation} ) => {
         alert("Se logeo")
         const user = userCredential.user;
         console.log(user)
+       
       })
       .catch(error => {
         alert("Usuario incorrecto")
@@ -59,8 +60,8 @@ export const Login = ( {navigation} ) => {
         <TouchableOpacity      
           style= { styles.button }
           onPress={ ()=> {
-            /* navigation.navigate('Menu') */
-            handleSignIn()
+            navigation.navigate('Menu')
+            /* handleSignIn() */
         }}
         >
           <Text> INICIAR </Text>
