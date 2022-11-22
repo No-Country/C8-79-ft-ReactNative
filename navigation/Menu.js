@@ -1,10 +1,20 @@
-import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import React, { Fragment } from "react";
+import {
+  createDrawerNavigator,
+  DrawerContent,
+  DrawerItem,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import Register from "../screens/Register";
 import Home from "../screens/Home";
 import CustomMenu from "./CustomMenu";
 import Products from "../screens/Products";
 import Clients from "../screens/Clients";
+import { Image, View } from "react-native";
+import { Icon } from "@rneui/base";
+import Inventario from "../screens/Inventario";
+import Reportes from "../screens/Reportes";
+import Usuarios from "../screens/Usuarios";
 
 const Drawer = createDrawerNavigator();
 
@@ -16,8 +26,59 @@ const Menu = () => {
       useLegacyImplementation
       initialRouteName="Home"
     >
-      <Drawer.Screen name="Clients" component={Clients} />
-      <Drawer.Screen name="Products" component={Products} />
+      {/* <ion-icon name="reader"></ion-icon> */}
+      <Drawer.Screen
+        name="Home"
+        component={Home}
+        options={{
+          title: "Home",
+          drawerIcon: () => <Icon name="home" type="ionicon"></Icon>,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Clients"
+        component={Clients}
+        options={{
+          title: "Clients",
+          drawerIcon: () => <Icon name="person" />,
+        }}
+      />
+      <Drawer.Screen
+        name="Products"
+        component={Products}
+        options={{
+          title: "Products",
+          drawerIcon: () => <Icon name="pricetag" type="ionicon"></Icon>,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Inventario"
+        component={Inventario}
+        options={{
+          title: "Inventario",
+          drawerIcon: () => <Icon name="reader" type="ionicon"></Icon>,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Reportes"
+        component={Reportes}
+        options={{
+          title: "Reportes",
+          drawerIcon: () => <Icon name="document-text" type="ionicon"></Icon>,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Usuarios"
+        component={Usuarios}
+        options={{
+          title: "Usuarios",
+          drawerIcon: () => <Icon name="people" type="ionicon"></Icon>,
+        }}
+      />
     </Drawer.Navigator>
   );
 };

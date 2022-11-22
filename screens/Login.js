@@ -4,9 +4,31 @@ import { StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, Ico
 import logo from '../assets/monshine.png';
 import diamont from '../assets/diamon2.gif';
 import { useState } from 'react';
+import { getAuth, signInWithEmailAndPassword} from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import {firebaseConfig} from '../firebase/Config'
 
 export const Login = ( {navigation} ) => {
     const [name, setName] = useState('');
+    const [password, setPassword] = useState('')
+
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app)
+
+    const handleSignIn = () => {
+      signInWithEmailAndPassword(auth, name, password)
+      .then((userCredential) => {
+        alert("Se logeo")
+        const user = userCredential.user;
+        console.log(user)
+       
+      })
+      .catch(error => {
+        alert("Usuario incorrecto")
+      })
+    }
+
 
     return (
       <View style={styles.container}>
@@ -21,11 +43,14 @@ export const Login = ( {navigation} ) => {
           
         <Text style={ styles.text }></Text>
         <TextInput
+          onChangeText={(text) => {setName(text)}}
           placeholder='Usuario'
+          keyboardType='email-address'
           style={ styles.inputs}  
         />
 
         <TextInput
+          onChangeText={(text) => {setPassword(text)}}
           password= { true }
           secureTextEntry= { true }
           placeholder="Contraseña"
@@ -36,6 +61,7 @@ export const Login = ( {navigation} ) => {
           style= { styles.button }
           onPress={ ()=> {
             navigation.navigate('Menu')
+            /* handleSignIn() */
         }}
         >
           <Text> INICIAR </Text>

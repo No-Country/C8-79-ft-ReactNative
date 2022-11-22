@@ -5,10 +5,30 @@ import * as Yup from "yup";
 import { Button,Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation } from '@react-navigation/native';
+import { getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from "../../firebase/Config";
 
 
 
 const RegisterForm = () => {
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app)
+
+
+  const handleCreateUser= ({email,password}) => {
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential)=>{
+      alert("Se Registro");
+      const user = userCredential.user;
+      console.log(user)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+
+  }
 
   const nav = useNavigation();
  
@@ -63,7 +83,7 @@ const RegisterForm = () => {
           "Las contraseñas deben coincidir"
         ),
       })}
-      onSubmit={(values  ,{ resetForm }) => submitForm(values,resetForm)}
+      onSubmit={(values  ,{ resetForm }) => {submitForm(values,resetForm); handleCreateUser(values)} }
     >
       {({
         handleChange,
