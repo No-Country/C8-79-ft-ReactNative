@@ -3,41 +3,39 @@ import {
   TextInput,
   Text,
   View,
-  ScrollView,
   FlatList,
 } from "react-native";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Button, Icon } from "@rneui/themed";
+import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation } from "@react-navigation/native";
 import MapSearchInput from "../MapsSearchInput";
 
 const NewClientForm = () => {
+
   const nav = useNavigation();
+  const placesRef = useRef();
 
   const [popup, setPopup] = useState(false);
   const [location, setLocation] = useState({cordiantes:"" ,address:""})
 
-  const placesRef = useRef();
+  const submitForm = (values, clear) => {
+    console.log(values);
+    setPopup(true);
+    clear();
+    setTimeout(() => {
+      setPopup(false), nav.navigate("ClientsScreen");
+    }, 1000);
+  };
+
   const getAddress = () => {
     return (placesRef.current.getAddressText());
   };
 
-  const submitForm = (values, clear) => {
-    console.log(values);
-    console.log(location)
-    
-    // setPopup(true);
-    // clear();
-    // setTimeout(() => {
-    //   setPopup(false), nav.navigate("ClientsScreen");
-    // }, 1000);
-  };
-
-  const getLocation = (data,details,cordiantes)=> {
-
+  const getLocation = (data,details,cordiantes,setter)=> {
+    setter("address",getAddress().split(",")[0])
     setLocation({cordiantes:cordiantes ,address:getAddress()})
   }
 
@@ -48,28 +46,27 @@ const NewClientForm = () => {
         lastName: "",
         email: "",
         phone: "",
-        address: location.address,
+        address: "",
       }}
       validationSchema={Yup.object({
         user: Yup.string()
           .max(20, "Must be 20 characters or less")
-         // .required("Debe completar este campo"),
-         ,
+          .required("Debe completar este campo"),
+         
         lastName: Yup.string().max(20, "Must be 20 characters or less"),
         email: Yup.string()
           .email("Direccion invalida")
-          //.required("Debe completar este campo"),
-          ,
+          .required("Debe completar este campo"),
         phone: Yup.string(),
         address: Yup.string()
           .min(5, "Must be 5 characters or more")
-          //.required("Debe completar este campo"),
+          .required("Debe completar este campo"),
       })}
       onSubmit={(values, { resetForm }) => {
         submitForm(values, resetForm);
       }}
     >
-      {({ handleChange, handleSubmit, values, errors, touched }) => (
+      {({setFieldValue , handleChange, handleSubmit, values, errors, touched }) => (
         <FlatList 
         overScrollMode={"never"}
           showsVerticalScrollIndicator={false}
@@ -125,9 +122,10 @@ const NewClientForm = () => {
 
           <MapSearchInput
             onChangeText={(handleChange("address"))}
-            value={location.address}
+            value={values.address}
             isPress={getLocation}
             refer={placesRef}
+            setFieldValue={setFieldValue}
           ></MapSearchInput>
 
           {errors.address && touched.address && (

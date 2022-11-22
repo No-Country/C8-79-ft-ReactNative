@@ -1,7 +1,7 @@
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { API_KEY} from '@env'
 
-const MapSearchInput = ({ isPress ,refer}) => {
+const MapSearchInput = ({ isPress ,refer,setFieldValue}) => {
   return (
     
       <GooglePlacesAutocomplete
@@ -30,7 +30,9 @@ ref={refer}
         //     <Text>No results were found</Text>
         //   </View>
         // )}
-        onPress={(data, details = null) => isPress(data, details,(details?.geometry?.location))}
+        onPress={(data, details = null) => {
+          //setFieldValue("address","casass"),
+          isPress(data, details,(details?.geometry?.location),setFieldValue)}}
       />
     
   );
