@@ -6,7 +6,7 @@ import diamont from '../assets/diamon2.gif';
 import { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import {firebaseConfig} from '../firebase/Config'
+import {firebaseConfig} from '../Firebase/Config'
 
 export const Login = ( {navigation} ) => {
     const [name, setName] = useState('');

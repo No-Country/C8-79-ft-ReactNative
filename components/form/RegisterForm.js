@@ -14,7 +14,7 @@ import PopUp from "../PopUp";
 import { useNavigation } from "@react-navigation/native";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { db, firebaseConfig } from "../../firebase/Config";
+import { db, firebaseConfig } from "../../Firebase/Config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 const RegisterForm = () => {
