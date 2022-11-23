@@ -1,35 +1,12 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, Icon } from 'react-native';
-import logo from '../assets/monshine.png';
-import diamont from '../assets/diamon2.gif';
+import logo from '../../assets/monshine.png';
+import diamont from '../../assets/diamon2.gif';
 import { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword} from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
-import {firebaseConfig} from '../firebase/Config'
 
-export const Login = ( {navigation} ) => {
+export const Login = ( navigation ) => {
     const [name, setName] = useState('');
-    const [password, setPassword] = useState('')
-
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app)
-
-    const handleSignIn = () => {
-      signInWithEmailAndPassword(auth, name, password)
-      .then((userCredential) => {
-        alert("Se logeo")
-        const user = userCredential.user;
-        console.log(user)
-        navigation.navigate('Menu')
-       
-      })
-      .catch(error => {
-        alert("Usuario incorrecto")
-      })
-    }
-
 
     return (
       <View style={styles.container}>
@@ -44,14 +21,11 @@ export const Login = ( {navigation} ) => {
           
         <Text style={ styles.text }></Text>
         <TextInput
-          onChangeText={(text) => {setName(text)}}
           placeholder='Usuario'
-          keyboardType='email-address'
           style={ styles.inputs}  
         />
 
         <TextInput
-          onChangeText={(text) => {setPassword(text)}}
           password= { true }
           secureTextEntry= { true }
           placeholder="Contraseña"
@@ -60,17 +34,13 @@ export const Login = ( {navigation} ) => {
         
         <TouchableOpacity      
           style= { styles.button }
-          onPress={ ()=> {
-             handleSignIn() 
-        }}
         >
           <Text> INICIAR </Text>
-          
         </TouchableOpacity>
 
         <TouchableOpacity
             onPress={ ()=> {
-                navigation.navigate('PasswordRecovery')
+                navigation.navigate('Pass')
             }}
         >
             <Text style={{ color: '#1995AD', marginTop: 40 }}> ¿Olvidaste tu contraseña? </Text>
@@ -88,16 +58,7 @@ export const Login = ( {navigation} ) => {
         </View>
         <View style={{flexDirection: 'row', marginTop: 20 }}>
             <Text> ¿No tienes una cuenta? </Text>
-            <TouchableOpacity      
-        
-          onPress={ ()=> {
-            navigation.navigate('Register')
-        }}
-        >
-             <Text style={{ color: '#1995AD' }}> Crear cuenta </Text>  
-          
-        </TouchableOpacity>
-          
+            <Text style={{ color: '#1995AD' }}> Crear cuenta </Text>    
         </View>
         <StatusBar style="auto" />
       </View>
