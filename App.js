@@ -7,6 +7,7 @@ import PasswordRecovery from "./screens/PasswordRecovery";
 import Register from "./screens/Register";
 import Menu from "./navigation/Menu";
 import Login from "./screens/Login";
+import NewClient from "./screens/NewClient";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,8 @@ export default function App() {
           headerShown: false,
         }}
       >
+               
+
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />

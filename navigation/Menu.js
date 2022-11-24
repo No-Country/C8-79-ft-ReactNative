@@ -15,14 +15,38 @@ import { Icon } from "@rneui/base";
 import Inventario from "../screens/Inventario";
 import Reportes from "../screens/Reportes";
 import Usuarios from "../screens/Usuarios";
+import ClientDetail from "../screens/ClientDetail";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import NewClient from "../screens/NewClient";
+import EditClient from "../screens/EditClient";
+
+
+const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
+
+
+
+const ClientsStack=()=>{
+return <Stack.Navigator
+  screenOptions={{
+    headerShown: true,
+    headerStyle: { backgroundColor: "#A1D6E2" } 
+  }}
+>
+ <Stack.Screen name="ClientsScreen" component={Clients} />
+  <Stack.Screen name="ClientDetail" component={ClientDetail} />
+  <Stack.Screen name="NewClient" component={NewClient} />
+  <Stack.Screen name="EditClient" component={EditClient} />
+</Stack.Navigator>}
 
 const Menu = () => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomMenu {...props} />}
-      screenOptions={{ headerStyle: { backgroundColor: "#A1D6E2" } }}
+      screenOptions={{ 
+        headerShown: true,
+      headerStyle: { backgroundColor: "#A1D6E2" } }}
       useLegacyImplementation
       initialRouteName="Home"
     >
@@ -38,7 +62,7 @@ const Menu = () => {
 
       <Drawer.Screen
         name="Clients"
-        component={Clients}
+        component={ClientsStack}
         options={{
           title: "Clients",
           drawerIcon: () => <Icon name="person" />,
@@ -79,6 +103,9 @@ const Menu = () => {
           drawerIcon: () => <Icon name="people" type="ionicon"></Icon>,
         }}
       />
+      
+      
+      
     </Drawer.Navigator>
   );
 };

@@ -12,14 +12,13 @@ import * as Yup from "yup";
 import { Button, Dialog, Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation } from "@react-navigation/native";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { db, firebaseConfig } from "../../firebase/Config";
+import { auth, db, firebaseConfig } from "../../firebase/Config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
+
 const RegisterForm = () => {
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
   const [popup, setPopup] = useState(false);
   const nav = useNavigation();
 
