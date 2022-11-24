@@ -12,7 +12,7 @@ const CustomMenu = (props) => {
       <DrawerItemList {...props} />
       <DrawerItem
         label="Logout"
-        onPress={() => props.navigation.navigate("Login")}
+        onPress={() => props.navigation.replace("Login")}
       />
     </DrawerContentScrollView>
   );
