@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import PasswordRecovery from "./screens/PasswordRecovery";
 import Register from "./screens/Register";
-import Menu from "./navigation/Menu";
+import Menu from './Navigation/Menu'
 import Login from "./screens/Login";
 import NewClient from "./screens/NewClient";
 
