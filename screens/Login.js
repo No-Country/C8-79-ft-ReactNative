@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -18,28 +18,35 @@ import { initializeApp } from "firebase/app";
 import { auth, firebaseConfig } from "../firebase/Config";
 import { Formik } from "formik";
 import * as Yup from "yup";
-
+import PopUp from "../components/PopUp";
+import { useFocusEffect } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-web";
+import Spinner from "../components/Spinner";
 
 export const Login = ({ navigation }) => {
- 
   const [incorrect, setIncorrect] = useState(false);
+  const [spinner, setSpinner] = useState(false);
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => setSpinner(false);
+    }, [])
+  );
 
-  const handleSignIn = ({email,password}, reset) => {
-
-
+  const handleSignIn = ({ email, password }, reset) => {
+    setSpinner(true);
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         setIncorrect(false);
-        reset()
+
+        reset();
+
         navigation.navigate("Menu");
       })
       .catch((error) => {
         console.log(error);
         setIncorrect(true);
       });
-
-    
   };
 
   return (
@@ -60,8 +67,7 @@ export const Login = ({ navigation }) => {
             .required("Debe completar este campo"),
         })}
         onSubmit={(values, { resetForm }) => {
-        handleSignIn(values, resetForm);
-        
+          handleSignIn(values, resetForm);
         }}
       >
         {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -69,6 +75,7 @@ export const Login = ({ navigation }) => {
             <TextInput
               style={styles.inputs}
               onChangeText={handleChange("email")}
+              onFocus={() => setIncorrect(false)}
               value={values.email}
               selectionColor={"#000"}
               placeholder="Direccion de email"
@@ -81,6 +88,7 @@ export const Login = ({ navigation }) => {
             <TextInput
               style={styles.inputs}
               onChangeText={handleChange("password")}
+              onFocus={() => setIncorrect(false)}
               value={values.password}
               selectionColor={"#000"}
               secureTextEntry={true}
@@ -97,7 +105,7 @@ export const Login = ({ navigation }) => {
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                handleSubmit()
+                handleSubmit();
               }}
             >
               <Text> INICIAR </Text>
@@ -105,7 +113,7 @@ export const Login = ({ navigation }) => {
           </>
         )}
       </Formik>
-
+      
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("PasswordRecovery");
@@ -139,6 +147,7 @@ export const Login = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
+      {spinner ? <Spinner></Spinner> : null}
     </View>
   );
 };
@@ -149,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
 
-    //justifyContent: 'center',
+    justifyContent: "center",
   },
   text: {
     color: "cyan",
@@ -157,14 +166,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   image: {
-    marginTop: 0,
+    marginBottom: 20,
     height: 50,
     width: 130,
   },
   diamont: {
     height: 135, //90
     width: 190, //125
-    marginTop: "10%",
+    marginTop: "0%",
     resizeMode: "contain",
   },
   button: {
@@ -178,7 +187,7 @@ const styles = StyleSheet.create({
   inputs: {
     backgroundColor: "#F1F1f2",
     width: "80%",
-    marginBottom: 25,
+    marginBottom: 20,
     padding: 10,
     borderRadius: 10,
   },
@@ -187,7 +196,7 @@ const styles = StyleSheet.create({
   },
   error: {
     color: "red",
-    marginVertical:5
+    marginVertical: 5,
   },
 });
 export default Login;
