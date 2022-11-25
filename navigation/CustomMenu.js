@@ -5,6 +5,7 @@ import {
 } from "@react-navigation/drawer";
 import { StyleSheet } from "react-native";
 import React from "react";
+import { Icon } from "@rneui/base";
 
 const CustomMenu = (props) => {
   return (
@@ -13,6 +14,8 @@ const CustomMenu = (props) => {
       <DrawerItem
         label="Logout"
         onPress={() => props.navigation.replace("Login")}
+       icon= {() => <Icon name="home" type="ionicon"></Icon>}
+       style={{marginTop:80}}
       />
     </DrawerContentScrollView>
   );
