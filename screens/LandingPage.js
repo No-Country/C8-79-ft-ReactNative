@@ -114,9 +114,6 @@ import {
       setCurrentSlideIndex(lastSlideIndex);
     };
   
-    const RedirigirAlLogin = () => {
-      /* Nosecomo */
-    }
     return (
       <View style={{ flex: 1, backgroundColor: "#9b9c9e" }}>
         <FlatList
