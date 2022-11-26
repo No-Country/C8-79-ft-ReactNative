@@ -30,7 +30,7 @@ const Drawer = createDrawerNavigator();
 const ClientsStack=()=>{
 return <Stack.Navigator
   screenOptions={{
-    headerShown: true,
+    headerShown: false,
     headerStyle: { backgroundColor: "#A1D6E2" } 
   }}
 >
