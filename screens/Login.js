@@ -18,14 +18,15 @@ import { initializeApp } from "firebase/app";
 import { auth, firebaseConfig } from "../firebase/Config";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import PopUp from "../components/PopUp";
 import { useFocusEffect } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native-web";
 import Spinner from "../components/Spinner";
 
 export const Login = ({ navigation }) => {
   const [incorrect, setIncorrect] = useState(false);
   const [spinner, setSpinner] = useState(false);
+  const [errorNetwork, setErrorNetwork] = useState(false)
+
+  
 
   useFocusEffect(
     useCallback(() => {
@@ -37,15 +38,18 @@ export const Login = ({ navigation }) => {
     setSpinner(true);
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        setIncorrect(false);
-
         reset();
-
         navigation.navigate("Menu");
       })
       .catch((error) => {
-        console.log(error);
-        setIncorrect(true);
+        if (error.message.includes("user-not-found")){
+          setIncorrect(true);
+        } else{
+          setErrorNetwork(true)
+          setTimeout(()=>setErrorNetwork(false) ,3000)
+        }
+        console.log(error.message);
+        setSpinner(false);
       });
   };
 
@@ -100,6 +104,9 @@ export const Login = ({ navigation }) => {
 
             {incorrect && (
               <Text style={styles.error}>Credenciales incorrectas</Text>
+            )}
+            {errorNetwork && (
+              <Text style={styles.error}>Problemas con el servidor , intenta mas tarde</Text>
             )}
 
             <TouchableOpacity
