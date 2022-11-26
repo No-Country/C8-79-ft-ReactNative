@@ -8,8 +8,8 @@ import {
   Button,
   TouchableOpacity,
   TextInput,
-  Icon,
 } from "react-native";
+import { Icon } from "@rneui/themed";
 import logo from "../assets/monshine.png";
 import diamont from "../assets/diamon2.gif";
 import { useState } from "react";
@@ -22,9 +22,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import Spinner from "../components/Spinner";
 
 export const Login = ({ navigation }) => {
-  
   const [spinner, setSpinner] = useState(false);
   const [error, setError] = useState({ user: false, network: false });
+  const [showPassword, setShowPassword] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -104,21 +104,30 @@ export const Login = ({ navigation }) => {
             {errors.email && touched.email && (
               <Text style={styles.error}>{errors.email}</Text>
             )}
-
-            <TextInput
-              style={styles.inputs}
-              onChangeText={handleChange("password")}
-              onFocus={() =>
-                setError((prev) => ({
-                  ...prev,
-                  user: false,
-                }))
-              }
-              value={values.password}
-              selectionColor={"#000"}
-              secureTextEntry={true}
-              placeholder="Contraseña"
-            />
+            <View style={styles.passwordInput}>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={handleChange("password")}
+                onFocus={() =>
+                  setError((prev) => ({
+                    ...prev,
+                    user: false,
+                  }))
+                }
+                value={values.password}
+                selectionColor={"#000"}
+                secureTextEntry={showPassword? true : false}
+                placeholder="Contraseña"
+              />
+              <Icon
+              style={styles.show}
+                name={showPassword ? "eye" : "eye-off"}
+                type="feather"
+                size={20}
+                color="#000"
+                onPress={() => setShowPassword(!showPassword)}
+              />
+            </View>
             {errors.password && touched.password && (
               <Text style={styles.error}>{errors.password}</Text>
             )}
@@ -228,5 +237,28 @@ const styles = StyleSheet.create({
     color: "red",
     marginVertical: 5,
   },
+  passwordInput: {
+    
+    width: "80%",
+    flexDirection: "row",
+    
+  },
+  textInput: {
+    backgroundColor: "#F1F1f2",
+    width: "80%",
+    marginBottom: 20,
+    padding: 10,
+    height: 45,
+    flex: 1,
+    borderRadius: 10,
+  },
+  show:{
+    position:"relative",
+    top:12
+  }
 });
 export default Login;
+
+//
+
+//
