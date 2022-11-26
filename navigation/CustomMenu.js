@@ -14,8 +14,8 @@ const CustomMenu = (props) => {
       <DrawerItem
         label="Logout"
         onPress={() => props.navigation.replace("Login")}
-       icon= {() => <Icon name="home" type="ionicon"></Icon>}
-       style={{marginTop:80}}
+       icon= {() => <Icon name="power-sharp" type="ionicon"></Icon>}
+       style={{marginTop:240}}
       />
     </DrawerContentScrollView>
   );

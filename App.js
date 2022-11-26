@@ -8,6 +8,7 @@ import Register from "./screens/Register";
 import Menu from './Navigation/Menu'
 import Login from "./screens/Login";
 import NewClient from "./screens/NewClient";
+import LandingPage from "./screens/LandingPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +21,7 @@ export default function App() {
           headerShown: false,
         }}
       >
-
-             
+        <Stack.Screen name="Landing" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
