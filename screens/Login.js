@@ -22,11 +22,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import Spinner from "../components/Spinner";
 
 export const Login = ({ navigation }) => {
-  const [incorrect, setIncorrect] = useState(false);
-  const [spinner, setSpinner] = useState(false);
-  const [errorNetwork, setErrorNetwork] = useState(false)
-
   
+  const [spinner, setSpinner] = useState(false);
+  const [error, setError] = useState({ user: false, network: false });
 
   useFocusEffect(
     useCallback(() => {
@@ -42,11 +40,24 @@ export const Login = ({ navigation }) => {
         navigation.navigate("Menu");
       })
       .catch((error) => {
-        if (error.message.includes("user-not-found")){
-          setIncorrect(true);
-        } else{
-          setErrorNetwork(true)
-          setTimeout(()=>setErrorNetwork(false) ,3000)
+        if (error.message.includes("user-not-found")) {
+          setError((prev) => ({
+            ...prev,
+            user: true,
+          }));
+        } else {
+          setError((prev) => ({
+            ...prev,
+            network: true,
+          }));
+          setTimeout(
+            () =>
+              setError((prev) => ({
+                ...prev,
+                network: false,
+              })),
+            5000
+          );
         }
         console.log(error.message);
         setSpinner(false);
@@ -79,7 +90,12 @@ export const Login = ({ navigation }) => {
             <TextInput
               style={styles.inputs}
               onChangeText={handleChange("email")}
-              onFocus={() => setIncorrect(false)}
+              onFocus={() =>
+                setError((prev) => ({
+                  ...prev,
+                  user: false,
+                }))
+              }
               value={values.email}
               selectionColor={"#000"}
               placeholder="Direccion de email"
@@ -92,7 +108,12 @@ export const Login = ({ navigation }) => {
             <TextInput
               style={styles.inputs}
               onChangeText={handleChange("password")}
-              onFocus={() => setIncorrect(false)}
+              onFocus={() =>
+                setError((prev) => ({
+                  ...prev,
+                  user: false,
+                }))
+              }
               value={values.password}
               selectionColor={"#000"}
               secureTextEntry={true}
@@ -102,11 +123,13 @@ export const Login = ({ navigation }) => {
               <Text style={styles.error}>{errors.password}</Text>
             )}
 
-            {incorrect && (
+            {error.user && (
               <Text style={styles.error}>Credenciales incorrectas</Text>
             )}
-            {errorNetwork && (
-              <Text style={styles.error}>Problemas con el servidor , intenta mas tarde</Text>
+            {error.network && (
+              <Text style={styles.error}>
+                Problemas con el servidor , intenta mas tarde
+              </Text>
             )}
 
             <TouchableOpacity
@@ -120,7 +143,7 @@ export const Login = ({ navigation }) => {
           </>
         )}
       </Formik>
-      
+
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("PasswordRecovery");
