@@ -40,7 +40,7 @@ import {
                 style={[
                   styles.indicador,
                   currentSlideIndex == index && {
-                    backgroundColor: "#ffff",
+                    backgroundColor: "#000000",
                     width: 25,
                   },
                 ]}
@@ -59,7 +59,7 @@ import {
                 >
                   <Text
                     style={{
-                      color: "#ffff",
+                      color: "#000000",
                       fontSize: 20,
                       fontWeight: "bold",
                     }}
@@ -72,7 +72,7 @@ import {
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity onPress={skipSlide} style={styles.btn}>
                   <Text
-                    style={{ color: "#ffff", fontSize: 20, fontWeight: "bold" }}
+                    style={{ color: "#000000", fontSize: 20, fontWeight: "bold" }}
                   >
                     SKIP
                   </Text>
@@ -81,7 +81,7 @@ import {
                 <TouchableOpacity onPress={goNextSlide} style={styles.btn}>
                   <Icon
                     size={40}
-                    color={"#ffff"}
+                    color={"#000000"}
                     name="arrow-forward-sharp"
                     type="ionicon"
                   ></Icon>
@@ -115,7 +115,7 @@ import {
     };
   
     return (
-      <View style={{ flex: 1, backgroundColor: "#9b9c9e" }}>
+      <View style={{ flex: 1, backgroundColor: "#ffff" }}>
         <FlatList
           ref={ref}
           data={slider}
@@ -146,7 +146,7 @@ import {
       width: 50,
       borderRadius: 60,
       backgroundColor: "transparent",
-      borderColor: "#ffff",
+      borderColor: "#000000",
       borderWidth: 2,
       alignItems: "center",
       justifyContent: "center",

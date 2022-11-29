@@ -10,8 +10,8 @@ export default function Slide({items}) {
   return (
     <View style={{ alignItems: "center" }}>
       <Image
-        source={items.image}
-        style={{ height: "55%", width:width, resizeMode: "contain" }}
+        source={{uri:items.image}}
+        style={{ height: "55%", width:width, resizeMode: "contain", marginTop: 30 }}
       />
       <Text style={styles.title}>{items.title}</Text>
       <Text onPress={handleAlgo} style={styles.subtitle}>{items.subtitle}</Text>
@@ -21,14 +21,14 @@ export default function Slide({items}) {
 }
 const styles = StyleSheet.create({
     title:{
-        color:"#ffff",
+        color:"#000000",
         fontSize: 22,
         fontWeight: "bold",
         marginTop: 20,
         textAlign: 'center'
     },
     subtitle:{
-        color: "#ffff",
+        color: "#000000",
         fontSize: 15,
         fontWeight: "500",
         marginTop: 10,
