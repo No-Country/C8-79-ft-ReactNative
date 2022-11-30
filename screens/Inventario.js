@@ -9,7 +9,7 @@ import {
 import React, { useState, useCallback } from "react";
 import { SearchBar } from "@rneui/themed";
 import ItemDeInventario from "../components/ItemDeInventario";
-import { FAB, Icon, Button } from "@rneui/themed";
+import { Icon, Button } from "@rneui/themed";
 import { useFocusEffect } from "@react-navigation/native";
 import { products } from "../helpers/devProcuctsData";
 
@@ -59,6 +59,7 @@ const Inventario = () => {
           iconPosition="right"
           titleStyle={{ color: "#000", fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
+         
             elevation: 1,
             backgroundColor: "transparent",
             height: 40,
@@ -149,7 +150,7 @@ const Inventario = () => {
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          paddingBottom: 30,
+          paddingBottom: 10,
         }}
       >
         {page > 1 ? (
@@ -187,11 +188,12 @@ const styles = StyleSheet.create({
     height: "80%",
   },
   container: {
-    marginTop: 10,
+    marginTop: 0,
     width: "95%",
     backgroundColor: "#fff",
     borderTopWidth: 0,
     borderBottomWidth: 0,
+    
   },
   searchInput: {
     textAlign: "center",
@@ -206,8 +208,8 @@ const styles = StyleSheet.create({
   },
   buttonsView: {
     width: "100%",
-    height: 60,
-    marginBottom: 10,
+    height: 50,
+    marginBottom: 0,
     paddingHorizontal: "5%",
     display: "flex",
     justifyContent: "center",

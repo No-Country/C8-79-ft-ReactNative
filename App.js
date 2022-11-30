@@ -21,8 +21,6 @@ export default function App() {
           headerShown: false,
         }}
       >
-
-<Stack.Screen name="inv" component={Inventario} />
              
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
