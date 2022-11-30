@@ -8,6 +8,7 @@ import Register from "./screens/Register";
 import Menu from "./navigation/Menu";
 import Login from "./screens/Login";
 import NewClient from "./screens/NewClient";
+import Inventario from "./screens/Inventario";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
         }}
       >
 
+<Stack.Screen name="inv" component={Inventario} />
              
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
