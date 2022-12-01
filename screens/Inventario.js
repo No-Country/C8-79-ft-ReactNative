@@ -5,6 +5,7 @@ import {
   Text,
   Dimensions,
   ScrollView,
+  ActivityIndicator
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { SearchBar } from "@rneui/themed";
@@ -134,6 +135,7 @@ const Inventario = () => {
               </Text>
             </View>
           )}
+          ListEmptyComponent={()=> <ActivityIndicator size="large" color="#A1D6E2" />}
           horizontal={false}
           overScrollMode={"never"}
           style={{
