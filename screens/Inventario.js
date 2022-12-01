@@ -13,7 +13,7 @@ import { Icon, Button } from "@rneui/themed";
 import { useFocusEffect } from "@react-navigation/native";
 import { products } from "../helpers/devProcuctsData";
 import PrintPDF from "../components/PrintPDF";
-
+import ExcelExport from "../components/ExcelExport";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -29,8 +29,6 @@ const Inventario = () => {
       setTotalPage(Math.ceil(products.length / 9));
     }, [])
   );
-
-  
 
   const increment = (p) => {
     setPage(p + 1);
