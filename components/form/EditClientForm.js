@@ -1,24 +1,43 @@
 import { StyleSheet, TextInput, Text, View, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button,Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation } from '@react-navigation/native';
+import { doc, setDoc, updateDoc } from "firebase/firestore"; 
+import { db } from "../../firebase/Config";
+import { Context } from "../../context/ContextProvider";
 
 
 const EditClientForm = ({client}) => {
-  console.log(client.address.address)
-
+  
+  const {handleBandera, bandera} = useContext(Context)
   const nav = useNavigation();
  
   const [popup, setPopup] = useState(false)
 
 
-  const submitForm = (formData,clear) => {
+  const submitForm = async(formData,clear) => {
+    const cliente = doc(db, "Clientes", client.id);
+    await updateDoc(cliente, {
+      firstName: formData.user,
+      lastName:formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      address: {
+        address:formData.address,
+        city: client.address.city,
+        coordinates: {
+          lat:client.address.coordinates.lat,
+          lng: client.address.coordinates.lng
+        }
+      }
+  });
+    handleBandera()
     setPopup(true)
     clear()
-    setTimeout(()=> {setPopup(false) ,nav.navigate("ClientsScreen")},1000)
+    setTimeout(()=> {setPopup(false), nav.navigate("ClientsScreen") },1000)
       }
 
   return (

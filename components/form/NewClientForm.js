@@ -19,7 +19,7 @@ const NewClientForm = () => {
   const placesRef = useRef();
 
   const [popup, setPopup] = useState(false);
-  const [location, setLocation] = useState({cordiantes:"" ,address:""})
+  const [location, setLocation] = useState({coordinates:"" ,address:""})
 
   const submitForm = (values, clear) => {
     console.log(values);
@@ -34,10 +34,17 @@ const NewClientForm = () => {
     return (placesRef.current.getAddressText());
   };
 
-  const getLocation = (data,details,cordiantes,setter)=> {
+  const getLocation = (data,details,coordinates,setter)=> {
+    
     setter("address",getAddress().split(",")[0])
-    setLocation({cordiantes:cordiantes ,address:getAddress()})
+    setLocation({coordinates:coordinates ,address:getAddress()})
+    
   }
+
+  const addClient = (values) => {
+    console.log(values)
+  }
+
 
   return (
     <Formik
@@ -64,6 +71,7 @@ const NewClientForm = () => {
       })}
       onSubmit={(values, { resetForm }) => {
         submitForm(values, resetForm);
+        addClient(values)
       }}
     >
       {({setFieldValue , handleChange, handleSubmit, values, errors, touched }) => (
@@ -121,7 +129,7 @@ const NewClientForm = () => {
           <Text style={styles.label}>Direccion</Text>
 
           <MapSearchInput
-            onChangeText={(handleChange("address"))}
+            onChangeText={(()=>handleChange("address"))}
             value={values.address}
             isPress={getLocation}
             refer={placesRef}

@@ -116,7 +116,7 @@ export const Login = ({ navigation }) => {
                 }
                 value={values.password}
                 selectionColor={"#000"}
-                secureTextEntry={showPassword? true : false}
+                secureTextEntry={showPassword? false : true}
                 placeholder="Contraseña"
               />
               <Icon
