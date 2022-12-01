@@ -19,7 +19,7 @@ const NewClientForm = () => {
   const placesRef = useRef();
 
   const [popup, setPopup] = useState(false);
-  const [location, setLocation] = useState({cordiantes:"" ,address:""})
+  const [location, setLocation] = useState({coordinates:"" ,address:""})
 
   const submitForm = (values, clear) => {
     console.log(values);
@@ -34,9 +34,11 @@ const NewClientForm = () => {
     return (placesRef.current.getAddressText());
   };
 
-  const getLocation = (data,details,cordiantes,setter)=> {
+  const getLocation = (data,details,coordinates,setter)=> {
+    
     setter("address",getAddress().split(",")[0])
-    setLocation({cordiantes:cordiantes ,address:getAddress()})
+    setLocation({coordinates:coordinates ,address:getAddress()})
+    
   }
 
   const addClient = (values) => {
