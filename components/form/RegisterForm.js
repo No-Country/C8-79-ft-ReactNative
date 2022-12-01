@@ -13,8 +13,7 @@ import { Button, Dialog, Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { auth, db, firebaseConfig } from "../../firebase/Config";
+import { auth, db } from "../../firebase/Config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 
@@ -27,7 +26,7 @@ const RegisterForm = () => {
     passwordConfirmation: true,
   });
 
-
+//
   const handleCreateUser = async ({
     userName,
     lastName,
