@@ -5,10 +5,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import PasswordRecovery from "./screens/PasswordRecovery";
 import Register from "./screens/Register";
-import Menu from "./navigation/Menu";
+import Menu from './navigation/Menu'
 import Login from "./screens/Login";
 import NewClient from "./screens/NewClient";
 import Inventario from "./screens/Inventario";
+import LandingPage from "./screens/LandingPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,7 @@ export default function App() {
           headerShown: false,
         }}
       >
-             
+        <Stack.Screen name="Landing" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
