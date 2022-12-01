@@ -28,9 +28,6 @@ const RegisterForm = () => {
     passwordConfirmation: true,
   });
 
-<<<<<<< HEAD
-//
-=======
   useFocusEffect(
     useCallback(() => {
       return () => setSpinner(false);
@@ -43,7 +40,6 @@ const RegisterForm = () => {
     
   };
 
->>>>>>> 1d1252d52b8cc2f14b4d81db80538e383a71c282
   const handleCreateUser = async ({
     userName,
     lastName,

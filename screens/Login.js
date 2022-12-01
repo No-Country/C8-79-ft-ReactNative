@@ -18,14 +18,9 @@ import { initializeApp } from "firebase/app";
 import { auth, firebaseConfig } from "../firebase/Config";
 import { Formik } from "formik";
 import * as Yup from "yup";
-<<<<<<< HEAD
-
-//
-=======
 import { useFocusEffect } from "@react-navigation/native";
 import Spinner from "../components/Spinner";
 
->>>>>>> 1d1252d52b8cc2f14b4d81db80538e383a71c282
 export const Login = ({ navigation }) => {
   const [spinner, setSpinner] = useState(false);
   const [error, setError] = useState({ user: false, network: false });
