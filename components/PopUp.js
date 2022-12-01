@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Dialog } from "@rneui/themed";
 import { Text, StyleSheet } from "react-native";
 
-const PopUp = ({ visibility, message, child }) => {
+const PopUp = ({ visibility, message, child}) => {
   return (
     <Dialog isVisible={visibility} overlayStyle={styles.dialog}>
       <Text style={{ fontSize: 16,textAlign:"center" }}>{message} </Text>

@@ -6,7 +6,7 @@ import RegisterForm from "../components/form/RegisterForm"
 const Register = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.top}></View>
+      
       <Text style={styles.title}>Por favor , registrate</Text>
       <RegisterForm></RegisterForm>
       
@@ -33,7 +33,7 @@ top:{
     textAlignVertical: "center",
     fontSize: 20,
     zIndex: 1,
-    marginTop: 15,
+    marginTop: 25,
     marginBottom: 10,
     color: "#000000",
     backgroundColor: "#A1D6E2",

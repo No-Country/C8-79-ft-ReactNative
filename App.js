@@ -8,20 +8,20 @@ import Register from "./screens/Register";
 import Menu from "./navigation/Menu";
 import Login from "./screens/Login";
 import NewClient from "./screens/NewClient";
+import Inventario from "./screens/Inventario";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <StatusBar style="auto" />
+      {/* <StatusBar style="auto" /> */}
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
       >
-               
-
+             
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />

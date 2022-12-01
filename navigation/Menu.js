@@ -30,7 +30,7 @@ const Drawer = createDrawerNavigator();
 const ClientsStack=()=>{
 return <Stack.Navigator
   screenOptions={{
-    headerShown: true,
+    headerShown: false,
     headerStyle: { backgroundColor: "#A1D6E2" } 
   }}
 >
@@ -45,6 +45,9 @@ const Menu = () => {
     <Drawer.Navigator
       drawerContent={(props) => <CustomMenu {...props} />}
       screenOptions={{ 
+        drawerItemStyle: {
+           marginVertical:"5%" 
+        },
         headerShown: true,
       headerStyle: { backgroundColor: "#A1D6E2" } }}
       useLegacyImplementation
@@ -53,8 +56,10 @@ const Menu = () => {
       {/* <ion-icon name="reader"></ion-icon> */}
       <Drawer.Screen
         name="Home"
+        
         component={Home}
         options={{
+          
           title: "Home",
           drawerIcon: () => <Icon name="home" type="ionicon"></Icon>,
         }}
