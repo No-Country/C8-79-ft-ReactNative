@@ -3,19 +3,68 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import React from "react";
 import { Icon } from "@rneui/base";
+import { Avatar } from "@rneui/themed";
 
 const CustomMenu = (props) => {
   return (
     <DrawerContentScrollView {...props}>
+      <DrawerItem
+        label={() => (
+          <View>
+            <View
+              style={{
+                marginTop: -10,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Avatar
+                containerStyle={{ margin: 0, width: "40%" }}
+                size={100}
+                rounded
+                source={{
+                  uri: "https://randomuser.me/api/portraits/men/36.jpg",
+                }}
+              />
+              
+              <Text
+                style={{
+                  fontSize: 22,
+                  flexWrap: "wrap",
+                  width: "60%",
+                  textAlign: "center",
+                  marginTop: 0,
+                  marginLeft: 10,
+                }}
+              >
+                Bienvenido Nombre
+              </Text>
+            </View>
+          </View>
+        )}
+        style={{
+          width: "95%",
+          height: 110,
+          borderBottomWidth: 1,
+          borderBottomColor: "#000",
+        }}
+      />
+
       <DrawerItemList {...props} />
       <DrawerItem
         label="Logout"
         onPress={() => props.navigation.replace("Login")}
-       icon= {() => <Icon name="home" type="ionicon"></Icon>}
-       style={{marginTop:80}}
+        icon={() => <Icon name="exit" type="ionicon"></Icon>}
+        style={{
+          marginTop: 120,
+          borderTopWidth: 1,
+          borderTopColor: "#000",
+          paddingTop: 5,
+        }}
       />
     </DrawerContentScrollView>
   );
