@@ -11,7 +11,7 @@ export default function Slide({items}) {
     <View style={{ alignItems: "center" }}>
       <Image
         source={{uri:items.image}}
-        style={{ height: "55%", width:width, resizeMode: "contain", marginTop: 30 }}
+        style={{ height: "50%", width:width, resizeMode: "contain", marginTop: 30 }}
       />
       <Text style={styles.title}>{items.title}</Text>
       <Text onPress={handleAlgo} style={styles.subtitle}>{items.subtitle}</Text>
