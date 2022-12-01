@@ -64,7 +64,7 @@ const Inventario = () => {
           titleStyle={{ color: "#000", fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
          
-            elevation: 1,
+            elevation: 0,
             backgroundColor: "transparent",
             height: 40,
             width: 120,
@@ -155,7 +155,7 @@ const Inventario = () => {
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          paddingBottom: 10,
+          paddingBottom: 30,
         }}
       >
         {page > 1 ? (
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     height: "80%",
   },
   container: {
-    marginTop: 0,
+    marginTop: 10,
     width: "95%",
     backgroundColor: "#fff",
     borderTopWidth: 0,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   buttonsView: {
     width: "100%",
     height: 50,
-    marginBottom: 0,
+    marginBottom: 10,
     paddingHorizontal: "5%",
     display: "flex",
     justifyContent: "center",

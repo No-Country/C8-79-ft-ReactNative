@@ -23,7 +23,7 @@ const CustomMenu = (props) => {
               }}
             >
               <Avatar
-                containerStyle={{ margin: 0, width: "40%" }}
+                containerStyle={{ margin: 0, maxWidth: "50%" }}
                 size={100}
                 rounded
                 source={{
@@ -35,7 +35,7 @@ const CustomMenu = (props) => {
                 style={{
                   fontSize: 22,
                   flexWrap: "wrap",
-                  width: "60%",
+                  width: "50%",
                   textAlign: "center",
                   marginTop: 0,
                   marginLeft: 10,
@@ -60,8 +60,8 @@ const CustomMenu = (props) => {
         onPress={() => props.navigation.replace("Login")}
         icon={() => <Icon name="exit" type="ionicon"></Icon>}
         style={{
-          marginTop: 120,
-          borderTopWidth: 1,
+        
+          borderTopWidth: 0,
           borderTopColor: "#000",
           paddingTop: 5,
         }}
