@@ -1,7 +1,9 @@
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { API_KEY} from '@env'
+import { useState } from "react";
 
 const MapSearchInput = ({ isPress ,refer,setFieldValue}) => {
+  const [text, setText] = useState("")
   return (
     
       <GooglePlacesAutocomplete
@@ -22,6 +24,14 @@ ref={refer}
         query={{ key: API_KEY }}
         fetchDetails={true}
         keepResultsAfterBlur={true}
+        textInputProps={{
+          value:text,
+          onChangeText:(newText)=>{
+            setText(newText)
+            setFieldValue("address",newText)
+          }
+
+        }}
         onFail={(error) => console.log(error)}
         onNotFound={() => console.log("no results")}
         //inserta mensaje que no se encontro direccion

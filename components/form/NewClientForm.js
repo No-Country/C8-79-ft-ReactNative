@@ -127,7 +127,7 @@ const NewClientForm = () => {
           <Text style={styles.label}>Direccion</Text>
 
           <MapSearchInput
-            onChangeText={(handleChange("address"))}
+            onChangeText={(()=>handleChange("address"))}
             value={values.address}
             isPress={getLocation}
             refer={placesRef}
