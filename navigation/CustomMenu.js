@@ -12,6 +12,7 @@ const CustomMenu = (props) => {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItem
+      onPress={()=>props.navigation.navigate("Perfil")}
         label={() => (
           <View>
             <View

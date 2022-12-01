@@ -40,6 +40,8 @@ return <Stack.Navigator
   <Stack.Screen name="EditClient" component={EditClient} />
 </Stack.Navigator>}
 
+
+
 const Menu = () => {
   return (
     <Drawer.Navigator
