@@ -14,7 +14,7 @@ import { Image, View } from "react-native";
 import { Icon } from "@rneui/base";
 import Inventario from "../screens/Inventario";
 import Reportes from "../screens/Reportes";
-import Usuarios from "../screens/Usuarios";
+import Perfil from "../screens/Perfil";
 import ClientDetail from "../screens/ClientDetail";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import NewClient from "../screens/NewClient";
@@ -45,15 +45,28 @@ const Menu = () => {
     <Drawer.Navigator
       drawerContent={(props) => <CustomMenu {...props} />}
       screenOptions={{ 
+        drawerActiveBackgroundColor:"#A1D6E2",
+        drawerActiveTintColor:"#000",
         drawerItemStyle: {
-           marginVertical:"5%" 
+           marginVertical:"3%" ,
+          
         },
         headerShown: true,
       headerStyle: { backgroundColor: "#A1D6E2" } }}
-      useLegacyImplementation
+      useLegacyImplementation={false}
       initialRouteName="Home"
     >
       {/* <ion-icon name="reader"></ion-icon> */}
+
+      {/* <Drawer.Screen
+        name="Perfil"
+        component={Perfil}
+        options={{
+          title: "Perfil",
+          drawerIcon: () => <Icon name="people" type="ionicon"></Icon>,
+        }}
+      /> */}
+
       <Drawer.Screen
         name="Home"
         
@@ -100,14 +113,7 @@ const Menu = () => {
         }}
       />
 
-      <Drawer.Screen
-        name="Usuarios"
-        component={Usuarios}
-        options={{
-          title: "Usuarios",
-          drawerIcon: () => <Icon name="people" type="ionicon"></Icon>,
-        }}
-      />
+      
       
       
       

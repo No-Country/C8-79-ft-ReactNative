@@ -5,6 +5,7 @@ import {
   Text,
   Dimensions,
   ScrollView,
+  ActivityIndicator
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { SearchBar } from "@rneui/themed";
@@ -13,7 +14,7 @@ import { Icon, Button } from "@rneui/themed";
 import { useFocusEffect } from "@react-navigation/native";
 import { products } from "../helpers/devProcuctsData";
 import PrintPDF from "../components/PrintPDF";
-
+import ExcelExport from "../components/ExcelExport";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -29,8 +30,6 @@ const Inventario = () => {
       setTotalPage(Math.ceil(products.length / 9));
     }, [])
   );
-
-  
 
   const increment = (p) => {
     setPage(p + 1);
@@ -65,7 +64,7 @@ const Inventario = () => {
           titleStyle={{ color: "#000", fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
          
-            elevation: 1,
+            elevation: 0,
             backgroundColor: "transparent",
             height: 40,
             width: 120,
@@ -136,6 +135,7 @@ const Inventario = () => {
               </Text>
             </View>
           )}
+          ListEmptyComponent={()=> <ActivityIndicator size="large" color="#A1D6E2" />}
           horizontal={false}
           overScrollMode={"never"}
           style={{
@@ -155,7 +155,7 @@ const Inventario = () => {
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          paddingBottom: 10,
+          paddingBottom: 30,
         }}
       >
         {page > 1 ? (
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     height: "80%",
   },
   container: {
-    marginTop: 0,
+    marginTop: 10,
     width: "95%",
     backgroundColor: "#fff",
     borderTopWidth: 0,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   buttonsView: {
     width: "100%",
     height: 50,
-    marginBottom: 0,
+    marginBottom: 10,
     paddingHorizontal: "5%",
     display: "flex",
     justifyContent: "center",
