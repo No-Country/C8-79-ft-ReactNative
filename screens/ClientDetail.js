@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View, Linking } from "react-native";
 import { ButtonGroup, Icon, FAB, Avatar, Button } from "@rneui/themed";
 import PopUp from "../components/PopUp";
 import PopUpInfo from "../components/PopUpInfo";
 import { getInitials } from "../components/Client";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../firebase/Config";
+import { Context } from "../context/ContextProvider";
 
 
 const ClientDetail = ({ navigation, route }) => {
@@ -11,7 +14,7 @@ const ClientDetail = ({ navigation, route }) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [deleted, setDeleted] = useState(false);
-
+  const {handleBandera, bandera} = useContext(Context)
   const client = route.params;
 
 
@@ -20,9 +23,11 @@ const ClientDetail = ({ navigation, route }) => {
     setDeletePopUp(true);
   };
 
-  const confirmationDelete = (remove, client) => {
+  const confirmationDelete = async (remove, client) => {
     remove
       ? (console.log("BORRAR " + client.firstName),
+        await deleteDoc(doc(db, "Clientes", client.id)),
+        handleBandera(),
         setDeletePopUp(false),
         setDeleted(true),
         setTimeout(() => {

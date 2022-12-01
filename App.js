@@ -10,12 +10,15 @@ import Login from "./screens/Login";
 import NewClient from "./screens/NewClient";
 import Inventario from "./screens/Inventario";
 import LandingPage from "./screens/LandingPage";
+import { ContextProvider } from './context/ContextProvider'
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
+    
     <NavigationContainer>
+      <ContextProvider>
       {/* <StatusBar style="auto" /> */}
       <Stack.Navigator
         screenOptions={{
@@ -28,7 +31,9 @@ export default function App() {
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
         <Stack.Screen name="Menu" component={Menu} />
       </Stack.Navigator>
+      </ContextProvider>
     </NavigationContainer>
+    
   );
 }
 

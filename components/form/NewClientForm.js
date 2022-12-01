@@ -39,6 +39,11 @@ const NewClientForm = () => {
     setLocation({cordiantes:cordiantes ,address:getAddress()})
   }
 
+  const addClient = (values) => {
+    console.log(values)
+  }
+
+
   return (
     <Formik
       initialValues={{
@@ -64,6 +69,7 @@ const NewClientForm = () => {
       })}
       onSubmit={(values, { resetForm }) => {
         submitForm(values, resetForm);
+        addClient(values)
       }}
     >
       {({setFieldValue , handleChange, handleSubmit, values, errors, touched }) => (
