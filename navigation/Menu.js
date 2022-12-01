@@ -53,7 +53,7 @@ const Menu = () => {
         },
         headerShown: true,
       headerStyle: { backgroundColor: "#A1D6E2" } }}
-      useLegacyImplementation
+      useLegacyImplementation={false}
       initialRouteName="Home"
     >
       {/* <ion-icon name="reader"></ion-icon> */}
