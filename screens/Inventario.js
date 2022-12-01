@@ -12,6 +12,8 @@ import ItemDeInventario from "../components/ItemDeInventario";
 import { Icon, Button } from "@rneui/themed";
 import { useFocusEffect } from "@react-navigation/native";
 import { products } from "../helpers/devProcuctsData";
+import PrintPDF from "../components/PrintPDF";
+
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -27,6 +29,8 @@ const Inventario = () => {
       setTotalPage(Math.ceil(products.length / 9));
     }, [])
   );
+
+  
 
   const increment = (p) => {
     setPage(p + 1);
@@ -56,6 +60,7 @@ const Inventario = () => {
       />
       <View style={styles.buttonsView}>
         <Button
+        onPress={()=>PrintPDF(products)}
           iconPosition="right"
           titleStyle={{ color: "#000", fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{

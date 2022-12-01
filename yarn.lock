@@ -5129,6 +5129,11 @@
     "compare-versions" "^3.4.0"
     "invariant" "^2.2.4"
 
+"expo-print@^12.0.0":
+  "integrity" "sha512-S9MD1iL3xicFuNwNEpfcIt0B4Afs9L+H2qLBDNGksv1b7gRCIf0NUSuDexVHkKkmWxhu0Rg7ClChtNpaB2AoOQ=="
+  "resolved" "https://registry.npmjs.org/expo-print/-/expo-print-12.0.0.tgz"
+  "version" "12.0.0"
+
 "expo-pwa@0.0.124":
   "integrity" "sha512-hYvQQhxATNTivWSRc9nrd1WVYJJnBG8P/SVrJ4PPu0pmsS7ZIvWt981IXYG461y9UWnTbXdZEG4UOt0Thak1Gg=="
   "resolved" "https://registry.npmjs.org/expo-pwa/-/expo-pwa-0.0.124.tgz"
@@ -5138,6 +5143,11 @@
     "chalk" "^4.0.0"
     "commander" "2.20.0"
     "update-check" "1.5.3"
+
+"expo-sharing@^11.0.1":
+  "integrity" "sha512-GlI2+fRxfdCNUftFPfqhbCSd6OQaVf/WNAADWZnRanRQRbQdQjM6L0oMmUTwQStc36cmzl+vGgNlouwdmTDseA=="
+  "resolved" "https://registry.npmjs.org/expo-sharing/-/expo-sharing-11.0.1.tgz"
+  "version" "11.0.1"
 
 "expo-status-bar@~1.4.2":
   "integrity" "sha512-ZWjO6D4ARGYfAd3SWDD3STNudHDhyBZDZjhhseqoEmsf7bS9ykny8KKOhlzJW24qIQNPhkgdvHhaw9fQwMJy3Q=="
