@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     width: 100,
   },
   buttonContainer: {
-    flexDirection: "row",
+  
     justifyContent: "space-evenly",
     marginVertical: 20,
   },

@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, View } from "react-native";
+import {FlatList, StyleSheet, View ,ActivityIndicator} from "react-native";
 import React, { useEffect, useState,useCallback, useContext} from "react";
 import { SearchBar } from "@rneui/themed";
 import { clients } from "../helpers/devData";
@@ -97,7 +97,7 @@ const renderItem=({ item, index }) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        
+        ListEmptyComponent={()=> <ActivityIndicator style={{marginTop:200}} size="large" color="#A1D6E2" />}
       />
       <FAB
         visible={true}

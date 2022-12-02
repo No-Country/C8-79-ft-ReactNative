@@ -5,7 +5,7 @@ import {
   Text,
   Dimensions,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { SearchBar } from "@rneui/themed";
@@ -15,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { products } from "../helpers/devProcuctsData";
 import PrintPDF from "../components/PrintPDF";
 import ExcelExport from "../components/ExcelExport";
+import PopUp from "../components/PopUp";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -23,6 +24,7 @@ const Inventario = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [prod, setProd] = useState([]);
+  const [popup, setPopup] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -38,6 +40,17 @@ const Inventario = () => {
   const decrement = (p) => {
     setPage(p - 1);
     setProd(products.slice((p - 1) * 10 - 10, (p - 1) * 9));
+  };
+
+  const exportDetail = () => {
+    setPopup(true);
+  };
+
+  const confirmationExport = (remove, format = null) => {
+    remove
+      ? (setPopup(false),
+        format === "PDF" ? PrintPDF(products) : ExcelExport(products))
+      : setPopup(false);
   };
 
   const renderItem = ({ item, index }) => {
@@ -59,11 +72,10 @@ const Inventario = () => {
       />
       <View style={styles.buttonsView}>
         <Button
-        onPress={()=>PrintPDF(products)}
+          onPress={() => exportDetail(products)}
           iconPosition="right"
           titleStyle={{ color: "#000", fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
-         
             elevation: 0,
             backgroundColor: "transparent",
             height: 40,
@@ -86,9 +98,7 @@ const Inventario = () => {
       >
         <FlatList
           ListHeaderComponent={() => (
-            <View
-              style={styles.headerStyle}
-            >
+            <View style={styles.headerStyle}>
               <Text style={{ marginLeft: 10, flexWrap: "wrap", maxWidth: 100 }}>
                 Codigo de Producto
               </Text>
@@ -135,16 +145,26 @@ const Inventario = () => {
               </Text>
             </View>
           )}
-          ListEmptyComponent={()=> <ActivityIndicator size="large" color="#A1D6E2" />}
+          ListEmptyComponent={() => (
+            <ActivityIndicator
+              style={{ marginTop: 200 }}
+              size="large"
+              color="#A1D6E2"
+            />
+          )}
           horizontal={false}
           overScrollMode={"never"}
           style={{
             width: "100%",
             height: "100%",
           }}
-          data={filter!==""?products.filter((item) =>
-            item.description.toLowerCase().includes(filter.toLowerCase())
-          ):prod}
+          data={
+            filter !== ""
+              ? products.filter((item) =>
+                  item.description.toLowerCase().includes(filter.toLowerCase())
+                )
+              : prod
+          }
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.code}
           renderItem={renderItem}
@@ -176,6 +196,41 @@ const Inventario = () => {
           />
         ) : null}
       </View>
+
+      <PopUp
+        visibility={popup}
+        message={"Selecciona el formato para exportar"}
+        child={
+          <View style={styles.buttonContainer}>
+            <View style={styles.buttonHeader}>
+              <Button
+                titleStyle={styles.buttonText}
+                buttonStyle={[styles.buttonDialog, { backgroundColor: "#fff" }]}
+                onPress={() => confirmationExport(true, "PDF")}
+              >
+                PDF
+              </Button>
+              <Button
+                titleStyle={styles.buttonText}
+                buttonStyle={[styles.buttonDialog, { backgroundColor: "#fff" }]}
+                onPress={() => confirmationExport(true, "XLS")}
+              >
+                XLS
+              </Button>
+            </View>
+            <Button
+              titleStyle={styles.buttonText}
+              buttonStyle={[
+                styles.buttonBottom,
+                { backgroundColor: "#A1D6E2" },
+              ]}
+              onPress={() => confirmationExport(false)}
+            >
+              CANCELAR
+            </Button>
+          </View>
+        }
+      />
     </View>
   );
 };
@@ -198,7 +253,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    
   },
   searchInput: {
     textAlign: "center",
@@ -220,12 +274,36 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
   },
-  headerStyle:{
+  headerStyle: {
     display: "flex",
     flexDirection: "row",
     backgroundColor: "#A1D6E2",
     height: 50,
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  buttonDialog: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#A1D6E2",
+    width: 100,
+    height: 50,
+  },
+  buttonContainer: {
+    justifyContent: "space-evenly",
+    marginVertical: 20,
+  },
+  buttonHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  buttonText: {
+    color: "#000",
+    fontWeight: "bold",
+  },
+  buttonBottom: {
+    borderRadius: 20,
+    height: 50,
+    marginTop: 20,
   },
 });
