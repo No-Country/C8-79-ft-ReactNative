@@ -12,6 +12,7 @@ import Inventario from "./screens/Inventario";
 import LandingPage from "./screens/LandingPage";
 import { ContextProvider } from './context/ContextProvider'
 import Perfil from "./screens/Perfil";
+import Reportes from "./screens/Reportes";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +27,7 @@ export default function App() {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="Landing" component={LandingPage} />
+        <Stack.Screen name="Landing" component={Reportes} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />

@@ -29,6 +29,7 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
+    "react-native-datatable-component": "^2.1.12",
     "react-native-dotenv": "^3.4.2",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-google-places-autocomplete": "^2.5.1",
