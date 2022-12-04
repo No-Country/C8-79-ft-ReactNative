@@ -1,4 +1,4 @@
-import DateRangePicker from "react-native-daterange-picker";
+import DateRangePicker from "react-native-daterange-picker-lz";
 
 const DateRangeFilter = ({ close, handleFilter, state }) => {
   const { visibility, startDate, endDate, displayedDate, maxDate } = state;

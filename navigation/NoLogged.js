@@ -6,14 +6,15 @@ import LandingPage from "../screens/LandingPage";
 
 const Stack = createNativeStackNavigator();
 
-const NoLogged = () => {
+const NoLogged = ({launched}) => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Landing" component={LandingPage} />
+    {!launched && <Stack.Screen name="Landing" component={LandingPage} /> }
+      
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
