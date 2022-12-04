@@ -13,6 +13,7 @@ import LandingPage from "./screens/LandingPage";
 import { ContextProvider } from './context/ContextProvider'
 import Perfil from "./screens/Perfil";
 import Reportes from "./screens/Reportes";
+import DateRangeFilter from "./components/DateRangeFilter";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,12 +28,14 @@ export default function App() {
           headerShown: false,
         }}
       >
+        
         <Stack.Screen name="Landing" component={Reportes} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
         <Stack.Screen name="Menu" component={Menu} />
         <Stack.Screen name="Perfil" component={Perfil} />
+        
 
       </Stack.Navigator>
       </ContextProvider>
@@ -40,5 +43,4 @@ export default function App() {
     
   );
 }
-
 
