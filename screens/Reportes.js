@@ -8,14 +8,18 @@ import DateRangeFilter from "../components/DateRangeFilter";
 import moment from "moment";
 
 const Reportes = () => {
-  
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
-    endDate: moment().endOf("month"),
+    endDate: moment(),
     displayedDate: moment(),
-    // maxDate: moment(),
     visibility: false,
+    title: {
+      month: moment().startOf("month").format("MMMM"),
+      year: moment().year(),
+    },
   });
+
+  console.log(moment().startOf("month").format("DD/MMM/YY"));
 
   const handleFilter = (obj) => {
     setFilter((prev) => ({
@@ -57,7 +61,15 @@ const Reportes = () => {
               }))
             }
           />
-          <Text style={{ marginRight: 10, fontSize: 20 }}>Diciembre 2022</Text>
+          <Text style={{ marginRight: 10, fontSize: 16 }}>
+            <Text style={{ fontWeight: "bold" }}>
+              {!filter.visibility && filter.startDate.format("DD/MMM/YY")}
+            </Text>
+            {" A "}
+            <Text style={{ fontWeight: "bold" }}>
+              {!filter.visibility && filter.endDate.format("DD/MMM/YY")}
+            </Text>
+          </Text>
         </View>
         <View style={styles.resume}>
           <Text
@@ -115,9 +127,9 @@ const Reportes = () => {
         <View style={styles.graph}>
           <PieChartComponent title={"Mejores Clientes"} data={graphTwo} />
         </View>
-        <View style={styles.graph}>
-          <BarGraphComponent title={"Ganancias"} />
-        </View>
+        {/* <View style={styles.graph}>
+          <BarGraphComponent dates={filter} title={"Ganancias"} />
+        </View> */}
       </ScrollView>
     </View>
   );
@@ -157,7 +169,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "95%",
-    height: 400,
+    height: 370,
     marginVertical: 20,
     borderWidth: 1,
     borderColor: "#A1D6E2",

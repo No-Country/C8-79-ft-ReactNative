@@ -13,7 +13,6 @@ import LandingPage from "./screens/LandingPage";
 import { ContextProvider } from './context/ContextProvider'
 import Perfil from "./screens/Perfil";
 import Reportes from "./screens/Reportes";
-import DateRangeFilter from "./components/DateRangeFilter";
 
 const Stack = createNativeStackNavigator();
 

@@ -3,7 +3,7 @@ import React from "react";
 import { BarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 
-const BarGraphComponent = ({ title }) => {
+const BarGraphComponent = ({dates, title }) => {
   return (
     <>
       <Text
@@ -19,7 +19,7 @@ const BarGraphComponent = ({ title }) => {
 
       <BarChart
         data={{
-          labels: ["January", "February", "March", "April", "May", "June"], //Periodo de tiempo
+          labels: [dates.startDate.format("DD/MMM"),dates.endDate.format("DD/MMM")], //Periodo de tiempo
           datasets: [
             {
               data: [20, 45, 28, 80, 99, 500], //Cantidad es $
