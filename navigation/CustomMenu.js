@@ -7,6 +7,7 @@ import { StyleSheet, View, Text } from "react-native";
 import React from "react";
 import { Icon } from "@rneui/base";
 import { Avatar } from "@rneui/themed";
+import { signOutUser } from "../firebase/session";
 
 const CustomMenu = (props) => {
   return (
@@ -58,7 +59,7 @@ const CustomMenu = (props) => {
       <DrawerItemList {...props} />
       <DrawerItem
         label="Logout"
-        onPress={() => props.navigation.replace("Login")}
+         onPress={() => signOutUser() }//props.navigation.replace("Login")
         icon={() => <Icon name="exit" type="ionicon"></Icon>}
         style={{
         
