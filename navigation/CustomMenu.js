@@ -64,7 +64,7 @@ const CustomMenu = (props) => {
           
           }}
         />
-        <View style={{ height:500, backgroundColor: colors.background, paddingTop: 10 }}>
+        <View style={{ height:2000, backgroundColor: colors.background, paddingTop: 10 }}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>

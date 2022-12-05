@@ -43,7 +43,8 @@ return <Stack.Navigator
 
 
 
-const Menu = () => {
+const Menu = ({route}) => {
+ 
 
   const {colors}=useTheme()
   return (
@@ -60,7 +61,7 @@ const Menu = () => {
         headerShown: true,
       headerStyle: { backgroundColor: colors.primary } }}
       useLegacyImplementation={false}
-      initialRouteName="Home"
+      initialRouteName={route.params}
     >
       {/* <ion-icon name="reader"></ion-icon> */}
 
@@ -73,7 +74,7 @@ const Menu = () => {
         }}
       /> */}
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Home"
         
         component={Home}
@@ -82,10 +83,10 @@ const Menu = () => {
           title: "Home",
           drawerIcon: () => <Icon color={ colors.text} name="home" type="ionicon"></Icon>,
         }}
-      />
+      /> */}
 
       <Drawer.Screen
-        name="Clients"
+        name="Clientes"
         component={ClientsStack}
         options={{
           title: "Clientes",
@@ -93,7 +94,7 @@ const Menu = () => {
         }}
       />
       <Drawer.Screen
-        name="Products"
+        name="Productos"
         component={Products}
         options={{
           title: "Productos",

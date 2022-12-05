@@ -2,15 +2,16 @@ import { Dimensions, Animated, Text } from "react-native";
 import React, { useRef, useCallback } from "react";
 import { Button, Icon } from "@rneui/themed";
 import { useTheme, useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("window").width;
 
-export default function AnimatedButton({ icon, title }) {
+export default function AnimatedButton({ icon, title,press }) {
   const { colors } = useTheme();
   const opacity = useRef(new Animated.Value(0)).current;
   //const size = useState(new Animated.Value(0))[0];
   const scale = useRef(new Animated.Value(0)).current;
-
+  const navigation=useNavigation()
   useFocusEffect(
     useCallback(() => {
       bounce();
@@ -53,15 +54,17 @@ export default function AnimatedButton({ icon, title }) {
       }}
     >
       <Button
-        onPress={() => {}}
+        onPress={()=> navigation.navigate("Menu",title)}
         titleStyle={{ color: colors.text }}
         buttonStyle={{
+          borderWidth:4,
+          borderColor:colors.primary,
           flexDirection: "column",
-          backgroundColor: colors.primary,
-          height: screenWidth / 2 - 30,
-          width: screenWidth / 2 - 30,
-          margin: 15,
-          borderRadius: (screenWidth / 2 - 30) / 2,
+          backgroundColor: colors.background,
+          height: screenWidth / 2 - 40,
+          width: screenWidth / 2 - 40,
+          margin: 20,
+          borderRadius: (screenWidth / 2 - 40) / 2,
         }}
       >
         <Icon color={colors.text} name={icon} type="ionicon" size={40} />
