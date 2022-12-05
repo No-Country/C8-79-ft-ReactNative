@@ -188,7 +188,7 @@ if(client.phone){
           <View style={styles.buttonContainer}>
             <Button
               titleStyle={[styles.buttonText,{ color:colors.text,}]}
-              buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background }]}
+              buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background,borderColor:colors.primary }]}
               onPress={() => confirmationDelete(true, client)}
             >
               SI
@@ -197,7 +197,7 @@ if(client.phone){
               titleStyle={[styles.buttonText,{ color:colors.text,}]}
               buttonStyle={[
                 styles.buttonDialog,
-                { backgroundColor: colors.primary },
+                { backgroundColor: colors.primary,borderColor:colors.primary },
               ]}
               onPress={() => confirmationDelete(false, client)}
             >

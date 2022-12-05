@@ -4,14 +4,16 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button,Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useTheme } from '@react-navigation/native';
 import { doc, setDoc, updateDoc } from "firebase/firestore"; 
 import { db } from "../../firebase/Config";
 import { Context } from "../../context/ContextProvider";
 
 
+
+
 const EditClientForm = ({client}) => {
-  
+  const { colors}=useTheme()
   const {handleBandera, bandera} = useContext(Context)
   const nav = useNavigation();
  
@@ -68,59 +70,59 @@ const EditClientForm = ({client}) => {
           showsVerticalScrollIndicator={false}
           style={styles.form}
         >
-          <Text style={styles.label}>Nombre</Text>
+          <Text style={[styles.label,{color:colors.text}]}>Nombre</Text>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
             onChangeText={handleChange("user")}
             value={values.user}
-            selectionColor={"#000"}
+            selectionColor={colors.text}
           />
           {errors.user && touched.user && (
             <Text style={styles.error}>{errors.user}</Text>
           )}
-          <Text style={styles.label}>Apellido</Text>
+          <Text style={[styles.label,{color:colors.text}]}>Apellido</Text>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
             onChangeText={handleChange("lastName")}
             value={values.lastName}
-            selectionColor={"#000"}
+            selectionColor={colors.text}
           />
           {errors.lastName && touched.lastName && (
             <Text style={styles.error}>{errors.lastName}</Text>
           )}
 
-          <Text style={styles.label}>Correo Elentrónico</Text>
+          <Text style={[styles.label,{color:colors.text}]}>Correo Elentrónico</Text>
           <TextInput
             autoCorrect={false}
-            style={styles.textInput}
+            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
             onChangeText={handleChange("email")}
            
             value={values.email}
-            selectionColor={"#000"}
+            selectionColor={colors.text}
           />
           {errors.email && touched.email && (
             <Text style={styles.error}>{errors.email}</Text>
           )}
-          <Text style={styles.label}>Telefono Celular</Text>
+          <Text style={[styles.label,{color:colors.text}]}>Telefono Celular</Text>
 
           <TextInput
             keyboardType={"numeric"}
-            style={styles.textInput}
+            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
             onChangeText={handleChange("phone")}
             value={values.phone}
-            selectionColor={"#000"}
+            selectionColor={colors.text}
           />
           {errors.phone && touched.phone && (
             <Text style={styles.error}>{errors.phone}</Text>
           )}
 
-          <Text style={styles.label}>Direccion</Text>
+          <Text style={[styles.label,{color:colors.text}]}>Direccion</Text>
           
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
               onChangeText={handleChange("address")}
               value={values.address}
-              selectionColor={"#000"}
+              selectionColor={colors.text}
             />
             
          
@@ -131,8 +133,8 @@ const EditClientForm = ({client}) => {
           
           <View style={styles.buttonContainer}>
             <Button
-              titleStyle={{ color: "#000",fontSize:18 }}
-              buttonStyle={styles.button}
+              titleStyle={{ color:colors.text,fontSize:18 }}
+              buttonStyle={[styles.button,{backgroundColor:colors.primary}]}
               onPress={handleSubmit}
               title="Guardar"
             />
