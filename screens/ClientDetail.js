@@ -38,20 +38,23 @@ const ClientDetail = ({ navigation, route }) => {
 
 
   const makeCall = (client) => {
-    Linking.openURL(`tel:${client.phone}`);
+    client.phone&& Linking.openURL(`tel:${client.phone}`);
   };
 
   const sendMessage = async (client) => {
 
     const link=`whatsapp://send?text=hello&phone=${client.phone}`
-
+if(client.phone){
     try {
             const supported = await Linking.canOpenURL(link);
               if (supported) Linking.openURL(link);
           } catch (error) {
+            
               console.log(error)
           }
-          Linking.openURL(`sms:${client.phone}?body=`);
+
+        }
+          
   };
 
   const openMap = (client) => {
@@ -63,6 +66,8 @@ const ClientDetail = ({ navigation, route }) => {
       const url = `${scheme}${latLng}(${label})`;
       Linking.openURL(url);
     };
+
+    client.address &&
     openAddressOnMap(
       client.address.coordinates.lat,
       client.address.coordinates.lng
@@ -243,10 +248,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 1,
     borderColor: "#A1D6E2",
-    width: 100,
+    width: 90,
   },
   buttonContainer: {
-  
+  flexDirection:"row",
     justifyContent: "space-evenly",
     marginVertical: 20,
   },

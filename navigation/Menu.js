@@ -84,7 +84,7 @@ const Menu = () => {
         name="Clients"
         component={ClientsStack}
         options={{
-          title: "Clients",
+          title: "Clientes",
           drawerIcon: () => <Icon name="person" />,
         }}
       />
@@ -92,7 +92,7 @@ const Menu = () => {
         name="Products"
         component={Products}
         options={{
-          title: "Products",
+          title: "Productos",
           drawerIcon: () => <Icon name="pricetag" type="ionicon"></Icon>,
         }}
       />
