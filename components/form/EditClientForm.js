@@ -20,7 +20,8 @@ const EditClientForm = ({client}) => {
 
   const submitForm = async(formData,clear) => {
     const cliente = doc(db, "Clientes", client.id);
-    await updateDoc(cliente, {
+    await setDoc(cliente, {
+      id: client.id,
       firstName: formData.user,
       lastName:formData.lastName,
       email: formData.email,
@@ -33,9 +34,13 @@ const EditClientForm = ({client}) => {
           lng: client.address.coordinates.lng
         }
       }
+  }).catch(error => {
+    console.log(error)
+    
   });
     handleBandera()
     setPopup(true)
+    console.log(client.id)
     clear()
     setTimeout(()=> {setPopup(false), nav.navigate("ClientsScreen") },1000)
       }
