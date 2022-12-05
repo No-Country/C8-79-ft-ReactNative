@@ -1,13 +1,15 @@
 import UserContext from "./UserContext";
 import UserReducer from "./UserReducer";
-import { GET_TOKEN ,SET_THEME} from "./types";
+import { GET_TOKEN ,SET_SPINNER,SET_THEME,SET_ERROR} from "./types";
 import { useReducer } from "react";
 
 
 const UserState = (props) => {
   const initialState = {
     token:{ loading: true, token: false ,uid:null},
-    theme:'Light'
+    theme:'Light',
+    spinner:false,
+    error:{ user: false, network: false }
   };
 
   const [state, dispatch] = useReducer(UserReducer, initialState);
@@ -26,13 +28,29 @@ const UserState = (props) => {
   
 };
 
+const setSpinner =  (value) => {
+   
+  dispatch({ type: SET_SPINNER, payload:value });
+
+};
+
+const setError =  (value) => {
+   
+  dispatch({ type: SET_ERROR, payload:value });
+
+};
+
   return (
     <UserContext.Provider
       value={{
         token:state.token,
         theme:state.theme,
+        spinner:state.spinner,
+        error:state.error,
         getToken,
         setTheme,
+        setSpinner,
+        setError
       }}
     >
       {props.children}

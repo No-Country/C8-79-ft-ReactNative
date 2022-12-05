@@ -60,7 +60,7 @@ const CustomMenu = (props) => {
           style={{
             width: "95%",
             height: 110,
-            borderBottomWidth: 1,
+           
           
           }}
         />

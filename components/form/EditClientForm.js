@@ -8,6 +8,8 @@ import { useNavigation,useTheme } from '@react-navigation/native';
 import { doc, setDoc, updateDoc } from "firebase/firestore"; 
 import { db } from "../../firebase/Config";
 import { Context } from "../../context/ContextProvider";
+import UserContext from "../../context/UserContext";
+import { color } from "react-native-reanimated";
 
 
 
@@ -15,14 +17,18 @@ import { Context } from "../../context/ContextProvider";
 const EditClientForm = ({client}) => {
   const { colors}=useTheme()
   const {handleBandera, bandera} = useContext(Context)
+  const {setSpinner,setError} = useContext(UserContext)
   const nav = useNavigation();
  
   const [popup, setPopup] = useState(false)
 
 
+ 
   const submitForm = async(formData,clear) => {
     const cliente = doc(db, "Clientes", client.id);
-    await updateDoc(cliente, {
+   setSpinner(true)
+    await setDoc(cliente, {
+      id: client.id,
       firstName: formData.user,
       lastName:formData.lastName,
       email: formData.email,
@@ -35,13 +41,17 @@ const EditClientForm = ({client}) => {
           lng: client.address.coordinates.lng
         }
       }
+  }).catch(error => {
+    console.log(error)
+
   });
     handleBandera()
+    setSpinner(false)
     setPopup(true)
+    console.log(client.id)
     clear()
     setTimeout(()=> {setPopup(false), nav.navigate("ClientsScreen") },1000)
       }
-
   return (
     <Formik
       initialValues={{ user: client.firstName ,lastName:client.lastName,email:client.email, phone:client.phone,address:client.address.address}}
@@ -72,7 +82,7 @@ const EditClientForm = ({client}) => {
         >
           <Text style={[styles.label,{color:colors.text}]}>Nombre</Text>
           <TextInput
-            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
+            style={[styles.textInput,{color:colors.text,backgroundColor:colors.card}]}
             onChangeText={handleChange("user")}
             value={values.user}
             selectionColor={colors.text}
@@ -82,7 +92,7 @@ const EditClientForm = ({client}) => {
           )}
           <Text style={[styles.label,{color:colors.text}]}>Apellido</Text>
           <TextInput
-            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
+            style={[styles.textInput,{color:colors.text,backgroundColor:colors.card}]}
             onChangeText={handleChange("lastName")}
             value={values.lastName}
             selectionColor={colors.text}
@@ -90,11 +100,10 @@ const EditClientForm = ({client}) => {
           {errors.lastName && touched.lastName && (
             <Text style={styles.error}>{errors.lastName}</Text>
           )}
-
           <Text style={[styles.label,{color:colors.text}]}>Correo Elentrónico</Text>
           <TextInput
             autoCorrect={false}
-            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
+            style={[styles.textInput,{color:colors.text,backgroundColor:colors.card}]}
             onChangeText={handleChange("email")}
            
             value={values.email}
@@ -104,10 +113,9 @@ const EditClientForm = ({client}) => {
             <Text style={styles.error}>{errors.email}</Text>
           )}
           <Text style={[styles.label,{color:colors.text}]}>Telefono Celular</Text>
-
           <TextInput
             keyboardType={"numeric"}
-            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
+            style={[styles.textInput,{color:colors.text,backgroundColor:colors.card}]}
             onChangeText={handleChange("phone")}
             value={values.phone}
             selectionColor={colors.text}
@@ -115,11 +123,10 @@ const EditClientForm = ({client}) => {
           {errors.phone && touched.phone && (
             <Text style={styles.error}>{errors.phone}</Text>
           )}
-
           <Text style={[styles.label,{color:colors.text}]}>Direccion</Text>
           
             <TextInput
-              style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
+              style={[styles.textInput,{color:colors.text,backgroundColor:colors.card}]}
               onChangeText={handleChange("address")}
               value={values.address}
               selectionColor={colors.text}
@@ -129,26 +136,22 @@ const EditClientForm = ({client}) => {
           {errors.address && touched.address && (
             <Text style={styles.error}>{errors.address}</Text>
           )}
-
           
           <View style={styles.buttonContainer}>
             <Button
-              titleStyle={{ color:colors.text,fontSize:18 }}
+              titleStyle={{ color: colors.text,fontSize:18 }}
               buttonStyle={[styles.button,{backgroundColor:colors.primary}]}
               onPress={handleSubmit}
               title="Guardar"
             />
           </View>
-
           <PopUp visibility={popup} message="¡Se guardaron los cambios con exito!" ></PopUp>
         </ScrollView>
       )}
     </Formik>
   );
 };
-
 export default EditClientForm;
-
 const styles = StyleSheet.create({
   form: {
     width: "90%",
