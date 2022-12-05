@@ -1,12 +1,13 @@
 import UserContext from "./UserContext";
 import UserReducer from "./UserReducer";
-import { GET_TOKEN } from "./types";
+import { GET_TOKEN ,SET_THEME} from "./types";
 import { useReducer } from "react";
 
 
 const UserState = (props) => {
   const initialState = {
     token:{ loading: true, token: false ,uid:null},
+    theme:'Light'
   };
 
   const [state, dispatch] = useReducer(UserReducer, initialState);
@@ -19,11 +20,19 @@ const UserState = (props) => {
     }
   };
 
+  const setTheme =  (value) => {
+   
+    dispatch({ type: SET_THEME, payload:value });
+  
+};
+
   return (
     <UserContext.Provider
       value={{
         token:state.token,
+        theme:state.theme,
         getToken,
+        setTheme,
       }}
     >
       {props.children}

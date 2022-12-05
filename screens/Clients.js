@@ -9,6 +9,8 @@ import { useFocusEffect } from '@react-navigation/native'
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
+import { useTheme } from "@react-navigation/native";
+import { color } from "react-native-reanimated";
 
 
 const sortData = (arr) => {
@@ -30,6 +32,7 @@ const Clients = ({navigation}) => {
   const [filter, setFilter] = useState("");
   const [click, setClick] = useState(null);
   const [clientes, setClientes] = useState([])
+  const {colors}=useTheme()
 
 
   const traerDatos = async () => {
@@ -66,21 +69,21 @@ const renderItem=({ item, index }) => {
       item={item}
       isPress={() => setClick(index)}
       index={index}
-      textColor = {index === click? "#A1D6E2":"#000"}
+      textColor = {index === click? "#A1D6E2":colors.text}
       fontSz={index === click? 22:20}
     />
   );
 }
   return (
-    <View style={styles.viewContainer}>
+    <View style={[styles.viewContainer,{backgroundColor:colors.background}]}>
       <SearchBar
         platform="default"
-        containerStyle={styles.container}
-        inputContainerStyle={styles.inputContainer}
-        inputStyle={styles.searchInput}
+        containerStyle={[styles.container,{backgroundColor:colors.background}]}
+        inputContainerStyle={[styles.inputContainer,{backgroundColor:colors.background}]}
+        inputStyle={[styles.searchInput,{backgroundColor:colors.background}]}
         onChangeText={(value) => setFilter(value)}
         placeholder="Ingrese el nombre del cliente"
-        placeholderTextColor="#888"
+        placeholderTextColor={colors.text}
         round
         value={filter}
       />
@@ -97,12 +100,12 @@ const renderItem=({ item, index }) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        ListEmptyComponent={()=> <ActivityIndicator style={{marginTop:200}} size="large" color="#A1D6E2" />}
+        ListEmptyComponent={()=> <ActivityIndicator style={{marginTop:200}} size="large" color={colors.primary} />}
       />
       <FAB
         visible={true}
-        icon={{ name: 'add', color: 'white' }}
-        color="#A1D6E2"
+        icon={{ name: 'add', color: colors.text }}
+        color={colors.primary}
         placement="right"
         onPress={()=>navigation.navigate("NewClient")}
         

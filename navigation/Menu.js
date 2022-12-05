@@ -19,6 +19,7 @@ import ClientDetail from "../screens/ClientDetail";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import NewClient from "../screens/NewClient";
 import EditClient from "../screens/EditClient";
+import { useTheme } from "@react-navigation/native";
 
 
 const Stack = createNativeStackNavigator();
@@ -43,18 +44,21 @@ return <Stack.Navigator
 
 
 const Menu = () => {
+
+  const {colors}=useTheme()
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomMenu {...props} />}
       screenOptions={{ 
-        drawerActiveBackgroundColor:"#A1D6E2",
-        drawerActiveTintColor:"#000",
+        headerTintColor:colors.text,
+        drawerActiveBackgroundColor:colors.primary,
+        drawerActiveTintColor:colors.text,
         drawerItemStyle: {
            marginVertical:"3%" ,
           
         },
         headerShown: true,
-      headerStyle: { backgroundColor: "#A1D6E2" } }}
+      headerStyle: { backgroundColor: colors.primary } }}
       useLegacyImplementation={false}
       initialRouteName="Home"
     >
@@ -76,7 +80,7 @@ const Menu = () => {
         options={{
           
           title: "Home",
-          drawerIcon: () => <Icon name="home" type="ionicon"></Icon>,
+          drawerIcon: () => <Icon color={ colors.text} name="home" type="ionicon"></Icon>,
         }}
       />
 
@@ -85,7 +89,7 @@ const Menu = () => {
         component={ClientsStack}
         options={{
           title: "Clientes",
-          drawerIcon: () => <Icon name="person" />,
+          drawerIcon: () => <Icon color={ colors.text} name="person" />,
         }}
       />
       <Drawer.Screen
@@ -93,7 +97,7 @@ const Menu = () => {
         component={Products}
         options={{
           title: "Productos",
-          drawerIcon: () => <Icon name="pricetag" type="ionicon"></Icon>,
+          drawerIcon: () => <Icon color={ colors.text} name="pricetag" type="ionicon"></Icon>,
         }}
       />
 
@@ -102,7 +106,7 @@ const Menu = () => {
         component={Inventario}
         options={{
           title: "Inventario",
-          drawerIcon: () => <Icon name="reader" type="ionicon"></Icon>,
+          drawerIcon: () => <Icon color={ colors.text} name="reader" type="ionicon"></Icon>,
         }}
       />
 
@@ -111,7 +115,7 @@ const Menu = () => {
         component={Reportes}
         options={{
           title: "Reportes",
-          drawerIcon: () => <Icon name="document-text" type="ionicon"></Icon>,
+          drawerIcon: () => <Icon color={ colors.text} name="document-text" type="ionicon"></Icon>,
         }}
       />
 

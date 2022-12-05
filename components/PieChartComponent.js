@@ -3,12 +3,15 @@ import React from "react";
 import { Button, Icon } from "@rneui/themed";
 import { PieChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 const PieChartComponent = ({ title, data }) => {
+  const{colors}=useTheme()
   return (
     <>
       <Text
         style={{
+          color:colors.text,
           width: "50%",
           textAlign: "center",
           fontSize: 20,
@@ -35,11 +38,11 @@ const PieChartComponent = ({ title, data }) => {
       />
 
       <Button
-        titleStyle={styles.buttonText}
-        buttonStyle={styles.button}
+        titleStyle={[styles.buttonText,{color:colors.text}]}
+        buttonStyle={[styles.button,{backgroundColor:colors.background,borderColor:colors.primary}]}
         //onPress={() => confirmationExport(true, "XLS")}
       >
-        <Icon name="chevrons-down" type="feather" /> Exportar
+        <Icon name="chevrons-down" type="feather" color={colors.text} /> Exportar
       </Button>
     </>
   );

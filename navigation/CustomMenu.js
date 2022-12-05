@@ -9,13 +9,16 @@ import { Icon } from "@rneui/base";
 import { Avatar } from "@rneui/themed";
 import { signOutUser } from "../firebase/session";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useTheme } from "@react-navigation/native";
+
 
 const CustomMenu = (props) => {
+  const{colors}=useTheme()
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ backgroundColor: "#A1D6E2" }}
+        contentContainerStyle={{ backgroundColor: colors.primary }}
       >
         <DrawerItem
           onPress={() => props.navigation.navigate("Perfil")}
@@ -46,6 +49,7 @@ const CustomMenu = (props) => {
                     textAlign: "center",
                     marginTop: 0,
                     marginLeft: 10,
+                    color:colors.text
                   }}
                 >
                   Bienvenido Nombre
@@ -57,10 +61,10 @@ const CustomMenu = (props) => {
             width: "95%",
             height: 110,
             borderBottomWidth: 1,
-            borderBottomColor: "#ccc",
+          
           }}
         />
-        <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 10 }}>
+        <View style={{ height:500, backgroundColor: colors.background, paddingTop: 10 }}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
@@ -70,18 +74,20 @@ const CustomMenu = (props) => {
           paddingVertical: 10,
           borderTopWidth: 1,
           borderTopColor: "#ccc",
+          backgroundColor:colors.background
         }}
       >
         <TouchableOpacity
           onPress={() => signOutUser()}
-          style={{ paddingVertical: 15 }}
+          style={{ paddingVertical: 15 ,backgroundColor:colors.background}}
         >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon name="exit" type="ionicon" />
+          <View style={{ flexDirection: "row", alignItems: "center",backgroundColor:colors.background }}>
+            <Icon color={colors.text} name="exit" type="ionicon" />
             <Text
               style={{
                 fontSize: 15,
                 marginLeft: 30,
+                color:colors.text
               }}
             >
               Cerrar Sesion

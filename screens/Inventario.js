@@ -16,10 +16,13 @@ import { products } from "../helpers/devProcuctsData";
 import PrintPDF from "../components/PrintPDF";
 import ExcelExport from "../components/ExcelExport";
 import PopUp from "../components/PopUp";
+import { useTheme } from "@react-navigation/native";
+import { color } from "react-native-reanimated";
 
 const windowWidth = Dimensions.get("window").width;
 
 const Inventario = () => {
+  const {colors}=useTheme()
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
@@ -58,15 +61,15 @@ const Inventario = () => {
   };
 
   return (
-    <View style={styles.viewContainer}>
+    <View style={[styles.viewContainer,{backgroundColor:colors.background}]}>
       <SearchBar
         platform="default"
-        containerStyle={styles.container}
-        inputContainerStyle={styles.inputContainer}
-        inputStyle={styles.searchInput}
+        containerStyle={[styles.container,{backgroundColor:colors.background}]}
+        inputContainerStyle={[styles.inputContainer,{backgroundColor:colors.background}]}
+        inputStyle={[styles.searchInput,{backgroundColor:colors.background}]}
         onChangeText={(value) => setFilter(value)}
         placeholder="Ingrese el nombre del producto"
-        placeholderTextColor="#888"
+        placeholderTextColor={colors.text}
         round
         value={filter}
       />
@@ -74,19 +77,19 @@ const Inventario = () => {
         <Button
           onPress={() => exportDetail(products)}
           iconPosition="right"
-          titleStyle={{ color: "#000", fontSize: 14, paddingLeft: 8 }}
+          titleStyle={{ color: colors.text, fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
             elevation: 0,
             backgroundColor: "transparent",
             height: 40,
             width: 120,
-            borderColor: "#A1D6E2",
+            borderColor: colors.primary,
             borderWidth: 1,
             borderRadius: 18,
           }}
         >
           Exportar
-          <Icon name="chevrons-down" type="feather" />
+          <Icon color={colors.text} name="chevrons-down" type="feather" />
         </Button>
       </View>
 
@@ -98,12 +101,13 @@ const Inventario = () => {
       >
         <FlatList
           ListHeaderComponent={() => (
-            <View style={styles.headerStyle}>
-              <Text style={{ marginLeft: 10, flexWrap: "wrap", maxWidth: 100 }}>
+            <View style={[styles.headerStyle,{backgroundColor:colors.primary,}]}>
+              <Text style={{ marginLeft: 10, flexWrap: "wrap", maxWidth: 100,color:colors.text }}>
                 Codigo de Producto
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   width: windowWidth * 0.4,
                   textAlign: "center",
                 }}
@@ -112,6 +116,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   width: windowWidth * 0.2,
                   textAlign: "center",
                 }}
@@ -120,6 +125,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   width: windowWidth * 0.25,
                   textAlign: "center",
                 }}
@@ -128,6 +134,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   width: windowWidth * 0.25,
                   textAlign: "center",
                 }}
@@ -136,6 +143,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   marginRight: 10,
                   width: windowWidth * 0.3,
                   textAlign: "center",
@@ -149,7 +157,7 @@ const Inventario = () => {
             <ActivityIndicator
               style={{ marginTop: 200 }}
               size="large"
-              color="#A1D6E2"
+              color={color.primary}
             />
           )}
           horizontal={false}
@@ -180,16 +188,18 @@ const Inventario = () => {
       >
         {page > 1 ? (
           <Icon
+          color={colors.text}
             name="chevron-left"
             type="feather"
             onPress={() => decrement(page)}
           />
         ) : null}
-        <Text style={{ color: "#A1D6E2" }}>{page}</Text>
-        <Text> de</Text>
-        <Text> {totalPage} </Text>
+        <Text style={{ color: colors.text }}>{page}  de {totalPage} </Text>
+        
+    
         {page !== totalPage ? (
           <Icon
+          color={colors.text}
             name="chevron-right"
             type="feather"
             onPress={() => increment(page)}
@@ -201,28 +211,28 @@ const Inventario = () => {
         visibility={popup}
         message={"Selecciona el formato para exportar"}
         child={
-          <View style={styles.buttonContainer}>
+          <View style={[styles.buttonContainer,]}>
             <View style={styles.buttonHeader}>
               <Button
-                titleStyle={styles.buttonText}
-                buttonStyle={[styles.buttonDialog, { backgroundColor: "#fff" }]}
+                titleStyle={[styles.buttonText,{color:colors.text}]}
+                buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background ,borderColor:colors.primary}]}
                 onPress={() => confirmationExport(true, "PDF")}
               >
                 PDF
               </Button>
               <Button
-                titleStyle={styles.buttonText}
-                buttonStyle={[styles.buttonDialog, { backgroundColor: "#fff" }]}
+                titleStyle={[styles.buttonText,{color:colors.text}]}
+                buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background,borderColor:colors.primary }]}
                 onPress={() => confirmationExport(true, "XLS")}
               >
                 XLS
               </Button>
             </View>
             <Button
-              titleStyle={styles.buttonText}
+              titleStyle={[styles.buttonText,{color:colors.text}]}
               buttonStyle={[
                 styles.buttonBottom,
-                { backgroundColor: "#A1D6E2" },
+                { backgroundColor: colors.primary ,borderColor:colors.primary},
               ]}
               onPress={() => confirmationExport(false)}
             >

@@ -6,8 +6,10 @@ import BarGraphComponent from "../components/BarGraphComponent";
 import { graphone, graphTwo } from "../helpers/devData";
 import DateRangeFilter from "../components/DateRangeFilter";
 import moment from "moment";
+import { useTheme } from "@react-navigation/native";
 
 const Reportes = () => {
+  const {colors}=useTheme()
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
     endDate: moment(),
@@ -38,14 +40,14 @@ const Reportes = () => {
   console.log("REPORTE", filter);
 
   return (
-    <View style={{ height: "100%" }}>
+    <View style={{ height: "100%",backgroundColor:colors.background }}>
       <DateRangeFilter
         state={filter}
         close={closeFilter}
         handleFilter={handleFilter}
       ></DateRangeFilter>
       <ScrollView
-        contentContainerStyle={styles.globalContainer}
+        contentContainerStyle={[styles.globalContainer,{backgroundColor:colors.background}]}
         overScrollMode="never"
       >
         <View style={styles.topContainer}>
@@ -53,7 +55,7 @@ const Reportes = () => {
             style={{ marginLeft: 10 }}
             name="calendar"
             type="ionicon"
-            color="#000"
+            color={colors.text}
             onPress={() =>
               setFilter((prev) => ({
                 ...prev,
@@ -61,7 +63,7 @@ const Reportes = () => {
               }))
             }
           />
-          <Text style={{ marginRight: 10, fontSize: 16 }}>
+          <Text style={{ marginRight: 10, fontSize: 16 ,color:colors.text}}>
             <Text style={{ fontWeight: "bold" }}>
               {!filter.visibility && filter.startDate.format("DD/MMM/YY")}
             </Text>
@@ -74,6 +76,7 @@ const Reportes = () => {
         <View style={styles.resume}>
           <Text
             style={{
+              color:colors.text,
               width: "100%",
               textAlign: "center",
               fontSize: 22,
@@ -88,7 +91,7 @@ const Reportes = () => {
             <Text
               style={[
                 styles.resumeText,
-                { borderLeftWidth: 0, fontWeight: "bold" },
+                { borderLeftWidth: 0, fontWeight: "bold" ,color:colors.text,borderColor:colors.primary},
               ]}
             >
               Ingresos
@@ -96,35 +99,35 @@ const Reportes = () => {
             <Text
               style={[
                 styles.resumeText,
-                { borderRightWidth: 0, fontWeight: "bold" },
+                { borderRightWidth: 0, fontWeight: "bold",color:colors.text,borderColor:colors.primary },
               ]}
             >
               Ganancia
             </Text>
-            <Text style={[styles.resumeText, { borderLeftWidth: 0 }]}>
+            <Text style={[styles.resumeText, { color:colors.text,borderLeftWidth: 0,borderColor:colors.primary }]}>
               $80000
             </Text>
-            <Text style={[styles.resumeText, { borderRightWidth: 0 }]}>
+            <Text style={[styles.resumeText, { color:colors.text,borderRightWidth: 0,borderColor:colors.primary }]}>
               $80000
             </Text>
           </View>
         </View>
         <View style={styles.bestClient}>
-          <Text style={styles.bestClientText}>Mejor cliente: </Text>
+          <Text style={[styles.bestClientText,{color:colors.text}]}>Mejor cliente: </Text>
           <Text
             style={[
               styles.bestClientText,
-              { width: "100%", textAlign: "center" },
+              { width: "100%", textAlign: "center",color:colors.text,fontWeight:"bold" },
             ]}
           >
             Nombre de cliente
           </Text>
         </View>
 
-        <View style={styles.graph}>
+        <View style={[styles.graph,{backgroundColor:colors.primary,borderColor:colors.primary}]}>
           <PieChartComponent title={"Productos mas vendidos"} data={graphone} />
         </View>
-        <View style={styles.graph}>
+        <View style={[styles.graph,{backgroundColor:colors.primary,borderColor:colors.primary}]}>
           <PieChartComponent title={"Mejores Clientes"} data={graphTwo} />
         </View>
         {/* <View style={styles.graph}>

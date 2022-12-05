@@ -6,11 +6,12 @@ import UserContext from "../context/UserContext";
 import {  useContext,useState,useEffect } from "react";
 import Logged from "./Logged";
 import NoLogged from "./NoLogged";
+import { DarkTheme, LightTheme } from "../Theme/theme";
 import { storeData,getData, removeData } from "../helpers/storageHelper";
 
 
  const Navigator = () => {
-    const { token } = useContext(UserContext);
+    const { token ,theme} = useContext(UserContext);
     const [launched, setLaunched] = useState(false)
     const LAUNCHED="LAUNCHED"
 
@@ -44,7 +45,7 @@ import { storeData,getData, removeData } from "../helpers/storageHelper";
         ) : (
           <>
             <StatusBar></StatusBar>
-            <NavigationContainer>
+            <NavigationContainer theme={theme == 'Light' ? LightTheme : DarkTheme}>
               {token.token ? <Logged></Logged> : <NoLogged launched={launched}></NoLogged>}
             </NavigationContainer>
           </>

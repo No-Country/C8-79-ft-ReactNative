@@ -1,4 +1,4 @@
-import { GET_TOKEN } from "./types";
+import { GET_TOKEN,SET_THEME } from "./types";
 
 export default (state, action) => {
   const { payload, type } = action;
@@ -9,6 +9,11 @@ export default (state, action) => {
           ...state,
           token: payload,
         };
+        case SET_THEME:
+          return {
+            ...state,
+            theme: payload,
+          };
         
     default:
       return state;
