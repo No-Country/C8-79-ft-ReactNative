@@ -16,7 +16,9 @@ const Logged = () => {
     >
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Menu" component={Menu} />
-      <Stack.Screen name="Perfil" component={Perfil} />
+      <Stack.Screen  options={{
+        headerShown: true,
+      }} name="Perfil" component={Perfil} />
     </Stack.Navigator>
   );
 };

@@ -1,7 +1,7 @@
 export const DarkTheme = {
     dark: true,
     colors: {
-      primary: "#4B0082",
+      primary: "#A1D6E2",
       background:"#232323",
       card: "#000",
       text: "#fff",
