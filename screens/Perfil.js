@@ -39,24 +39,23 @@ export default function Perfil() {
   return (
     <View style={{justifyContent:"center",alignItems:"center",height:"100%"}}>
       
-     <View style={{width:"100%" ,flexDirection:"row",alignItems:"center",justifyContent:"flex-end"}}>
-      <Icon
+     <View style={{width:"100%" ,flexDirection:"row",alignItems:"center",justifyContent:"flex-end", marginRight: 25}}>
       
-        name='moon'
-        type='ionicon'
-        color={colors.text}
-      />
+       <Icon  
+       name='sunny'
+       type='ionicon'
+       color={colors.text}
+     />
       <Switch
         style={{marginHorizontal:5}}
         value={toggle}
         onValueChange={() => handleTheme()}
       />
-       <Icon
-       
-        name='sunny'
-        type='ionicon'
-        color={colors.text}
-      />
+      <Icon 
+      name='moon'
+      type='ionicon'
+      color={colors.text}
+    />
       </View>
 
 <Avatar

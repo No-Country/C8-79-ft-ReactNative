@@ -17,17 +17,36 @@ import PrintPDF from "../components/PrintPDF";
 import ExcelExport from "../components/ExcelExport";
 import PopUp from "../components/PopUp";
 import { useTheme } from "@react-navigation/native";
-
+import { useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/Config";
 
 const windowWidth = Dimensions.get("window").width;
 
 const Inventario = () => {
-  const {colors}=useTheme()
+  const { colors } = useTheme();
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [prod, setProd] = useState([]);
   const [popup, setPopup] = useState(false);
+  const [productos, setProductos] = useState([]);
+
+
+  const traerDatos = async () => {
+    const array = [];
+    const querySnapshot = await getDocs(collection(db, "Productos"));
+    querySnapshot.forEach((doc) => {
+      array.push(doc.data());
+    });
+    setProductos(array);
+  };
+
+  useEffect(() => {
+    traerDatos();
+    console.log(productos)
+  }, []);
+
 
   useFocusEffect(
     useCallback(() => {
@@ -52,7 +71,7 @@ const Inventario = () => {
   const confirmationExport = (remove, format = null) => {
     remove
       ? (setPopup(false),
-        format === "PDF" ? PrintPDF(products) : ExcelExport(products))
+        format === "PDF" ? PrintPDF(productos) : ExcelExport(productos))
       : setPopup(false);
   };
 
@@ -61,12 +80,23 @@ const Inventario = () => {
   };
 
   return (
-    <View style={[styles.viewContainer,{backgroundColor:colors.background}]}>
+    <View
+      style={[styles.viewContainer, { backgroundColor: colors.background }]}
+    >
       <SearchBar
         platform="default"
-        containerStyle={[styles.container,{backgroundColor:colors.background}]}
-        inputContainerStyle={[styles.inputContainer,{backgroundColor:colors.background}]}
-        inputStyle={[styles.searchInput,{backgroundColor:colors.background}]}
+        containerStyle={[
+          styles.container,
+          { backgroundColor: colors.background },
+        ]}
+        inputContainerStyle={[
+          styles.inputContainer,
+          { backgroundColor: colors.background },
+        ]}
+        inputStyle={[
+          styles.searchInput,
+          { backgroundColor: colors.background },
+        ]}
         onChangeText={(value) => setFilter(value)}
         placeholder="Ingrese el nombre del producto"
         placeholderTextColor={colors.text}
@@ -75,7 +105,7 @@ const Inventario = () => {
       />
       <View style={styles.buttonsView}>
         <Button
-          onPress={() => exportDetail(products)}
+          onPress={() => exportDetail(productos)}
           iconPosition="right"
           titleStyle={{ color: colors.text, fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
@@ -101,13 +131,22 @@ const Inventario = () => {
       >
         <FlatList
           ListHeaderComponent={() => (
-            <View style={[styles.headerStyle,{backgroundColor:colors.primary,}]}>
-              <Text style={{ marginLeft: 10, flexWrap: "wrap", maxWidth: 100,color:colors.text }}>
+            <View
+              style={[styles.headerStyle, { backgroundColor: colors.primary }]}
+            >
+              <Text
+                style={{
+                  marginLeft: 10,
+                  flexWrap: "wrap",
+                  maxWidth: 100,
+                  color: colors.text,
+                }}
+              >
                 Codigo de Producto
               </Text>
               <Text
                 style={{
-                  color:colors.text,
+                  color: colors.text,
                   width: windowWidth * 0.4,
                   textAlign: "center",
                 }}
@@ -116,7 +155,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
-                  color:colors.text,
+                  color: colors.text,
                   width: windowWidth * 0.2,
                   textAlign: "center",
                 }}
@@ -125,25 +164,17 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
-                  color:colors.text,
+                  color: colors.text,
                   width: windowWidth * 0.25,
                   textAlign: "center",
                 }}
               >
-                Ex. Inicial
+                Stock
               </Text>
+              
               <Text
                 style={{
-                  color:colors.text,
-                  width: windowWidth * 0.25,
-                  textAlign: "center",
-                }}
-              >
-                Ex. Final
-              </Text>
-              <Text
-                style={{
-                  color:colors.text,
+                  color: colors.text,
                   marginRight: 10,
                   width: windowWidth * 0.3,
                   textAlign: "center",
@@ -168,13 +199,13 @@ const Inventario = () => {
           }}
           data={
             filter !== ""
-              ? products.filter((item) =>
-                  item.description.toLowerCase().includes(filter.toLowerCase())
+              ? productos.filter((item) =>
+                  item.nombre.toLowerCase().includes(filter.toLowerCase())
                 )
-              : prod
+              : productos
           }
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.code}
+          keyExtractor={(item) => item.codigo}
           renderItem={renderItem}
         />
       </ScrollView>
@@ -188,18 +219,19 @@ const Inventario = () => {
       >
         {page > 1 ? (
           <Icon
-          color={colors.text}
+            color={colors.text}
             name="chevron-left"
             type="feather"
             onPress={() => decrement(page)}
           />
         ) : null}
-        <Text style={{ color: colors.text }}>{page}  de {totalPage} </Text>
-        
-    
+        <Text style={{ color: colors.text }}>
+          {page} de {totalPage}{" "}
+        </Text>
+
         {page !== totalPage ? (
           <Icon
-          color={colors.text}
+            color={colors.text}
             name="chevron-right"
             type="feather"
             onPress={() => increment(page)}
@@ -211,28 +243,43 @@ const Inventario = () => {
         visibility={popup}
         message={"Selecciona el formato para exportar"}
         child={
-          <View style={[styles.buttonContainer,]}>
+          <View style={[styles.buttonContainer]}>
             <View style={styles.buttonHeader}>
               <Button
-                titleStyle={[styles.buttonText,{color:colors.text}]}
-                buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background ,borderColor:colors.primary}]}
+                titleStyle={[styles.buttonText, { color: colors.text }]}
+                buttonStyle={[
+                  styles.buttonDialog,
+                  {
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary,
+                  },
+                ]}
                 onPress={() => confirmationExport(true, "PDF")}
               >
                 PDF
               </Button>
               <Button
-                titleStyle={[styles.buttonText,{color:colors.text}]}
-                buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background,borderColor:colors.primary }]}
+                titleStyle={[styles.buttonText, { color: colors.text }]}
+                buttonStyle={[
+                  styles.buttonDialog,
+                  {
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary,
+                  },
+                ]}
                 onPress={() => confirmationExport(true, "XLS")}
               >
                 XLS
               </Button>
             </View>
             <Button
-              titleStyle={[styles.buttonText,{color:colors.text}]}
+              titleStyle={[styles.buttonText, { color: colors.text }]}
               buttonStyle={[
                 styles.buttonBottom,
-                { backgroundColor: colors.primary ,borderColor:colors.primary},
+                {
+                  backgroundColor: colors.primary,
+                  borderColor: colors.primary,
+                },
               ]}
               onPress={() => confirmationExport(false)}
             >

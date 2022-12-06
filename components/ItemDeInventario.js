@@ -17,16 +17,15 @@ const ItemDeInventario = ({ item, index }) => {
       <Text
         style={{color:colors.text, marginLeft: 10, flexWrap: "wrap", width: windowWidth * 0.2 }}
       >
-        {item.code}
+        {item.codigo}
       </Text>
       <Text style={{color:colors.text, width: windowWidth * 0.4, textAlign: "center" }}>
-        {item.description}
+        {item.nombre}
       </Text>
       <Text style={{color:colors.text, width: windowWidth * 0.2, textAlign: "center" }}>
-        ${item.price}
+        ${item.precioCompra}
       </Text>
-      <Text style={[styles.Ex,{color:colors.text,}]}>{item.ExI}</Text>
-      <Text style={[styles.Ex,{color:colors.text,}]}>{item.ExF}</Text>
+      <Text style={[styles.Ex,{color:colors.text,}]}>{item.cantidad}</Text>
       <Text
         style={{
           color:colors.text,
@@ -35,7 +34,7 @@ const ItemDeInventario = ({ item, index }) => {
           textAlign: "center",
         }}
       >
-        ${item.sellPrice}
+        ${item.precioVenta}
       </Text>
     </View>
   );
