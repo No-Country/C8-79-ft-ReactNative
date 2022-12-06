@@ -15,7 +15,7 @@ const Logged = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Home" component={Venta} />
+      <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Menu" component={Menu} />
       <Stack.Screen  options={{
         headerShown: true,

@@ -1,22 +1,10 @@
-import {
-  StyleSheet,
-  TextInput,
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-} from "react-native";
-import React, { useCallback, useState } from "react";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { Button, Dialog, Icon } from "@rneui/themed";
-import {
-  useFocusEffect,
-  useNavigation,
-  useTheme,
-} from "@react-navigation/native";
+import { StyleSheet, TextInput, Text, View } from "react-native";
+import React, { useState } from "react";
 
-const ProductInput = ({ id, handleData,confirm }) => {
+import { Icon } from "@rneui/themed";
+import { useTheme } from "@react-navigation/native";
+
+const ProductInput = ({  handleData, confirm }) => {
   const [cantidad, setCantidad] = useState(1);
   const { colors } = useTheme();
   const [producto, setProducto] = useState("");
@@ -24,7 +12,7 @@ const ProductInput = ({ id, handleData,confirm }) => {
 
   return (
     <View style={{ flexDirection: "row" }}>
-      <View style={{ width: "70%" }}>
+      <View style={{ width: "50%" }}>
         <Text style={styles.label}>Producto</Text>
         <TextInput
           style={styles.textInput}
@@ -36,43 +24,59 @@ const ProductInput = ({ id, handleData,confirm }) => {
         />
       </View>
 
-      <View style={{ width: "30%", alignItems: "center" }}>
+      <View style={{ width: "40%", alignItems: "center" }}>
         <Text style={styles.label}>Cantidad</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: "row", alignItems: "center",width:"100%" }}>
           <Icon
+          style={{padding:5}}
             name="remove"
             type="ionicon"
             color={colors.text}
             onPress={() => {
-              edit&& setCantidad((prev) => prev - 1);
+              edit && setCantidad((prev) => prev - 1);
             }}
           />
           <Text
-            style={[styles.textInput, { textAlign: "center", width: "30%" }]}
+            style={[styles.textInput, { textAlign: "center",width:"20%"}]}
           >
             {cantidad}
           </Text>
           <Icon
+           style={{padding:5}}
             name="add"
             type="ionicon"
             color={colors.text}
             onPress={() => {
-              edit&& setCantidad((prev) => prev + 1);
+              edit && setCantidad((prev) => prev + 1);
             }}
           />
+          
         </View>
-        <Icon
+        
+      </View>
+      <View style={{ width: "10%", alignItems: "center",justifyContent:"flex-end" ,paddingBottom:5}}>
+      {edit ?<Icon
+           style={{padding:5}}
           name="checkmark"
           type="ionicon"
           color="green"
           onPress={() => {
             setEdit(false);
-            confirm((prev)=>prev+1)
+            confirm((prev) => prev + 1);
             handleData((prev) => [...prev, { producto, cantidad }]);
           }}
         />
+        :
+        <Icon
+           style={{padding:5}}
+          name="checkmark-done"
+          type="ionicon"
+          color="green"
+          
+        />
+        }
+
       </View>
-     
     </View>
   );
 };
@@ -87,7 +91,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: "#F1F1F2",
     height: 45,
-    width: "100%",
     color: "#000000",
     fontSize: 18,
     flex: 1,
