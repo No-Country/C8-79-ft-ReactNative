@@ -17,7 +17,7 @@ import PrintPDF from "../components/PrintPDF";
 import ExcelExport from "../components/ExcelExport";
 import PopUp from "../components/PopUp";
 import { useTheme } from "@react-navigation/native";
-import { color } from "react-native-reanimated";
+
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -157,7 +157,7 @@ const Inventario = () => {
             <ActivityIndicator
               style={{ marginTop: 200 }}
               size="large"
-              color={color.primary}
+              color={colors.primary}
             />
           )}
           horizontal={false}

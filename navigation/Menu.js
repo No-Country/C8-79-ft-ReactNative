@@ -14,12 +14,14 @@ import { Image, View } from "react-native";
 import { Icon } from "@rneui/base";
 import Inventario from "../screens/Inventario";
 import Reportes from "../screens/Reportes";
-import Perfil from "../screens/Perfil";
+
 import ClientDetail from "../screens/ClientDetail";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import NewClient from "../screens/NewClient";
 import EditClient from "../screens/EditClient";
 import { useTheme } from "@react-navigation/native";
+import Comprobantes from "../screens/Comprobantes";
+import DetalleComprobante from "../screens/DetalleComprobante";
 
 
 const Stack = createNativeStackNavigator();
@@ -40,6 +42,18 @@ return <Stack.Navigator
   <Stack.Screen name="NewClient" component={NewClient} />
   <Stack.Screen name="EditClient" component={EditClient} />
 </Stack.Navigator>}
+
+ const ComprobantesStack=()=>{
+  return <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+      headerStyle: { backgroundColor: "#A1D6E2" } 
+    }}
+  >
+   <Stack.Screen name="List de Comprobantes" component={Comprobantes} />
+    <Stack.Screen name="Detalle de Comprobante" component={DetalleComprobante} />
+    
+  </Stack.Navigator>}
 
 
 
@@ -90,7 +104,7 @@ const Menu = ({route}) => {
         component={ClientsStack}
         options={{
           title: "Clientes",
-          drawerIcon: () => <Icon color={ colors.text} name="person" />,
+          drawerIcon: () => <Icon color={ colors.text} name="people" type="ionicon" />,
         }}
       />
       <Drawer.Screen
@@ -116,6 +130,15 @@ const Menu = ({route}) => {
         component={Reportes}
         options={{
           title: "Reportes",
+          drawerIcon: () => <Icon color={ colors.text} name="bar-chart" type="ionicon"></Icon>,
+        }}
+      />
+
+<Drawer.Screen
+        name="Comprobantes"
+        component={ComprobantesStack}
+        options={{
+          title: "Comprobantes",
           drawerIcon: () => <Icon color={ colors.text} name="document-text" type="ionicon"></Icon>,
         }}
       />

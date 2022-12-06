@@ -4,11 +4,12 @@ import { ContextProvider} from "./context/ContextProvider";
 import UserState from "./context/UserState";
 import Main from "./navigation/Main";
 
+
 const  App=()=> {
   return (
     <UserState>
       <ContextProvider>
-        <Main></Main>
+       <Main></Main>
       </ContextProvider>
     </UserState>
   );
