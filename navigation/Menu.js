@@ -22,58 +22,60 @@ import EditClient from "../screens/EditClient";
 import { useTheme } from "@react-navigation/native";
 import Comprobantes from "../screens/Comprobantes";
 import DetalleComprobante from "../screens/DetalleComprobante";
-
+import Venta from "../screens/Venta";
 
 const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
+const ClientsStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        headerStyle: { backgroundColor: "#A1D6E2" },
+      }}
+    >
+      <Stack.Screen name="ClientsScreen" component={Clients} />
+      <Stack.Screen name="ClientDetail" component={ClientDetail} />
+      <Stack.Screen name="NewClient" component={NewClient} />
+      <Stack.Screen name="EditClient" component={EditClient} />
+    </Stack.Navigator>
+  );
+};
 
+const ComprobantesStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        headerStyle: { backgroundColor: "#A1D6E2" },
+      }}
+    >
+      <Stack.Screen name="List de Comprobantes" component={Comprobantes} />
+      <Stack.Screen
+        name="Detalle de Comprobante"
+        component={DetalleComprobante}
+      />
+    </Stack.Navigator>
+  );
+};
 
-const ClientsStack=()=>{
-return <Stack.Navigator
-  screenOptions={{
-    headerShown: false,
-    headerStyle: { backgroundColor: "#A1D6E2" } 
-  }}
->
- <Stack.Screen name="ClientsScreen" component={Clients} />
-  <Stack.Screen name="ClientDetail" component={ClientDetail} />
-  <Stack.Screen name="NewClient" component={NewClient} />
-  <Stack.Screen name="EditClient" component={EditClient} />
-</Stack.Navigator>}
-
- const ComprobantesStack=()=>{
-  return <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-      headerStyle: { backgroundColor: "#A1D6E2" } 
-    }}
-  >
-   <Stack.Screen name="List de Comprobantes" component={Comprobantes} />
-    <Stack.Screen name="Detalle de Comprobante" component={DetalleComprobante} />
-    
-  </Stack.Navigator>}
-
-
-
-const Menu = ({route}) => {
- 
-
-  const {colors}=useTheme()
+const Menu = ({ route }) => {
+  const { colors } = useTheme();
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomMenu {...props} />}
-      screenOptions={{ 
-        headerTintColor:colors.text,
-        drawerActiveBackgroundColor:colors.primary,
-        drawerActiveTintColor:colors.text,
+      screenOptions={{
+        headerTintColor: colors.text,
+        drawerActiveBackgroundColor: colors.primary,
+        drawerActiveTintColor: colors.text,
         drawerItemStyle: {
-           marginVertical:"3%" ,
-          
+          marginVertical: "3%",
         },
         headerShown: true,
-      headerStyle: { backgroundColor: colors.primary } }}
+        headerStyle: { backgroundColor: colors.primary },
+      }}
       useLegacyImplementation={false}
       initialRouteName={route.params}
     >
@@ -104,7 +106,9 @@ const Menu = ({route}) => {
         component={ClientsStack}
         options={{
           title: "Clientes",
-          drawerIcon: () => <Icon color={ colors.text} name="people" type="ionicon" />,
+          drawerIcon: () => (
+            <Icon color={colors.text} name="people" type="ionicon" />
+          ),
         }}
       />
       <Drawer.Screen
@@ -112,7 +116,9 @@ const Menu = ({route}) => {
         component={Products}
         options={{
           title: "Productos",
-          drawerIcon: () => <Icon color={ colors.text} name="pricetag" type="ionicon"></Icon>,
+          drawerIcon: () => (
+            <Icon color={colors.text} name="pricetag" type="ionicon"></Icon>
+          ),
         }}
       />
 
@@ -121,7 +127,39 @@ const Menu = ({route}) => {
         component={Inventario}
         options={{
           title: "Inventario",
-          drawerIcon: () => <Icon color={ colors.text} name="reader" type="ionicon"></Icon>,
+          drawerIcon: () => (
+            <Icon color={colors.text} name="reader" type="ionicon"></Icon>
+          ),
+        }}
+      />
+
+      <Drawer.Screen
+        name="Venta"
+        component={Venta}
+        options={{
+          title: "Venta",
+          drawerIcon: () => (
+            <Icon
+              color={colors.text}
+              name="md-cash-outline"
+              type="ionicon"
+            ></Icon>
+          ),
+        }}
+      />
+
+      <Drawer.Screen
+        name="Comprobantes"
+        component={ComprobantesStack}
+        options={{
+          title: "Comprobantes",
+          drawerIcon: () => (
+            <Icon
+              color={colors.text}
+              name="document-text"
+              type="ionicon"
+            ></Icon>
+          ),
         }}
       />
 
@@ -130,23 +168,11 @@ const Menu = ({route}) => {
         component={Reportes}
         options={{
           title: "Reportes",
-          drawerIcon: () => <Icon color={ colors.text} name="bar-chart" type="ionicon"></Icon>,
+          drawerIcon: () => (
+            <Icon color={colors.text} name="bar-chart" type="ionicon"></Icon>
+          ),
         }}
       />
-
-<Drawer.Screen
-        name="Comprobantes"
-        component={ComprobantesStack}
-        options={{
-          title: "Comprobantes",
-          drawerIcon: () => <Icon color={ colors.text} name="document-text" type="ionicon"></Icon>,
-        }}
-      />
-
-      
-      
-      
-      
     </Drawer.Navigator>
   );
 };

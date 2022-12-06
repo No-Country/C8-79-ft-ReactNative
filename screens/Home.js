@@ -13,6 +13,7 @@ export default function Home() {
   const [arr3, setArr3] = useState(false);
   const [arr4, setArr4] = useState(false);
   const [arr5, setArr5] = useState(false);
+  const [arr6, setArr6] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -22,6 +23,7 @@ export default function Home() {
       setTimeout(() => setArr3(true), 900);
       setTimeout(() => setArr4(true), 1200);
       setTimeout(() => setArr5(true), 1500);
+      setTimeout(() => setArr6(true), 1800);
 
       return () => {
         setArr1(false),
@@ -29,6 +31,7 @@ export default function Home() {
           setArr3(false),
           setArr4(false),
           setArr5(false),
+          setArr6(false),
           console.log("salio");
       };
     }, [])
@@ -88,17 +91,18 @@ export default function Home() {
 
           {arr4 && (
             <AnimatedButton
+              icon={"md-cash-outline"}
+              title={"Venta"}
+            ></AnimatedButton>
+          )}
+          {arr5 && (
+            <AnimatedButton
               icon={"bar-chart"}
               title={"Comprobantes"}
             ></AnimatedButton>
           )}
 
-          {arr5 && (
-            <AnimatedButton
-              icon={"document-text"}
-              title={"person"}
-            ></AnimatedButton>
-          )}
+         
         </View>
       </LinearGradient>
     </View>
