@@ -35,6 +35,7 @@ const setSpinner =  (value) => {
 };
 
 const setError =  (value) => {
+  console.log(value)
    
   dispatch({ type: SET_ERROR, payload:value });
 

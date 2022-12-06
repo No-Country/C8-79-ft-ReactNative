@@ -43,6 +43,7 @@ const EditClientForm = ({client}) => {
       }
   }).catch(error => {
     console.log(error)
+    setError(error)
 
   });
     handleBandera()

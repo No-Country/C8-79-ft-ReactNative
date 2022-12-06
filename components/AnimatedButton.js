@@ -1,4 +1,4 @@
-import { Dimensions, Animated, Text } from "react-native";
+import { Dimensions, Animated, Text ,TouchableWithoutFeedback} from "react-native";
 import React, { useRef, useCallback } from "react";
 import { Button, Icon } from "@rneui/themed";
 import { useTheme, useFocusEffect } from "@react-navigation/native";
@@ -46,6 +46,14 @@ export default function AnimatedButton({ icon, title,press }) {
     ]).start();
   };
 
+  const size = () => {
+    
+      Animated.timing(scale, {
+        toValue: .8,
+        duration: 200,
+        useNativeDriver: true,
+      }).start()
+  };
   return (
     <Animated.View
       style={{
@@ -55,6 +63,8 @@ export default function AnimatedButton({ icon, title,press }) {
     >
       <Button
         onPress={()=> navigation.navigate("Menu",title)}
+        onPressIn={()=>size()}
+        TouchableComponent={TouchableWithoutFeedback}
         titleStyle={{ color: colors.text }}
         buttonStyle={{
           borderWidth:4,
