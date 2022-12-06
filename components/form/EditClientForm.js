@@ -26,10 +26,6 @@ const EditClientForm = ({client}) => {
  
   const submitForm = async(formData,clear) => {
     const cliente = doc(db, "Clientes", client.id);
-<<<<<<< HEAD
-=======
-   setSpinner(true)
->>>>>>> ba5f0a5153548ea9ad7be8f28df44823be0bace8
     await setDoc(cliente, {
       id: client.id,
       firstName: formData.user,
@@ -46,12 +42,8 @@ const EditClientForm = ({client}) => {
       }
   }).catch(error => {
     console.log(error)
-<<<<<<< HEAD
-    
-=======
     setError(error)
 
->>>>>>> ba5f0a5153548ea9ad7be8f28df44823be0bace8
   });
     handleBandera()
     setSpinner(false)
