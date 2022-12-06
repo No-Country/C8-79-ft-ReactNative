@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -8,8 +8,8 @@ import {
   Button,
   TouchableOpacity,
   TextInput,
-  Icon,
 } from "react-native";
+import { Icon } from "@rneui/themed";
 import logo from "../assets/monshine.png";
 import diamont from "../assets/diamon2.gif";
 import { useState } from "react";
@@ -18,28 +18,50 @@ import { initializeApp } from "firebase/app";
 import { auth, firebaseConfig } from "../firebase/Config";
 import { Formik } from "formik";
 import * as Yup from "yup";
-
+import { useFocusEffect } from "@react-navigation/native";
+import Spinner from "../components/Spinner";
 
 export const Login = ({ navigation }) => {
- 
-  const [incorrect, setIncorrect] = useState(false);
+  const [spinner, setSpinner] = useState(false);
+  const [error, setError] = useState({ user: false, network: false });
+  const [showPassword, setShowPassword] = useState(false);
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => setSpinner(false);
+    }, [])
+  );
 
-  const handleSignIn = ({email,password}, reset) => {
-
-
+  const handleSignIn = ({ email, password }, reset) => {
+    setSpinner(true);
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        setIncorrect(false);
-        reset()
+        reset();
         navigation.navigate("Menu");
       })
       .catch((error) => {
-        console.log(error);
-        setIncorrect(true);
+        if (error.message.includes("user-not-found")) {
+          setError((prev) => ({
+            ...prev,
+            user: true,
+          }));
+        } else {
+          setError((prev) => ({
+            ...prev,
+            network: true,
+          }));
+          setTimeout(
+            () =>
+              setError((prev) => ({
+                ...prev,
+                network: false,
+              })),
+            5000
+          );
+        }
+        console.log(error.message);
+        setSpinner(false);
       });
-
-    
   };
 
   return (
@@ -60,8 +82,7 @@ export const Login = ({ navigation }) => {
             .required("Debe completar este campo"),
         })}
         onSubmit={(values, { resetForm }) => {
-        handleSignIn(values, resetForm);
-        
+          handleSignIn(values, resetForm);
         }}
       >
         {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -69,6 +90,12 @@ export const Login = ({ navigation }) => {
             <TextInput
               style={styles.inputs}
               onChangeText={handleChange("email")}
+              onFocus={() =>
+                setError((prev) => ({
+                  ...prev,
+                  user: false,
+                }))
+              }
               value={values.email}
               selectionColor={"#000"}
               placeholder="Direccion de email"
@@ -77,27 +104,47 @@ export const Login = ({ navigation }) => {
             {errors.email && touched.email && (
               <Text style={styles.error}>{errors.email}</Text>
             )}
-
-            <TextInput
-              style={styles.inputs}
-              onChangeText={handleChange("password")}
-              value={values.password}
-              selectionColor={"#000"}
-              secureTextEntry={true}
-              placeholder="Contraseña"
-            />
+            <View style={styles.passwordInput}>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={handleChange("password")}
+                onFocus={() =>
+                  setError((prev) => ({
+                    ...prev,
+                    user: false,
+                  }))
+                }
+                value={values.password}
+                selectionColor={"#000"}
+                secureTextEntry={showPassword? false : true}
+                placeholder="Contraseña"
+              />
+              <Icon
+              style={styles.show}
+                name={showPassword ? "eye" : "eye-off"}
+                type="feather"
+                size={20}
+                color="#000"
+                onPress={() => setShowPassword(!showPassword)}
+              />
+            </View>
             {errors.password && touched.password && (
               <Text style={styles.error}>{errors.password}</Text>
             )}
 
-            {incorrect && (
+            {error.user && (
               <Text style={styles.error}>Credenciales incorrectas</Text>
+            )}
+            {error.network && (
+              <Text style={styles.error}>
+                Problemas con el servidor , intenta mas tarde
+              </Text>
             )}
 
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
-                handleSubmit()
+                handleSubmit();
               }}
             >
               <Text> INICIAR </Text>
@@ -139,6 +186,7 @@ export const Login = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
+      {spinner ? <Spinner></Spinner> : null}
     </View>
   );
 };
@@ -149,7 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
 
-    //justifyContent: 'center',
+    justifyContent: "center",
   },
   text: {
     color: "cyan",
@@ -157,14 +205,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   image: {
-    marginTop: 0,
+    marginBottom: 20,
     height: 50,
     width: 130,
   },
   diamont: {
     height: 135, //90
     width: 190, //125
-    marginTop: "10%",
+    marginTop: "0%",
     resizeMode: "contain",
   },
   button: {
@@ -178,7 +226,7 @@ const styles = StyleSheet.create({
   inputs: {
     backgroundColor: "#F1F1f2",
     width: "80%",
-    marginBottom: 25,
+    marginBottom: 20,
     padding: 10,
     borderRadius: 10,
   },
@@ -187,7 +235,30 @@ const styles = StyleSheet.create({
   },
   error: {
     color: "red",
-    marginVertical:5
+    marginVertical: 5,
   },
+  passwordInput: {
+    
+    width: "80%",
+    flexDirection: "row",
+    
+  },
+  textInput: {
+    backgroundColor: "#F1F1f2",
+    width: "80%",
+    marginBottom: 20,
+    padding: 10,
+    height: 45,
+    flex: 1,
+    borderRadius: 10,
+  },
+  show:{
+    position:"relative",
+    top:12
+  }
 });
 export default Login;
+
+//
+
+//

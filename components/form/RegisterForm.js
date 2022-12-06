@@ -6,27 +6,39 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Dialog, Icon } from "@rneui/themed";
 import PopUp from "../PopUp";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { auth, db, firebaseConfig } from "../../firebase/Config";
+import { auth, db } from "../../firebase/Config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import Spinner from "../Spinner";
 
 
 const RegisterForm = () => {
   const [popup, setPopup] = useState(false);
   const nav = useNavigation();
-
+  const [error, setError] = useState({ user: false, network: false });
+  const [spinner, setSpinner] = useState(false);
   const [showPassword, setShowPassword] = useState({
     password: true,
     passwordConfirmation: true,
   });
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => setSpinner(false);
+    }, [])
+  );
+
+  const submitForm = (formData, clear) => {
+    setSpinner(true);
+  handleCreateUser(formData,clear)
+    
+  };
 
   const handleCreateUser = async ({
     userName,
@@ -34,7 +46,7 @@ const RegisterForm = () => {
     email,
     phoneNumber,
     password,
-  }) => {
+  },clear) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
@@ -45,10 +57,39 @@ const RegisterForm = () => {
           phoneNumber,
           password,
         };
-        await addDoc(collection(db, "Usuarios"), data);
+      await addDoc(collection(db, "Usuarios"), data);
+       setPopup(true);
+       clear();
+       setTimeout(() => {
+         setPopup(false), nav.navigate("Login");
+       }, 1000);
+     
       })
       .catch((error) => {
-        console.log(error);
+if(error.message.includes("email-already-in-use")){
+  setError((prev) => ({
+    ...prev,
+    user: true,
+  }));
+
+}else{
+  setError((prev) => ({
+    ...prev,
+    network: true,
+  }));
+  setTimeout(
+    () =>
+      setError((prev) => ({
+        ...prev,
+        network: false,
+      })),
+    5000
+  );
+
+}
+
+        console.log(error)
+        setSpinner(false);
       });
   };
 
@@ -68,17 +109,11 @@ const RegisterForm = () => {
     });
   };
 
-  const submitForm = (formData, clear) => {
-    console.log(formData);
-    setPopup(true);
-    clear();
-    setTimeout(() => {
-      setPopup(false), nav.navigate("Login");
-    }, 1000);
-  };
+  
 
   return (
     <>
+     {spinner ? <Spinner></Spinner> : null}
       <Formik
         initialValues={{ userName: "", lastName: "", email: "", password: "" }}
         validationSchema={Yup.object({
@@ -103,7 +138,7 @@ const RegisterForm = () => {
         })}
         onSubmit={(values, { resetForm }) => {
           submitForm(values, resetForm);
-          handleCreateUser(values);
+         
         }}
       >
         {({
@@ -145,6 +180,12 @@ const RegisterForm = () => {
               autoCorrect={false}
               style={styles.textInput}
               onChangeText={handleChange("email")}
+              onFocus={() =>
+                  setError((prev) => ({
+                    ...prev,
+                    user: false,
+                  }))
+                }
               value={values.email}
               selectionColor={"#000"}
             />
@@ -208,6 +249,14 @@ const RegisterForm = () => {
             {errors.passwordConfirmation && touched.passwordConfirmation && (
               <Text style={styles.error}>{errors.passwordConfirmation}</Text>
             )}
+            {error.user && (
+              <Text style={styles.error}>Direccion de email en uso ,prueba reestablecer tu contraseña</Text>
+            )}
+            {error.network && (
+              <Text style={styles.error}>
+                Problemas con el servidor , intenta mas tarde
+              </Text>
+            )}
             <View style={styles.buttonContainer}>
               <Button
                 titleStyle={{ color: "#000", fontSize: 18 }}
@@ -258,6 +307,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   error: {
+    marginTop:20,
     color: "red",
   },
   label: {

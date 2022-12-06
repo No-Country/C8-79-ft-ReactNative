@@ -1,11 +1,14 @@
 import {FlatList, StyleSheet, View } from "react-native";
-import React, { useEffect, useState,useCallback} from "react";
+import React, { useEffect, useState,useCallback, useContext} from "react";
 import { SearchBar } from "@rneui/themed";
 import { clients } from "../helpers/devData";
 import Client from "../components/Client";
 import { FAB ,Icon} from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from '@react-navigation/native'
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/Config";
+import { Context } from "../context/ContextProvider";
 
 
 const sortData = (arr) => {
@@ -23,9 +26,29 @@ const sortData = (arr) => {
 
 const Clients = ({navigation}) => {
 
-
+  const {bandera} = useContext(Context)
   const [filter, setFilter] = useState("");
   const [click, setClick] = useState(null);
+  const [clientes, setClientes] = useState([])
+
+
+  const traerDatos = async () => {
+    const array = []
+    const querySnapshot = await getDocs(collection(db, "Clientes"));
+    querySnapshot.forEach((doc) => {
+      array.push(doc.data());
+
+    });
+    setClientes(array)
+  };
+  
+  useEffect(() => {
+    
+    traerDatos()
+    
+   
+  }, [bandera])
+  //
 
   useFocusEffect(
     useCallback(() => {
@@ -66,7 +89,7 @@ const renderItem=({ item, index }) => {
        removeClippedSubviews={true}
         overScrollMode={"never"}
         style={styles.flatlist}
-        data={sortData(clients).filter(
+        data={sortData(clientes).filter(
           (client) =>
             client.firstName.toLowerCase().includes(filter.toLocaleLowerCase()) ||
             client.lastName.toLowerCase().includes(filter.toLocaleLowerCase())
