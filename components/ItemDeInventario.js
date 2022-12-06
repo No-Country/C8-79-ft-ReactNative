@@ -1,32 +1,35 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 
 const ItemDeInventario = ({ item, index }) => {
+  const { colors }=useTheme()
   return (
     <View
       style={[
         index % 2 === 0
-          ? { backgroundColor: "#A1D6E266" }
-          : { backgroundColor: "#fff" },
+          ? { backgroundColor: colors.primary }
+          : { backgroundColor: colors.background },
         styles.item,
       ]}
     >
       <Text
-        style={{ marginLeft: 10, flexWrap: "wrap", width: windowWidth * 0.2 }}
+        style={{color:colors.text, marginLeft: 10, flexWrap: "wrap", width: windowWidth * 0.2 }}
       >
         {item.code}
       </Text>
-      <Text style={{ width: windowWidth * 0.4, textAlign: "center" }}>
+      <Text style={{color:colors.text, width: windowWidth * 0.4, textAlign: "center" }}>
         {item.description}
       </Text>
-      <Text style={{ width: windowWidth * 0.2, textAlign: "center" }}>
+      <Text style={{color:colors.text, width: windowWidth * 0.2, textAlign: "center" }}>
         ${item.price}
       </Text>
-      <Text style={styles.Ex}>{item.ExI}</Text>
-      <Text style={styles.Ex}>{item.ExF}</Text>
+      <Text style={[styles.Ex,{color:colors.text,}]}>{item.ExI}</Text>
+      <Text style={[styles.Ex,{color:colors.text,}]}>{item.ExF}</Text>
       <Text
         style={{
+          color:colors.text,
           marginRight: 10,
           width: windowWidth * 0.3,
           textAlign: "center",

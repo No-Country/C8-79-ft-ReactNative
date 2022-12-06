@@ -5,7 +5,7 @@ import {
   Text,
   Dimensions,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { SearchBar } from "@rneui/themed";
@@ -15,14 +15,19 @@ import { useFocusEffect } from "@react-navigation/native";
 import { products } from "../helpers/devProcuctsData";
 import PrintPDF from "../components/PrintPDF";
 import ExcelExport from "../components/ExcelExport";
+import PopUp from "../components/PopUp";
+import { useTheme } from "@react-navigation/native";
+
 
 const windowWidth = Dimensions.get("window").width;
 
 const Inventario = () => {
+  const {colors}=useTheme()
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [prod, setProd] = useState([]);
+  const [popup, setPopup] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -40,41 +45,51 @@ const Inventario = () => {
     setProd(products.slice((p - 1) * 10 - 10, (p - 1) * 9));
   };
 
+  const exportDetail = () => {
+    setPopup(true);
+  };
+
+  const confirmationExport = (remove, format = null) => {
+    remove
+      ? (setPopup(false),
+        format === "PDF" ? PrintPDF(products) : ExcelExport(products))
+      : setPopup(false);
+  };
+
   const renderItem = ({ item, index }) => {
     return <ItemDeInventario item={item} index={index} />;
   };
 
   return (
-    <View style={styles.viewContainer}>
+    <View style={[styles.viewContainer,{backgroundColor:colors.background}]}>
       <SearchBar
         platform="default"
-        containerStyle={styles.container}
-        inputContainerStyle={styles.inputContainer}
-        inputStyle={styles.searchInput}
+        containerStyle={[styles.container,{backgroundColor:colors.background}]}
+        inputContainerStyle={[styles.inputContainer,{backgroundColor:colors.background}]}
+        inputStyle={[styles.searchInput,{backgroundColor:colors.background}]}
         onChangeText={(value) => setFilter(value)}
         placeholder="Ingrese el nombre del producto"
-        placeholderTextColor="#888"
+        placeholderTextColor={colors.text}
         round
         value={filter}
       />
       <View style={styles.buttonsView}>
         <Button
-        onPress={()=>PrintPDF(products)}
+          onPress={() => exportDetail(products)}
           iconPosition="right"
-          titleStyle={{ color: "#000", fontSize: 14, paddingLeft: 8 }}
+          titleStyle={{ color: colors.text, fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
-         
             elevation: 0,
             backgroundColor: "transparent",
             height: 40,
             width: 120,
-            borderColor: "#A1D6E2",
+            borderColor: colors.primary,
             borderWidth: 1,
             borderRadius: 18,
           }}
         >
           Exportar
-          <Icon name="chevrons-down" type="feather" />
+          <Icon color={colors.text} name="chevrons-down" type="feather" />
         </Button>
       </View>
 
@@ -86,14 +101,13 @@ const Inventario = () => {
       >
         <FlatList
           ListHeaderComponent={() => (
-            <View
-              style={styles.headerStyle}
-            >
-              <Text style={{ marginLeft: 10, flexWrap: "wrap", maxWidth: 100 }}>
+            <View style={[styles.headerStyle,{backgroundColor:colors.primary,}]}>
+              <Text style={{ marginLeft: 10, flexWrap: "wrap", maxWidth: 100,color:colors.text }}>
                 Codigo de Producto
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   width: windowWidth * 0.4,
                   textAlign: "center",
                 }}
@@ -102,6 +116,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   width: windowWidth * 0.2,
                   textAlign: "center",
                 }}
@@ -110,6 +125,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   width: windowWidth * 0.25,
                   textAlign: "center",
                 }}
@@ -118,6 +134,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   width: windowWidth * 0.25,
                   textAlign: "center",
                 }}
@@ -126,6 +143,7 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  color:colors.text,
                   marginRight: 10,
                   width: windowWidth * 0.3,
                   textAlign: "center",
@@ -135,16 +153,26 @@ const Inventario = () => {
               </Text>
             </View>
           )}
-          ListEmptyComponent={()=> <ActivityIndicator size="large" color="#A1D6E2" />}
+          ListEmptyComponent={() => (
+            <ActivityIndicator
+              style={{ marginTop: 200 }}
+              size="large"
+              color={colors.primary}
+            />
+          )}
           horizontal={false}
           overScrollMode={"never"}
           style={{
             width: "100%",
             height: "100%",
           }}
-          data={filter!==""?products.filter((item) =>
-            item.description.toLowerCase().includes(filter.toLowerCase())
-          ):prod}
+          data={
+            filter !== ""
+              ? products.filter((item) =>
+                  item.description.toLowerCase().includes(filter.toLowerCase())
+                )
+              : prod
+          }
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.code}
           renderItem={renderItem}
@@ -160,22 +188,59 @@ const Inventario = () => {
       >
         {page > 1 ? (
           <Icon
+          color={colors.text}
             name="chevron-left"
             type="feather"
             onPress={() => decrement(page)}
           />
         ) : null}
-        <Text style={{ color: "#A1D6E2" }}>{page}</Text>
-        <Text> de</Text>
-        <Text> {totalPage} </Text>
+        <Text style={{ color: colors.text }}>{page}  de {totalPage} </Text>
+        
+    
         {page !== totalPage ? (
           <Icon
+          color={colors.text}
             name="chevron-right"
             type="feather"
             onPress={() => increment(page)}
           />
         ) : null}
       </View>
+
+      <PopUp
+        visibility={popup}
+        message={"Selecciona el formato para exportar"}
+        child={
+          <View style={[styles.buttonContainer,]}>
+            <View style={styles.buttonHeader}>
+              <Button
+                titleStyle={[styles.buttonText,{color:colors.text}]}
+                buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background ,borderColor:colors.primary}]}
+                onPress={() => confirmationExport(true, "PDF")}
+              >
+                PDF
+              </Button>
+              <Button
+                titleStyle={[styles.buttonText,{color:colors.text}]}
+                buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background,borderColor:colors.primary }]}
+                onPress={() => confirmationExport(true, "XLS")}
+              >
+                XLS
+              </Button>
+            </View>
+            <Button
+              titleStyle={[styles.buttonText,{color:colors.text}]}
+              buttonStyle={[
+                styles.buttonBottom,
+                { backgroundColor: colors.primary ,borderColor:colors.primary},
+              ]}
+              onPress={() => confirmationExport(false)}
+            >
+              CANCELAR
+            </Button>
+          </View>
+        }
+      />
     </View>
   );
 };
@@ -198,7 +263,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    
   },
   searchInput: {
     textAlign: "center",
@@ -220,12 +284,36 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
   },
-  headerStyle:{
+  headerStyle: {
     display: "flex",
     flexDirection: "row",
     backgroundColor: "#A1D6E2",
     height: 50,
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  buttonDialog: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#A1D6E2",
+    width: 100,
+    height: 50,
+  },
+  buttonContainer: {
+    justifyContent: "space-evenly",
+    marginVertical: 20,
+  },
+  buttonHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  buttonText: {
+    color: "#000",
+    fontWeight: "bold",
+  },
+  buttonBottom: {
+    borderRadius: 20,
+    height: 50,
+    marginTop: 20,
   },
 });

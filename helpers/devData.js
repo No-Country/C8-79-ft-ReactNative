@@ -1,3 +1,69 @@
+
+export const graphone=[
+  {
+    name: "Collar",
+    population: 21,
+    color: "rgba(131, 167, 234, 1)",
+    legendFontColor: "#7F7F7F",
+    legendFontSize: 15,
+  },
+  {
+    name: "Perla",
+    population: 19,
+    color: "#F00",
+    legendFontColor: "#7F7F7F",
+    legendFontSize: 15,
+  },
+  {
+    name: "Aros",
+    population: 10,
+    color: "#323232",
+    legendFontColor: "#7F7F7F",
+    legendFontSize: 15,
+  },
+  {
+    name: "Pulsera",
+    population: 20,
+    color: "rgb(0, 0, 255)",
+    legendFontColor: "#7F7F7F",
+    legendFontSize: 15,
+  },
+]
+
+export const graphTwo=[
+  {
+    name: "Juan",
+    population: 20,
+    color: "rgba(131, 167, 234, 1)",
+    legendFontColor: "#7F7F7F",
+    legendFontSize: 15,
+  },
+  {
+    name: "Maria",
+    population: 20,
+    color: "#F00",
+    legendFontColor: "#7F7F7F",
+    legendFontSize: 15,
+  },
+  {
+    name: "Martin",
+    population: 20,
+    color: "#323232",
+    legendFontColor: "#7F7F7F",
+    legendFontSize: 15,
+  },
+  {
+    name: "Lucia",
+    population: 40,
+    color: "rgb(0, 0, 255)",
+    legendFontColor: "#7F7F7F",
+    legendFontSize: 15,
+  },
+];
+
+
+
+
 export const clients = [
     {
       "id": 1,
