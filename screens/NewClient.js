@@ -1,12 +1,14 @@
 import { StyleSheet, SafeAreaView, Text,View } from "react-native";
 import React from "react";
 import NewClientForm from "../components/form/NewClientForm";
+import { useTheme } from "@react-navigation/native";
 
 const NewClient = () => {
+ const {colors}=useTheme()
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container,{backgroundColor:colors.background}]}>
      
-      <Text style={styles.title}>Crear nuevo Cliente</Text>
+      <Text style={[styles.title,{backgroundColor:colors.primary,color:colors.text}]}>Crear nuevo Cliente</Text>
       <NewClientForm></NewClientForm>
       
     </SafeAreaView>
@@ -21,12 +23,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: "center",
   },
-top:{
-  backgroundColor: "#EFEFEF",
-  height:14,
-  width:"100%"
-}
-  ,
   title: {
     textAlign: "center",
     textAlignVertical: "center",

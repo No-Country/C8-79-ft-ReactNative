@@ -9,8 +9,11 @@ import { Avatar, Icon } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/Config";
+import { useTheme } from "@react-navigation/native";
+
 
 export const getInitials = (client) => {
+
   const firstName = client.firstName[0].toUpperCase();
   const firstLastName = client.lastName[0].toUpperCase();
   return firstName + firstLastName;
@@ -21,6 +24,7 @@ export const getInitials = (client) => {
 
 
 const Client = ({ fontSz, textColor, item, isPress, index }) => {
+  const {colors}=useTheme()
   const navigation = useNavigation();
   
   
@@ -35,8 +39,8 @@ const Client = ({ fontSz, textColor, item, isPress, index }) => {
       }}
       style={[
         index % 2 === 0
-          ? { backgroundColor: "#A1D6E266" }
-          : { backgroundColor: "#fff" },
+          ? { backgroundColor: colors.primary }
+          : { backgroundColor: colors.background },
         styles.item,
       ]}
     >

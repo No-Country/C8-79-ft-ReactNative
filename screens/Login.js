@@ -37,7 +37,7 @@ export const Login = ({ navigation }) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         reset();
-        navigation.navigate("Menu");
+        navigation.navigate("Home");
       })
       .catch((error) => {
         if (error.message.includes("user-not-found")) {
