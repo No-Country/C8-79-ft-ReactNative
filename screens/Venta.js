@@ -6,7 +6,7 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState ,useRef} from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Dialog, Icon } from "@rneui/themed";
@@ -15,58 +15,57 @@ import {
   useNavigation,
   useTheme,
 } from "@react-navigation/native";
+import ProductInput from "../components/ProductInput";
 
 const windowWidth = Dimensions.get("window").width;
 
 const Venta = () => {
   const { colors } = useTheme();
-  const [popup, setPopup] = useState(false);
-  const nav = useNavigation();
-  const [error, setError] = useState({ user: false, network: false });
-  const [spinner, setSpinner] = useState(false);
   const [productInput, setProductInput] = useState(1);
-  const [showPassword, setShowPassword] = useState({
-    password: true,
-    passwordConfirmation: true,
-  });
-
-  const submitForm = (formData, clear) => {};
-
-  const ProductInput = ({ handleChange, values,setFieldValue }) => {
-
-    const [cantidad, setCantidad] = useState(1)
-    return (
+  const [cliente, setCliente] = useState("")
+  const [productData, setProductData] = useState([])
+  const [confirmation, setConfirmation] = useState(0)
 
 
-      <View style={{ flexDirection: "row" }}>
-        <View style={{ width: "70%" }}>
-          <Text style={styles.label}>Producto</Text>
-          <TextInput
-        
-            style={styles.textInput}
-            onChangeText={handleChange("producto")}
-            value={values.producto}
-            selectionColor={"#000"}
-          />
-        </View>
+  // const getFromChild=(data,id,type)=>{
 
-        <View style={{ width: "30%", alignItems: "center" }}>
-          <Text style={styles.label}>Cantidad</Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon name="add" type="ionicon" color={colors.text}  onPress={()=>setCantidad (cantidad+1)} />
-            <TextInput
-              style={[styles.textInput, {textAlign:"center", width: "30%" }]}
-              onChangeText={()=>{handleChange("cantidad")}}
-              value={values.cantidad}
-              selectionColor={"#000"}
-              
-            />
-            <Icon name="remove" type="ionicon" color={colors.text} onPress={()=>setCantidad (cantidad-1)}  />
-          </View>
-        </View>
-      </View>
-    );
+  //   const obj={[type]:data,id:id}
+  //   let temp =[...productData]
+
+  //   temp.map((item,i)=>item.id)
+
+  //  if (!is){
+  //   temp.push(obj)
+  //  }
+
+    
+  //   console.log(temp)
+  //   setProductData(temp)
+
+  //   //console.log(data,id,type)
+
+  // }
+
+  const submit = (data) => {
+if(confirmation===productInput){
+  const comprobante={
+    fecha:new Date(),
+    cliente:cliente,
+    productos:{
+     ...productData
+    }
+  }
+  console.log(comprobante)
+  return comprobante
+
+}else{
+  console.log("debe completar")
+}
+
+    
   };
+
+  
 
   return (
     <View
@@ -77,33 +76,9 @@ const Venta = () => {
         backgroundColor: colors.background,
       }}
     >
-      <Formik
-        initialValues={{ cliente: "A", producto: "", cantidad:"1" }}
-        validationSchema={Yup.object({
-            cliente: Yup.string()
-            .max(20, "Must be 20 characters or less")
-            .required("Debe completar este campo"),
-          producto: Yup.string()
-            .max(20, "Must be 20 characters or less")
-            .required("Debe completar este campo"),
-          cantidad: Yup.number()
-            .required("Debe completar este campo")
-            .positive()
-            .max(100)
-        })}
-        onSubmit={(values, { resetForm }) => {
-          submitForm(values, resetForm);
-        }}
-      >
-        {({
-            setFieldValue,
-          handleChange,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
-          <ScrollView
+
+
+<ScrollView
             overScrollMode={"never"}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
@@ -116,29 +91,23 @@ const Venta = () => {
 
             <TextInput
               style={styles.textInput}
-              onChangeText={handleChange("cliente")}
-              value={values.cliente}
+              onChangeText={(d)=>setCliente(d)}
               selectionColor={"#000"}
             />
 
-            {errors.cliente && touched.cliente && (
-              <Text style={styles.error}>{errors.cliente}</Text>
-            )}
-
+        
             {Array.from(Array(productInput)).map((item, index) => {
               return (
                 <ProductInput
                   key={index}
-                  values={values}
-                  handleChange={handleChange}
-                  setFieldValue={setFieldValue}
+                  id={index}
+                  handleData={setProductData}
+                  confirm={setConfirmation}
                 />
               );
             })}
 
-            {errors.lastName && touched.lastName && (
-              <Text style={styles.error}>{errors.lastName}</Text>
-            )}
+            
 
             <View style={styles.buttonContainer}>
               <Button
@@ -150,13 +119,12 @@ const Venta = () => {
               <Button
                 titleStyle={{ color: "#000", fontSize: 18 }}
                 buttonStyle={styles.button}
-                onPress={handleSubmit}
-                title="Guardar"
+                onPress={()=>submit()}
+                title={confirmation}
               />
             </View>
           </ScrollView>
-        )}
-      </Formik>
+      
     </View>
   );
 };
@@ -208,3 +176,87 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+
+
+// <Formik
+//         initialValues={{ cliente: "" }}
+//         // validationSchema={Yup.object({
+//         //   cliente: Yup.string()
+//         //     .max(20, "Must be 20 characters or less")
+//         //     .required("Debe completar este campo"),
+//         //   producto: Yup.string()
+//         //     .max(20, "Must be 20 characters or less")
+//         //     .required("Debe completar este campo"),
+//         //   cantidad: Yup.number()
+//         //     .required("Debe completar este campo")
+//         //     .positive()
+//         //     .max(100),
+//         // })}
+//         onSubmit={(values, { resetForm }) => {
+//           submitForm(values, resetForm);
+//         }}
+//       >
+//         {({
+//           setFieldValue,
+//           handleChange,
+//           handleSubmit,
+//           values,
+//           errors,
+//           touched,
+//         }) => (
+//           <ScrollView
+//             overScrollMode={"never"}
+//             showsVerticalScrollIndicator={false}
+//             contentContainerStyle={{
+//               heigth: "100%",
+//               marginTop: 20,
+//               width: windowWidth - 30,
+//             }}
+//           >
+//             <Text style={styles.label}>Cliente</Text>
+
+//             <TextInput
+//               style={styles.textInput}
+//               onChangeText={handleChange("cliente")}
+              
+//               selectionColor={"#000"}
+//             />
+
+//             {errors.cliente && touched.cliente && (
+//               <Text style={styles.error}>{errors.cliente}</Text>
+//             )}
+
+//             {Array.from(Array(productInput)).map((item, index) => {
+//               return (
+//                 <ProductInput
+//                   key={index}
+//                   id={index}
+                
+//                   handleChange={handleChange}
+//                   setFieldValue={setFieldValue}
+//                 />
+//               );
+//             })}
+
+//             {errors.lastName && touched.lastName && (
+//               <Text style={styles.error}>{errors.lastName}</Text>
+//             )}
+
+//             <View style={styles.buttonContainer}>
+//               <Button
+//                 titleStyle={{ color: "#000", fontSize: 18 }}
+//                 buttonStyle={styles.button}
+//                 onPress={() => setProductInput(productInput + 1)}
+//                 title="+ Productos"
+//               />
+//               <Button
+//                 titleStyle={{ color: "#000", fontSize: 18 }}
+//                 buttonStyle={styles.button}
+//                 onPress={handleSubmit}
+//                 title="Guardar"
+//               />
+//             </View>
+//           </ScrollView>
+//         )}
+//       </Formik>

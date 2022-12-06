@@ -4,6 +4,7 @@ import Menu from "./Menu";
 import Perfil from "../screens/Perfil";
 import SplashScreen from "../screens/SplashScreen";
 import Home from "../screens/Home";
+import Venta from "../screens/Venta";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +15,7 @@ const Logged = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Home" component={Venta} />
       <Stack.Screen name="Menu" component={Menu} />
       <Stack.Screen  options={{
         headerShown: true,

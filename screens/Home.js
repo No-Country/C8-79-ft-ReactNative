@@ -53,7 +53,7 @@ export default function Home() {
           style={{
             color: colors.text,
             fontSize: 28,
-            padding: 20,
+            paddingTop: 20,
             textAlign: "center",
           }}
         >
