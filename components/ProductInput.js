@@ -38,7 +38,7 @@ const ProductInput = ({ handleData, confirm }) => {
             type="ionicon"
             color={colors.text}
             onPress={() => {
-              edit && setCantidad((prev) => prev - 1);
+              edit && setCantidad(prev => (prev <= 1)?prev:(prev - 1))
             }}
           />
           <Text
