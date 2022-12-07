@@ -20,7 +20,8 @@ const windowWidth = Dimensions.get("window").width;
 const DetalleComprobante = ({ navigation, route }) => {
   const { colors } = useTheme();
   const [popup, setPopup] = useState(false);
-
+  const idFactura = route.params
+  console.log(idFactura)
   const items = [
     { producto: "joya", cantidad: 3, uni: 34.5 },
     { producto: "aros", cantidad: 9, uni: 4.5 },

@@ -5,7 +5,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import React, { useState,useContext } from "react";
+import React, { useState,useContext, useEffect } from "react";
 import DateRangeFilter from "../components/DateRangeFilter";
 import { Icon } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
@@ -13,30 +13,68 @@ import moment from "moment";
 import { FlatList } from "react-native-gesture-handler";
 import Comprobante from "../components/Comprobante";
 import UserContext from "../context/UserContext";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/Config";
+import { Context } from "../context/ContextProvider";
 
 const windowWidth = Dimensions.get("window").width;
 
 const Comprobantes = () => {
   const { colors } = useTheme();
   const { setSpinner, setError } = useContext(UserContext);
-  const comprobantes = [
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-  ];
+  const {bandera, handleBandera} = useContext(Context)
+  const [facturas, setFacturas] = useState([])
+  const [comprobante, setComprobante] = useState()
+  const [bandera2, setBandera2] = useState(false)
+
+  const traerDatos = async () => {
+    try {
+      const array = [];
+      const querySnapshot = await getDocs(collection(db, "Facura"));
+      querySnapshot.forEach((doc) => {
+        array.push(doc.data());
+      });
+      setFacturas(array);
+      let auxFecha 
+      let fechaReal 
+      let arrayFecha = []
+     
+
+      array.forEach(factura => {
+        auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
+        fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
+        const todosProductos = factura.productos
+        const sumall = todosProductos.map(item => item.total).reduce((prev, curr) => prev + curr, 0);
+        const objeto = {
+          cliente: factura.cliente,
+          operacion: "Venta",
+          fecha: fechaReal,
+          id: factura.id,
+          monto: sumall
+        }
+        arrayFecha.push(objeto)
+        
+      
+      });
+
+      
+  
+      
+      setComprobante(arrayFecha)
+      setSpinner(false);
+    } catch (e) {
+      setSpinner(false);
+      throwError(e)
+    }
+  };
+
+  useEffect(() => {
+    setSpinner(true);
+    traerDatos();
+   
+  }, []);
+
+ 
 
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
@@ -68,7 +106,9 @@ const Comprobantes = () => {
   };
 
   return (
+    
     <View style={{ height: "100%", backgroundColor: colors.background }}>
+      
       <DateRangeFilter
         state={filter}
         close={closeFilter}
@@ -98,7 +138,9 @@ const Comprobantes = () => {
           </Text>
         </Text>
       </View>
-      <FlatList
+      {
+        facturas ? 
+        <FlatList
         ListHeaderComponent={() => (
           <View
             style={[styles.headerStyle, { backgroundColor: colors.primary }]}
@@ -151,31 +193,20 @@ const Comprobantes = () => {
             </Text>
           </View>
         )}
-        ListEmptyComponent={() => (
-          <ActivityIndicator
-            style={{ marginTop: 200 }}
-            size="large"
-            color={colors.primary}
-          />
-        )}
+        
         horizontal={false}
         overScrollMode={"never"}
         style={{
           width: "100%",
           height: "100%",
         }}
-        data={
-          comprobantes
-          // filter !== ""
-          //   ? products.filter((item) =>
-          //       item.description.toLowerCase().includes(filter.toLowerCase())
-          //     )
-          //   : prod
-        }
+        data={comprobante}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index}
         renderItem={renderItem}
-      ></FlatList>
+      ></FlatList> : <View></View>
+      }
+      
     </View>
   );
 };
