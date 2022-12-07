@@ -1,32 +1,33 @@
 import { StyleSheet, TextInput, Text, View, FlatList } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import MapSearchInput from "../MapsSearchInput";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
+import { getAuth } from "firebase/auth";
+import { Context } from "../../context/ContextProvider";
 
 const NewClientForm = () => {
   const { colors } = useTheme();
   const nav = useNavigation();
   const placesRef = useRef();
-
   const [popup, setPopup] = useState(false);
   const [getCity, setGetCity] = useState("");
+  const {handleBandera} = useContext(Context)
   const [location, setLocation] = useState({ coordinates: "", address: "" });
 
-  const submitForm = (values, clear) => {
-    // Aqui va el AddDoc
+  const submitForm = async(values, clear) => {
     let min = 83.1;
-    let max = 193.36;
-    /* await setDoc(doc(db, "Clientes", "Aqui va el uid"), {
+    let max = 193.3;
+    await setDoc(collection(db, "Clientes" ), {
       firstName: values.user,
       lastName: values.lastName,
       email: values.email,
-      phone: values.phone,
+      phone: values.phoneNumber,
       address: {
         address: values.address,
         city: getCity,
@@ -35,7 +36,11 @@ const NewClientForm = () => {
           lng: Math.random() * (max - min) + min,
         },
       },
-    }); */
+    }).catch(error => {
+      console.log(error)
+      setError(error)
+    });
+    handleBandera()
     setPopup(true);
     clear();
     setTimeout(() => {
