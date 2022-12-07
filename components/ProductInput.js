@@ -27,7 +27,7 @@ const ProductInput = ({ handleData, confirm }) => {
         />
       </View>
 
-      <View style={{ width: "40%", alignItems: "center" }}>
+      <View style={{ width: "50%", alignItems: "center" }}>
         <Text style={[styles.label, { color: colors.text }]}>Cantidad</Text>
         <View
           style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     flex: 1,
     borderRadius: 10,
+    width: "70%"
   },
   button: {
     borderRadius: 10,
