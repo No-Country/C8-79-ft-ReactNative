@@ -51,7 +51,7 @@ const Clients = ({navigation}) => {
     
    
   }, [bandera])
-  
+  //
 
   useFocusEffect(
     useCallback(() => {

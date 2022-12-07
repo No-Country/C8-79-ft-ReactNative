@@ -1,7 +1,7 @@
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 
-const PrintPDF = (products) => {
+const PrintPDF = (productos) => {
   const html = 
   `<html>
       <body>
@@ -16,22 +16,20 @@ const PrintPDF = (products) => {
 
             <table class="tftable" border="1">
              <tr>
-                <th>CODE</th>
-                 <th>DESCRIPTION </th>
-                 <th>PRICE </th>
-                <th>EXI</th>
-                <th>EXF </th>
-                <th>PRICE F</th>
+                <th>CODIGO</th>
+                 <th>NOMBRE </th>
+                 <th>PRECIO COMPRA </th>
+                <th>CANTIDAD</th>
+                <th>PRECIO VENTA</th>
              </tr>
 
-             ${products.map(item=>
+             ${productos.map(item=>
                 `<tr>
-                   <td>${item.code}</td>
-                    <td>${item.description}</td>
-                    <td>${item.price}</td>
-                    <td>${item.ExI}</td>
-                    <td>${item.ExF}</td>
-                    <td>${item.sellPrice}</td>
+                   <td>${item.codigo}</td>
+                    <td>${item.nombre}</td>
+                    <td>${item.precioCompra}</td>
+                    <td>${item.cantidad}</td>
+                    <td>${item.precioVenta}</td>
                 </tr>`)}
             </table>
        

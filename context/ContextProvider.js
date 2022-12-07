@@ -7,6 +7,7 @@ const Context = createContext();
 
 const ContextProvider = ({children}) => {
     
+    
     const [bandera, setBandera] = useState(false) 
 
     const handleBandera = () => {

@@ -42,6 +42,7 @@ import {
                   currentSlideIndex == index && {
                     backgroundColor: "#000000",
                     width: 25,
+                    height: 5
                   },
                 ]}
               />
@@ -134,7 +135,7 @@ import {
   
   const styles = StyleSheet.create({
     indicador: {
-      height: 2.5,
+      height: 5,
       width: 10,
       backgroundColor: "grey",
       marginHorizontal: 3,

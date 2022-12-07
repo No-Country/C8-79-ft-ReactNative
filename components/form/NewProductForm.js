@@ -5,88 +5,68 @@ import * as Yup from "yup";
 import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation, useTheme } from "@react-navigation/native";
-import MapSearchInput from "../MapsSearchInput";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
-
 import { Context } from "../../context/ContextProvider";
 
-const NewClientForm = () => {
+const NewProductForm = () => {
   const { colors } = useTheme();
   const nav = useNavigation();
-  const placesRef = useRef();
+
   const [popup, setPopup] = useState(false);
-  const [getCity, setGetCity] = useState("");
   const {handleBandera} = useContext(Context)
-  const [location, setLocation] = useState({ coordinates: "", address: "" });
 
   const submitForm = async(values, clear) => {
-    let min = 83.1;
-    let max = 193.3;
+
     const rand=()=>Math.random(0).toString(36).substr(2);
     const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
     const aux = token(40)
-    console.log(aux);
-    await setDoc(doc(db, "Clientes", aux), {
-      firstName: values.user,
-      lastName: values.lastName,
-      email: values.email,
-      phone: values.phoneNumber,
-      id:aux,
-      cantidad: 0,
-      address: {
-        address: values.address,
-        city: getCity,
-        coordinates: {
-          lat: Math.random() * (max - min) + min,
-          lng: Math.random() * (max - min) + min,
-        },
-      },
-    }).catch(error => {
-      console.log(error)
-      setError(error)
-    });
-    handleBandera()
+
+    await setDoc(doc(db, "Productos", values.codigo), {
+        nombre: values.nombre,
+        descripcion: values.descripcion,
+        precioVenta:  Number(values.precioVenta),
+        totalVentas:0,
+        precioCompra:  Number(values.precioCompra),
+        cantidad: Number(values.cantidad),
+        codigo: values.codigo
+      }).catch(error => {
+        console.log(error)
+        setError(error)
+      });
+      handleBandera()
     setPopup(true);
     clear();
     setTimeout(() => {
-      setPopup(false), nav.navigate("ClientsScreen");
+      setPopup(false), nav.navigate("ProductScreen");
     }, 1000);
-  };
-
-
-  const getAddress = () => {
-    const aux = placesRef.current.getAddressText().split(",")[1];
-    setGetCity(aux);
-    return placesRef.current.getAddressText();
-  };
-
-  const getLocation = (data, details, coordinates, setter) => {
-    setter("address", getAddress().split(",")[0]);
-    setLocation({ coordinates: coordinates, address: getAddress() });
   };
 
   return (
     <Formik
       initialValues={{
-        user: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        address: "",
+        nombre: "",
+        descripcion: "",
+        precioVenta: "",
+        precioCompra: "",
+        cantidad: "",
+        codigo: "",
       }}
       validationSchema={Yup.object({
-        user: Yup.string()
+        nombre: Yup.string()
           .max(20, "Must be 20 characters or less")
           .required("Debe completar este campo"),
 
-        lastName: Yup.string().max(20, "Must be 20 characters or less"),
-        email: Yup.string()
-          .email("Direccion invalida")
+        descripcion: Yup.string()
+          .max(80, "Must be 80 characters or less")
           .required("Debe completar este campo"),
-        phone: Yup.string(),
-        address: Yup.string()
-          .min(5, "Must be 5 characters or more")
+        precioVenta: Yup.string().required("Debe completar este campo"),
+        precioCompra: Yup.string().required("Debe completar este campo"),
+        cantidad: Yup.string()
+          .max(5, "Must be 5 characters or more")
+          .required("Debe completar este campo"),
+          codigo: Yup.string()
+          .max(6, "Must be 6 characters or more")
           .required("Debe completar este campo"),
       })}
       onSubmit={(values, { resetForm }) => {
@@ -111,56 +91,49 @@ const NewClientForm = () => {
               <TextInput
                 style={[
                   styles.textInput,
-                  {
-                    backgroundColor: colors.card,
-                    color: colors.text,
-                    placeholder: colors.text,
-                  },
+                  { backgroundColor: colors.card, color: colors.text },
                 ]}
-                onChangeText={handleChange("user")}
-                value={values.user}
+                onChangeText={handleChange("nombre")}
+                value={values.nombre}
                 selectionColor={colors.text}
-                placeholder="Nombre"
               />
-              {errors.user && touched.user && (
-                <Text style={styles.error}>{errors.user}</Text>
+              {errors.nombre && touched.nombre && (
+                <Text style={styles.error}>{errors.nombre}</Text>
               )}
               <Text style={[styles.label, { color: colors.text }]}>
-                Apellido
+                Descripcion
               </Text>
               <TextInput
                 style={[
                   styles.textInput,
                   { backgroundColor: colors.card, color: colors.text },
                 ]}
-                onChangeText={handleChange("lastName")}
-                value={values.lastName}
+                onChangeText={handleChange("descripcion")}
+                value={values.descripcion}
                 selectionColor={colors.text}
-                placeholder="Apellido"
               />
-              {errors.lastName && touched.lastName && (
-                <Text style={styles.error}>{errors.lastName}</Text>
+              {errors.descripcion && touched.descripcion && (
+                <Text style={styles.error}>{errors.descripcion}</Text>
               )}
 
               <Text style={[styles.label, { color: colors.text }]}>
-                Correo Elentrónico
+                Precio de venta
               </Text>
               <TextInput
-                autoCorrect={false}
+                keyboardType={"numeric"}
                 style={[
                   styles.textInput,
                   { backgroundColor: colors.card, color: colors.text },
                 ]}
-                onChangeText={handleChange("email")}
-                value={values.email}
+                onChangeText={handleChange("precioVenta")}
+                value={values.precioVenta}
                 selectionColor={colors.text}
-                placeholder="Corre@example.com"
               />
-              {errors.email && touched.email && (
-                <Text style={styles.error}>{errors.email}</Text>
+              {errors.precioVenta && touched.precioVenta && (
+                <Text style={styles.error}>{errors.precioVenta}</Text>
               )}
               <Text style={[styles.label, { color: colors.text }]}>
-                Telefono Celular
+                Precio de compra
               </Text>
 
               <TextInput
@@ -169,29 +142,50 @@ const NewClientForm = () => {
                   styles.textInput,
                   { backgroundColor: colors.card, color: colors.text },
                 ]}
-                onChangeText={handleChange("phoneNumber")}
-                value={values.phoneNumber}
+                onChangeText={handleChange("precioCompra")}
+                value={values.precioCompra}
                 selectionColor={colors.text}
-                placeholder="xxx xxxxxxx"
               />
-              {errors.phoneNumber && touched.phoneNumber && (
-                <Text style={styles.error}>{errors.phoneNumber}</Text>
+              {errors.precioCompra && touched.precioCompra && (
+                <Text style={styles.error}>{errors.precioCompra}</Text>
               )}
 
               <Text style={[styles.label, { color: colors.text }]}>
-                Direccion
+                Cantidad en stock
               </Text>
 
-              <MapSearchInput
-                onChangeText={() => handleChange("address")}
-                value={values.address}
-                isPress={getLocation}
-                refer={placesRef}
-                setFieldValue={setFieldValue}
-              ></MapSearchInput>
+              <TextInput
+                keyboardType={"numeric"}
+                style={[
+                  styles.textInput,
+                  { backgroundColor: colors.card, color: colors.text },
+                ]}
+                onChangeText={handleChange("cantidad")}
+                value={values.cantidad}
+                selectionColor={colors.text}
+              />
 
-              {errors.address && touched.address && (
-                <Text style={styles.error}>{errors.address}</Text>
+              {errors.cantidad && touched.cantidad && (
+                <Text style={styles.error}>{errors.cantidad}</Text>
+              )}
+
+<Text style={[styles.label, { color: colors.text }]}>
+                Codigo del producto
+              </Text>
+
+              <TextInput
+                
+                style={[
+                  styles.textInput,
+                  { backgroundColor: colors.card, color: colors.text },
+                ]}
+                onChangeText={handleChange("codigo")}
+                value={values.codigo}
+                selectionColor={colors.text}
+              />
+
+              {errors.codigo && touched.codigo && (
+                <Text style={styles.error}>{errors.codigo}</Text>
               )}
 
               <View style={styles.buttonContainer}>
@@ -208,7 +202,7 @@ const NewClientForm = () => {
 
               <PopUp
                 visibility={popup}
-                message="¡Se creo el Cliente con exito!"
+                message="¡Se creo el Producto con exito!"
               ></PopUp>
             </>
           }
@@ -218,7 +212,7 @@ const NewClientForm = () => {
   );
 };
 
-export default NewClientForm;
+export default NewProductForm;
 
 const styles = StyleSheet.create({
   form: {

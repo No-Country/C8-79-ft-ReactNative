@@ -26,7 +26,6 @@ const EditClientForm = ({client}) => {
  
   const submitForm = async(formData,clear) => {
     const cliente = doc(db, "Clientes", client.id);
-   setSpinner(true)
     await setDoc(cliente, {
       id: client.id,
       firstName: formData.user,

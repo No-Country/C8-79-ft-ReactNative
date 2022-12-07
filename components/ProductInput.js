@@ -13,19 +13,19 @@ const ProductInput = ({  handleData, confirm }) => {
   return (
     <View style={{ flexDirection: "row" }}>
       <View style={{ width: "50%" }}>
-        <Text style={styles.label}>Producto</Text>
+        <Text style={[styles.label,{color:colors.text}]}>Producto</Text>
         <TextInput
-          style={styles.textInput}
+          style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
           onChangeText={(d) => {
             setProducto(d);
           }}
           editable={edit ? true : false}
-          selectionColor={"#000"}
+          selectionColor={colors.text}
         />
       </View>
 
       <View style={{ width: "40%", alignItems: "center" }}>
-        <Text style={styles.label}>Cantidad</Text>
+        <Text style={[styles.label,{color:colors.text}]}>Cantidad</Text>
         <View style={{ flexDirection: "row", alignItems: "center",width:"100%" }}>
           <Icon
           style={{padding:5}}
@@ -37,7 +37,7 @@ const ProductInput = ({  handleData, confirm }) => {
             }}
           />
           <Text
-            style={[styles.textInput, { textAlign: "center",width:"20%"}]}
+            style={[styles.textInput, { textAlign: "center",width:"20%",backgroundColor:colors.primary,color:colors.text}]}
           >
             {cantidad}
           </Text>

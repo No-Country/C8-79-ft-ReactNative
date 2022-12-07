@@ -23,10 +23,26 @@ import { useTheme } from "@react-navigation/native";
 import Comprobantes from "../screens/Comprobantes";
 import DetalleComprobante from "../screens/DetalleComprobante";
 import Venta from "../screens/Venta";
+import NewProduct from "../screens/NewProduct";
 
 const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
+
+const ProductStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        headerStyle: { backgroundColor: "#A1D6E2" },
+      }}
+    >
+      <Stack.Screen name="ProductScreen" component={Products} />
+      <Stack.Screen name="NewProduct" component={NewProduct} />
+      
+    </Stack.Navigator>
+  );
+};
 
 const ClientsStack = () => {
   return (
@@ -113,7 +129,7 @@ const Menu = ({ route }) => {
       />
       <Drawer.Screen
         name="Productos"
-        component={Products}
+        component={ProductStack}
         options={{
           title: "Productos",
           drawerIcon: () => (
