@@ -63,7 +63,8 @@ const Venta = () => {
         producto: productData[i].producto,
         nombre: allProducts[indice].nombre,
         cantidad: productData[i].cantidad,
-        precioUnitario: allProducts[indice].precioVenta
+        precioUnitario: allProducts[indice].precioVenta,
+        total: productData[i].cantidad * allProducts[indice].precioVenta
       }
       arrayProductData.push(objeto)
       

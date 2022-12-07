@@ -13,7 +13,7 @@ const Comprobante = ({ item, index }) => {
     
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Detalle de Comprobante");
+        navigation.navigate("Detalle de Comprobante",item.id);
       }}
     >
       
