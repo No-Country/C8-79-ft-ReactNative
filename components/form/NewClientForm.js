@@ -10,8 +10,10 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
 
 import { Context } from "../../context/ContextProvider";
+import UserContext from "../../context/UserContext";
 
 const NewClientForm = () => {
+  const { setSpinner, throwError } = useContext(UserContext);
   const { colors } = useTheme();
   const nav = useNavigation();
   const placesRef = useRef();
@@ -21,6 +23,7 @@ const NewClientForm = () => {
   const [location, setLocation] = useState({ coordinates: "", address: "" });
 
   const submitForm = async(values, clear) => {
+    setSpinner(true)
     let min = 83.1;
     let max = 193.3;
     const rand=()=>Math.random(0).toString(36).substr(2);
@@ -45,7 +48,9 @@ const NewClientForm = () => {
     }).catch(error => {
       console.log(error)
       setError(error)
+      setSpinner(false)
     });
+    setSpinner(false)
     handleBandera()
     setPopup(true);
     clear();
@@ -84,7 +89,7 @@ const NewClientForm = () => {
         email: Yup.string()
           .email("Direccion invalida")
           .required("Debe completar este campo"),
-        phone: Yup.string(),
+        phone: Yup.string().required("Debe completar este campo"),
         address: Yup.string()
           .min(5, "Must be 5 characters or more")
           .required("Debe completar este campo"),
