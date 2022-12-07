@@ -56,8 +56,10 @@ const RegisterForm = () => {
           email,
           phoneNumber,
           password,
+          id: auth.currentUser.uid
         };
-      await addDoc(collection(db, "Usuarios"), data);
+        console.log(auth.currentUser.uid)
+      await setDoc(doc(db, "Usuarios",auth.currentUser.uid), data);
        setPopup(true);
        clear();
        setTimeout(() => {

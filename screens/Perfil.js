@@ -10,16 +10,16 @@ import { db } from "../firebase/Config";
 import UserContext from "../context/UserContext";
 import { color } from "react-native-reanimated";
 import { Context } from "../context/ContextProvider";
-
-
-
 import {Switch } from "@rneui/themed";
+import { getAuth } from "firebase/auth/react-native";
 
 
 export default function Perfil() {
   const { theme,setTheme} =useContext(UserContext);
   const [toggle, setToggle] = useState(false)
   const { colors } = useTheme();
+  const auth = getAuth();
+  const user = auth.currentUser;
 
  
   const {handleBandera, bandera} = useContext(Context)
@@ -27,6 +27,8 @@ export default function Perfil() {
   const nav = useNavigation();
  
   const [popup, setPopup] = useState(false)
+
+
 
 
   const handleTheme = () => {
