@@ -72,7 +72,7 @@ const Comprobantes = () => {
     setSpinner(true);
     traerDatos();
    
-  }, []);
+  }, [bandera]);
 
  
 

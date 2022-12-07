@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,9 +10,11 @@ import {
 import { Icon, Button } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 import ItemDeComprobante from "../components/ItemDeComprobante";
-import PrintPDF from "../components/PrintPDF"
 import ExcelExport from  "../components/ExcelExport"
 import PopUp from  "../components/PopUp"
+import { db } from "../firebase/Config";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import PrintPDFComprobante from "../context/PrintPDFComprobante";
 
 
 const windowWidth = Dimensions.get("window").width;
@@ -20,25 +22,35 @@ const windowWidth = Dimensions.get("window").width;
 const DetalleComprobante = ({ navigation, route }) => {
   const { colors } = useTheme();
   const [popup, setPopup] = useState(false);
+  const [facturas, setFactura] = useState([]);
   const idFactura = route.params
-  console.log(idFactura)
-  const items = [
-    { producto: "joya", cantidad: 3, uni: 34.5 },
-    { producto: "aros", cantidad: 9, uni: 4.5 },
-    { producto: "pulsera", cantidad: 6, uni: 3.5 },
-    { producto: "joya", cantidad: 3, uni: 34.5 },
-    { producto: "aros", cantidad: 9, uni: 4.5 },
-    { producto: "pulsera", cantidad: 6, uni: 3.5 },
-    { producto: "joya", cantidad: 3, uni: 34.5 },
-    { producto: "aros", cantidad: 9, uni: 4.5 },
-    { producto: "pulsera", cantidad: 6, uni: 3.5 },
-    { producto: "joya", cantidad: 3, uni: 34.5 },
-    { producto: "aros", cantidad: 9, uni: 4.5 },
-    { producto: "pulsera", cantidad: 6, uni: 3.5 },
-    { producto: "joya", cantidad: 3, uni: 34.5 },
-    { producto: "aros", cantidad: 9, uni: 4.5 },
-    { producto: "pulsera", cantidad: 6, uni: 3.5 },
-  ];
+  const [items, setItems] = useState()
+  const [fecha, setFecha] = useState()
+  const [monto, setMonto] = useState()
+
+
+  const traerDatos = async () => {
+    try {
+
+      const docRef = doc(db, "Facura", idFactura);
+      const docSnap = await getDoc(docRef);
+      setFactura(docSnap.data());
+      setItems(docSnap.data().productos)
+      let auxFecha = String(new Date(docSnap.data()?.fecha.seconds * 1000)).split(' ')
+      let fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
+      setFecha(fechaReal)
+      const sumall = docSnap.data().productos.map(item => item.total).reduce((prev, curr) => prev + curr, 0);
+      setMonto(sumall)
+    } catch (e) {
+;
+      throwError(e)
+    }
+  };
+
+  useEffect(() => {
+    traerDatos();
+    console.log(items)
+  }, []);
 
 
   const exportDetail = () => {
@@ -48,7 +60,7 @@ const DetalleComprobante = ({ navigation, route }) => {
   const confirmationExport = (remove, format = null) => {
     remove
       ? (setPopup(false),
-        format === "PDF" ? PrintPDF(items) : ExcelExport(items))
+        format === "PDF" ? PrintPDFComprobante(items) : ExcelExport(items))
       : setPopup(false);
   };
 
@@ -91,13 +103,13 @@ const DetalleComprobante = ({ navigation, route }) => {
             color: colors.text,
           }}
         >
-          Juan Perez
+          {facturas?.cliente}
         </Text>
         <Text style={{ fontSize: 18, padding: 2, color: colors.text }}>
         
-          Comprobante
+          Comprobante {' '}
           <Text style={{ fontWeight: "bold", color: colors.text }}>
-            #45464565
+            #{idFactura}
           </Text>
         </Text>
         <Text
@@ -109,10 +121,10 @@ const DetalleComprobante = ({ navigation, route }) => {
           }}
         >
         
-          Fecha
+          Fecha: {' '}
           <Text style={{ fontWeight: "bold", color: colors.text }}>
         
-            2/3/2022
+            {fecha}
           </Text>
         </Text>
       </View>
@@ -214,7 +226,7 @@ const DetalleComprobante = ({ navigation, route }) => {
             color: colors.text,
           }}
         >
-          TOTAL : $ XXXXX
+          TOTAL : $ {monto}
         </Text>
       </View>
       <PopUp
