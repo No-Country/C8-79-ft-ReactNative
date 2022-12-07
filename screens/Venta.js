@@ -31,16 +31,17 @@ const Venta = () => {
           ...productData,
         },
       };
-      console.log(comprobante);
       return comprobante;
     } else {
       console.log("debe completar");
     }
   };
 
-  const reset=()=>{
+const reset=()=>{
 setProductInput(0)
 setConfirmation(0)
+setProductData([])
+setCliente("")
 
   }
 
