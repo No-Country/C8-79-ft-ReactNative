@@ -19,10 +19,12 @@ export default function Perfil() {
   const [toggle, setToggle] = useState(false);
   const { colors } = useTheme();
   const [usuario, setUsuario] = useState();
-  const { handleBandera, bandera, uid } = useContext(Context);
+  const { handleBandera, bandera} = useContext(Context);
   const { setSpinner, setError } = useContext(UserContext);
   const nav = useNavigation();
-
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const uid = auth.currentUser.uid;
   const [popup, setPopup] = useState(false);
 
   const datosUsuario = async () => {
