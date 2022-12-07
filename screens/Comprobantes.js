@@ -38,31 +38,27 @@ const Comprobantes = () => {
       let auxFecha 
       let fechaReal 
       let arrayFecha = []
-      
-      console.log(array)
+     
 
       array.forEach(factura => {
         auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
         fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
-        
+        const todosProductos = factura.productos
+        const sumall = todosProductos.map(item => item.total).reduce((prev, curr) => prev + curr, 0);
         const objeto = {
           cliente: factura.cliente,
           operacion: "Venta",
           fecha: fechaReal,
-          id: factura.id
+          id: factura.id,
+          monto: sumall
         }
         arrayFecha.push(objeto)
-        const totalProductos = factura.productos
-        const tamañoProductos = totalProductos.length
-        // console.log(totalProductos[0])
-        for(let i = 0; i<2; i++){
-          
-        }
-        // const sumall = totalProductos.map(item => item.amount).reduce((prev, curr) => prev + curr, 0);
+        
+      
       });
 
       
-      
+  
       
       setComprobante(arrayFecha)
       setSpinner(false);

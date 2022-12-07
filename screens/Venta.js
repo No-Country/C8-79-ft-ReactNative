@@ -75,10 +75,10 @@ const Venta = () => {
       const comprobante = {
         fecha: new Date(),
         cliente: auxCliente,
-        productos: {
+        productos: [
           ...arrayProductData, 
           
-        },
+      ],
         id: ram,
       };
 

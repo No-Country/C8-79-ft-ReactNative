@@ -61,7 +61,7 @@ const Comprobante = ({ item, index }) => {
             textAlign: "center",
           }}
         >
-          ${"TEST"}
+          ${item.monto}
         </Text>
       </View>
     </TouchableOpacity>
