@@ -1,28 +1,45 @@
 import { StyleSheet, TextInput, Text, View, FlatList } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation, useTheme } from "@react-navigation/native";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase/Config";
+import { Context } from "../../context/ContextProvider";
 
 const NewProductForm = () => {
   const { colors } = useTheme();
   const nav = useNavigation();
 
   const [popup, setPopup] = useState(false);
+  const {handleBandera} = useContext(Context)
 
-  const submitForm = (values, clear) => {
-    console.log(values);
+  const submitForm = async(values, clear) => {
+
+    const rand=()=>Math.random(0).toString(36).substr(2);
+    const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
+    const aux = token(40)
+
+    await setDoc(doc(db, "Productos", aux), {
+        nombre: values.nombre,
+        descripcion: values.descripcion,
+        precioVenta: values.precioVenta,
+        precioCompra: values.precioCompra,
+        id:aux,
+        cantidad: values.cantidad,
+        codigo: values.codigo
+      }).catch(error => {
+        console.log(error)
+        setError(error)
+      });
+      handleBandera()
     setPopup(true);
     clear();
     setTimeout(() => {
       setPopup(false), nav.navigate("ProductScreen");
     }, 1000);
-  };
-
-  const addProduct = (values) => {
-    console.log(values);
   };
 
   return (
@@ -50,12 +67,10 @@ const NewProductForm = () => {
           .required("Debe completar este campo"),
           codigo: Yup.string()
           .max(6, "Must be 6 characters or more")
-          .min(6, "Must be 6 characters or less")
           .required("Debe completar este campo"),
       })}
       onSubmit={(values, { resetForm }) => {
         submitForm(values, resetForm);
-        addProduct(values);
       }}
     >
       {({

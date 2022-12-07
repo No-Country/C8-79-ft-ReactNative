@@ -6,9 +6,9 @@ import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation, useTheme } from "@react-navigation/native";
 import MapSearchInput from "../MapsSearchInput";
-import { collection, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
-import { getAuth } from "firebase/auth";
+
 import { Context } from "../../context/ContextProvider";
 
 const NewClientForm = () => {
@@ -23,11 +23,16 @@ const NewClientForm = () => {
   const submitForm = async(values, clear) => {
     let min = 83.1;
     let max = 193.3;
-    await setDoc(collection(db, "Clientes" ), {
+    const rand=()=>Math.random(0).toString(36).substr(2);
+    const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
+    const aux = token(40)
+    console.log(aux);
+    await setDoc(doc(db, "Clientes", aux), {
       firstName: values.user,
       lastName: values.lastName,
       email: values.email,
       phone: values.phoneNumber,
+      id:aux,
       address: {
         address: values.address,
         city: getCity,
@@ -47,6 +52,7 @@ const NewClientForm = () => {
       setPopup(false), nav.navigate("ClientsScreen");
     }, 1000);
   };
+
 
   const getAddress = () => {
     const aux = placesRef.current.getAddressText().split(",")[1];
