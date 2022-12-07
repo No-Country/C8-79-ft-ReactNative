@@ -33,6 +33,7 @@ const NewClientForm = () => {
       email: values.email,
       phone: values.phoneNumber,
       id:aux,
+      cantidad: 0,
       address: {
         address: values.address,
         city: getCity,
