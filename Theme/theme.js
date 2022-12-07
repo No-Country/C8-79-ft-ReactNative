@@ -5,7 +5,7 @@ export const DarkTheme = {
       background:"#2C3333",
       card: "#000",
       text: "#E7F6F2",
-      button:"#4B0082",
+      button:"#395B64",
       border: "#000",
       notification: "#fff",
     },
