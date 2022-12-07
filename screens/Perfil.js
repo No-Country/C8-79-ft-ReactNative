@@ -20,7 +20,7 @@ export default function Perfil() {
   const { colors } = useTheme();
   const auth = getAuth();
   const user = auth.currentUser;
-
+  const uid = auth.currentUser.uid
  
   const {handleBandera, bandera} = useContext(Context)
   const {setSpinner,setError} = useContext(UserContext)
@@ -28,15 +28,13 @@ export default function Perfil() {
  
   const [popup, setPopup] = useState(false)
 
-
+  //
 
 
   const handleTheme = () => {
     setToggle((toggle)=>!toggle)
     setTheme(theme == "Light" ? "Dark" : "Light");
 
-
-    
   };
   return (
     <View style={{justifyContent:"center",alignItems:"center",height:"100%"}}>
