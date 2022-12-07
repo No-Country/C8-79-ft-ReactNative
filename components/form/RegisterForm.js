@@ -36,7 +36,7 @@ const RegisterForm = () => {
 
   const submitForm = (formData, clear) => {
     setSpinner(true);
-  handleCreateUser(formData,clear)
+    handleCreateUser(formData,clear)
     
   };
 
