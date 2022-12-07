@@ -16,10 +16,10 @@ const DateRangeFilter = ({ close, handleFilter, state }) => {
       displayedDate={displayedDate}
       maxDate={maxDate}
       open={visibility}
-      containerStyle={{backgroundColor:colors.primary,color:colors.text}}
+      containerStyle={{backgroundColor:colors.background,color:colors.text}}
       headerTextStyle={{color:colors.text}}
       dayTextStyle={{color:colors.text}}
-      selectedStyle={{backgroundColor:colors.card}}
+      selectedStyle={{backgroundColor:colors.primary}}
       range
     />
   );

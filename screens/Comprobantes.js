@@ -21,7 +21,7 @@ const windowWidth = Dimensions.get("window").width;
 
 const Comprobantes = () => {
   const { colors } = useTheme();
-  const { setSpinner, setError } = useContext(UserContext);
+  const { setSpinner, setError,throwError } = useContext(UserContext);
   const {bandera, handleBandera} = useContext(Context)
   const [facturas, setFacturas] = useState([])
   const [comprobante, setComprobante] = useState()
@@ -75,7 +75,7 @@ const Comprobantes = () => {
    
   }, []);
 
- 
+
 
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
@@ -123,7 +123,7 @@ const Comprobantes = () => {
           type="ionicon"
           color={colors.text}
           onPress={() =>
-            setFilter((prev) => ({
+            setFilter((prev) => ( console.log(moment(facturas[0].fecha.seconds*1000)),{
               ...prev,
               visibility: true,
             }))
