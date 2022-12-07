@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Icon } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 
-const ProductInput = ({  handleData, confirm }) => {
+const ProductInput = ({ handleData, confirm }) => {
   const [cantidad, setCantidad] = useState(1);
   const { colors } = useTheme();
   const [producto, setProducto] = useState("");
@@ -12,10 +12,13 @@ const ProductInput = ({  handleData, confirm }) => {
 
   return (
     <View style={{ flexDirection: "row" }}>
-      <View style={{ width: "50%" }}>
-        <Text style={[styles.label,{color:colors.text}]}>Producto</Text>
+      <View style={{ width: "60%" }}>
+        <Text style={[styles.label, { color: colors.text }]}>Producto</Text>
         <TextInput
-          style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
+          style={[
+            styles.textInput,
+            { backgroundColor: colors.card, color: colors.text },
+          ]}
           onChangeText={(d) => {
             setProducto(d);
           }}
@@ -24,11 +27,13 @@ const ProductInput = ({  handleData, confirm }) => {
         />
       </View>
 
-      <View style={{ width: "40%", alignItems: "center" }}>
-        <Text style={[styles.label,{color:colors.text}]}>Cantidad</Text>
-        <View style={{ flexDirection: "row", alignItems: "center",width:"100%" }}>
+      <View style={{ width: "30%", alignItems: "center" }}>
+        <Text style={[styles.label, { color: colors.text }]}>Cantidad</Text>
+        <View
+          style={{ flexDirection: "row", alignItems: "center", width: "100%" }}
+        >
           <Icon
-          style={{padding:5}}
+            style={{ padding: 5 }}
             name="remove"
             type="ionicon"
             color={colors.text}
@@ -37,12 +42,21 @@ const ProductInput = ({  handleData, confirm }) => {
             }}
           />
           <Text
-            style={[styles.textInput, { textAlign: "center",width:"20%",backgroundColor:colors.primary,color:colors.text}]}
+            style={[
+              styles.textInput,
+              {
+                textAlign: "center",
+                width: "20%",
+                backgroundColor: colors.card,
+                color: colors.text,
+                textAlignVertical: "center",
+              },
+            ]}
           >
             {cantidad}
           </Text>
           <Icon
-           style={{padding:5}}
+            style={{ padding: 5 }}
             name="add"
             type="ionicon"
             color={colors.text}
@@ -50,32 +64,36 @@ const ProductInput = ({  handleData, confirm }) => {
               edit && setCantidad((prev) => prev + 1);
             }}
           />
-          
         </View>
-        
       </View>
-      <View style={{ width: "10%", alignItems: "center",justifyContent:"flex-end" ,paddingBottom:5}}>
-      {edit ?<Icon
-           style={{padding:5}}
-          name="checkmark"
-          type="ionicon"
-          color="green"
-          onPress={() => {
-            setEdit(false);
-            confirm((prev) => prev + 1);
-            handleData((prev) => [...prev, { producto, cantidad }]);
-          }}
-        />
-        :
-        <Icon
-           style={{padding:5}}
-          name="checkmark-done"
-          type="ionicon"
-          color="green"
-          
-        />
-        }
-
+      <View
+        style={{
+          width: "10%",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          paddingBottom: 5,
+        }}
+      >
+        {edit ? (
+          <Icon
+            style={{ padding: 5 }}
+            name="checkmark"
+            type="ionicon"
+            color="green"
+            onPress={() => {
+              setEdit(false);
+              confirm((prev) => prev + 1);
+              handleData((prev) => [...prev, { producto, cantidad }]);
+            }}
+          />
+        ) : (
+          <Icon
+            style={{ padding: 5 }}
+            name="checkmark-done"
+            type="ionicon"
+            color="green"
+          />
+        )}
       </View>
     </View>
   );

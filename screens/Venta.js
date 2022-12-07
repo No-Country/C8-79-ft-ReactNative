@@ -12,16 +12,25 @@ import { Button } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 import ProductInput from "../components/ProductInput";
 import { resetPassword } from "../firebase/session";
-import { useEffect } from "react";
-import { collection, doc, getDocs, increment, setDoc, updateDoc } from "firebase/firestore";
+import { useEffect ,useContext} from "react";
+import {
+  collection,
+  doc,
+  getDocs,
+  increment,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase/Config";
-import SelectDropdown from 'react-native-select-dropdown'
+import SelectDropdown from "react-native-select-dropdown";
 import { random } from "../helpers/random";
-
+import { color } from "react-native-reanimated";
+import UserContext from "../context/UserContext";
 
 const windowWidth = Dimensions.get("window").width;
 
 const Venta = () => {
+  const {setSpinner,setError} = useContext(UserContext)
   const { colors } = useTheme();
   const [productInput, setProductInput] = useState(1);
   const [cliente, setCliente] = useState("");
@@ -29,53 +38,46 @@ const Venta = () => {
   const [confirmation, setConfirmation] = useState(0);
   const [clientesFire, setClientesFire] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [idCodigo, setIdCodigo] = useState([])
-  const ram = random()
- 
+  const [idCodigo, setIdCodigo] = useState([]);
+  const ram = random();
 
-  const submit = async(data) => {
-    let bandera = true
+  const submit = async (data) => {
+    let bandera = true;
     for (let i = 0; i < productData.length; i++) {
-      bandera  = productos.includes(productData[i].producto) 
-      if(bandera == false){
-        break
+      bandera = productos.includes(productData[i].producto);
+      if (bandera == false) {
+        break;
       }
     }
 
-    
-
-    
-    const aux = cliente.split(' ')
-    const id = aux[aux.length-1]
-    const auxCliente = aux[0] + " " + aux[1] 
-    
+    const aux = cliente.split(" ");
+    const id = aux[aux.length - 1];
+    const auxCliente = aux[0] + " " + aux[1];
 
     if (confirmation === productInput && bandera === true) {
-      
       const comprobante = {
         fecha: new Date(),
         cliente: auxCliente,
         productos: {
           ...productData,
         },
-        id: ram
+        id: ram,
       };
-     
-      await setDoc(doc(db, "Facura", ram ), comprobante);
+
+      await setDoc(doc(db, "Facura", ram), comprobante);
 
       const docRef = doc(db, "Clientes", id);
       await updateDoc(docRef, {
-        cantidad : increment(1)
+        cantidad: increment(1),
       });
 
-      productData.forEach(async(e) => {
+      productData.forEach(async (e) => {
         const docRef = doc(db, "Productos", e.producto);
         await updateDoc(docRef, {
-          cantidad : increment(-e.cantidad),
-          totalVentas: increment(e.cantidad)
+          cantidad: increment(-e.cantidad),
+          totalVentas: increment(e.cantidad),
         });
       });
-
 
       return comprobante;
     } else {
@@ -91,36 +93,31 @@ const Venta = () => {
   };
 
   const traerDatos = async () => {
-    const array = []
+    const array = [];
     const querySnapshot = await getDocs(collection(db, "Clientes"));
     querySnapshot.forEach((doc) => {
-      const nombre = doc.data().firstName + ' ' + doc.data().lastName + ' ' + doc.data().id
+      const nombre =
+        doc.data().firstName + " " + doc.data().lastName + " " + doc.data().id;
       array.push(nombre);
-
     });
-    setClientesFire(array)
+    setClientesFire(array);
 
     const array2 = [];
 
     const querySnapshot2 = await getDocs(collection(db, "Productos"));
     querySnapshot2.forEach((doc) => {
-      
-      
-      const codigo = doc.data().codigo
+      const codigo = doc.data().codigo;
       array2.push(codigo);
-   
     });
     setProductos(array2);
-  
+    setSpinner(false)
   };
-  
+
   useEffect(() => {
-    
-    traerDatos()
-    console.log(productos)
-   
-   
-  }, [])
+    traerDatos();
+    setSpinner(true)
+    console.log(productos);
+  }, []);
 
   return (
     <View
@@ -140,21 +137,30 @@ const Venta = () => {
           width: windowWidth - 30,
         }}
       >
-        <Text style={[styles.label,{color:colors.text}]}>Cliente</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Cliente</Text>
 
-        {
-          clientesFire.length > 0 ? 
-            <SelectDropdown  
-              data={clientesFire}
-              onSelect={(selectedItem, index) => {
-                setCliente(selectedItem)
-              }}
-              search
-              
-            />
-          : null
-        }
-
+        
+          <SelectDropdown
+            defaultButtonText="Selecciona un contacto"
+            buttonStyle={{
+              width: "100%",
+              borderRadius: 10,
+              backgroundColor: colors.card,
+            }}
+           
+            dropdownStyle={{ backgroundColor: colors.card }}
+            
+            rowTextStyle={{color:colors.text}}
+            buttonTextStyle={{ color: colors.text }}
+            searchInputStyle={{ backgroundColor:colors.primary,  }}
+            searchInputTxtColor={colors.text}
+            data={clientesFire}
+            onSelect={(selectedItem, index) => {
+              setCliente(selectedItem);
+            }}
+            search
+          />
+       
 
         {Array.from(Array(productInput)).map((item, index) => {
           return (
@@ -169,20 +175,20 @@ const Venta = () => {
 
         <View style={styles.buttonContainer}>
           <Button
-            titleStyle={{ color:colors.text, fontSize: 18 }}
-            buttonStyle={[styles.button,{backgroundColor:colors.primary}]}
+            titleStyle={{ color: colors.text, fontSize: 18 }}
+            buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
             onPress={() => reset()}
             title={"Reiniciar"}
           />
           <Button
             titleStyle={{ color: colors.text, fontSize: 18 }}
-            buttonStyle={[styles.button,{backgroundColor:colors.primary}]}
+            buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
             onPress={() => setProductInput(productInput + 1)}
             title={"+ productos"}
           />
           <Button
-            titleStyle={{ color:colors.text, fontSize: 18 }}
-            buttonStyle={[styles.button,{backgroundColor:colors.primary}]}
+            titleStyle={{ color: colors.text, fontSize: 18 }}
+            buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
             onPress={() => submit()}
             title={"Confirmar"}
           />

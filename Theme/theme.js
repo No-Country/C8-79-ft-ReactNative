@@ -3,7 +3,7 @@ export const DarkTheme = {
     colors: {
       primary: "#395B64",
       background:"#2C3333",
-      card: "#000",
+      card: "#505b5b",
       text: "#E7F6F2",
       button:"#395B64",
       border: "#000",
