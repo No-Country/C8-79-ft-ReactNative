@@ -12,6 +12,8 @@ import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation , useTheme} from "@react-navigation/native";
 import MapSearchInput from "../MapsSearchInput"
+import { doc, setDoc } from "firebase/firestore"; 
+import { db } from "../../firebase/Config";
 
 const NewClientForm = () => {
 
@@ -43,7 +45,18 @@ const NewClientForm = () => {
   }
 
   const addClient = (values) => {
-    console.log(values)
+    console.log(values);
+   /*  await setDoc(doc(db, "cities", "LA"), {
+      firstName: values.user,
+      lastName: values.lastName,
+      email: values.email,
+      phone: values.phone,
+      address: {
+        address:values.address,
+        city:
+      }
+
+    }); */
   }
 
 
@@ -88,6 +101,7 @@ const NewClientForm = () => {
             onChangeText={handleChange("user")}
             value={values.user}
             selectionColor={colors.text}
+            placeholder="Nombre"
           />
           {errors.user && touched.user && (
             <Text style={styles.error}>{errors.user}</Text>
@@ -98,6 +112,7 @@ const NewClientForm = () => {
             onChangeText={handleChange("lastName")}
             value={values.lastName}
             selectionColor={colors.text}
+            placeholder="Apellido"
           />
           {errors.lastName && touched.lastName && (
             <Text style={styles.error}>{errors.lastName}</Text>
@@ -110,6 +125,7 @@ const NewClientForm = () => {
             onChangeText={handleChange("email")}
             value={values.email}
             selectionColor={colors.text}
+            placeholder="Corre@example.com"
           />
           {errors.email && touched.email && (
             <Text style={styles.error}>{errors.email}</Text>
@@ -122,6 +138,7 @@ const NewClientForm = () => {
             onChangeText={handleChange("phoneNumber")}
             value={values.phoneNumber}
             selectionColor={colors.text}
+            placeholder="xxx xxxxxxx"
           />
           {errors.phoneNumber && touched.phoneNumber && (
             <Text style={styles.error}>{errors.phoneNumber}</Text>
@@ -135,6 +152,7 @@ const NewClientForm = () => {
             isPress={getLocation}
             refer={placesRef}
             setFieldValue={setFieldValue}
+            placeholder="Address-City"
           ></MapSearchInput>
 
           {errors.address && touched.address && (

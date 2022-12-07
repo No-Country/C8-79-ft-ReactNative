@@ -120,7 +120,7 @@ const Products = ({ navigation }) => {
         icon={{ name: "add", color: colors.text }}
         color={colors.primary}
         placement="right"
-        onPress={() => navigation.navigate("Productos")}
+        onPress={()=>navigation.navigate("NewProduct")}
       />
     </View>
   );

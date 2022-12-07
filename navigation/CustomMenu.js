@@ -99,6 +99,6 @@ const CustomMenu = (props) => {
   );
 };
 
-export default CustomMenu;
+export default CustomMenu; 
 
 const styles = StyleSheet.create({});
