@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { Icon } from "@rneui/themed";
 import PieChartComponent from "../components/PieChartComponent";
 import BarGraphComponent from "../components/BarGraphComponent";
@@ -7,8 +7,10 @@ import { graphone, graphTwo } from "../helpers/devData";
 import DateRangeFilter from "../components/DateRangeFilter";
 import moment from "moment";
 import { useTheme } from "@react-navigation/native";
+import UserContext from "../context/UserContext";
 
 const Reportes = () => {
+  const { setSpinner, setError } = useContext(UserContext);
   const {colors}=useTheme()
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
@@ -124,10 +126,10 @@ const Reportes = () => {
           </Text>
         </View>
 
-        <View style={[styles.graph,{backgroundColor:colors.primary,borderColor:colors.primary}]}>
+        <View style={[styles.graph,{backgroundColor:colors.background,borderColor:colors.primary}]}>
           <PieChartComponent title={"Productos mas vendidos"} data={graphone} />
         </View>
-        <View style={[styles.graph,{backgroundColor:colors.primary,borderColor:colors.primary}]}>
+        <View style={[styles.graph,{backgroundColor:colors.background,borderColor:colors.primary}]}>
           <PieChartComponent title={"Mejores Clientes"} data={graphTwo} />
         </View>
         {/* <View style={styles.graph}>

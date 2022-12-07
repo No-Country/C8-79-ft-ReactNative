@@ -5,18 +5,20 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import DateRangeFilter from "../components/DateRangeFilter";
 import { Icon } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 import moment from "moment";
 import { FlatList } from "react-native-gesture-handler";
 import Comprobante from "../components/Comprobante";
+import UserContext from "../context/UserContext";
 
 const windowWidth = Dimensions.get("window").width;
 
 const Comprobantes = () => {
   const { colors } = useTheme();
+  const { setSpinner, setError } = useContext(UserContext);
   const comprobantes = [
     {},
     {},

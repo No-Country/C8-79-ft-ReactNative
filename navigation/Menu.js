@@ -49,7 +49,7 @@ const ClientsStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        headerStyle: { backgroundColor: "#A1D6E2" },
+        
       }}
     >
       <Stack.Screen name="ClientsScreen" component={Clients} />

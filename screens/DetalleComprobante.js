@@ -10,11 +10,16 @@ import {
 import { Icon, Button } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 import ItemDeComprobante from "../components/ItemDeComprobante";
+import PrintPDF from "../components/PrintPDF"
+import ExcelExport from  "../components/ExcelExport"
+import PopUp from  "../components/PopUp"
+
 
 const windowWidth = Dimensions.get("window").width;
 
 const DetalleComprobante = ({ navigation, route }) => {
   const { colors } = useTheme();
+  const [popup, setPopup] = useState(false);
 
   const items = [
     { producto: "joya", cantidad: 3, uni: 34.5 },
@@ -34,15 +39,29 @@ const DetalleComprobante = ({ navigation, route }) => {
     { producto: "pulsera", cantidad: 6, uni: 3.5 },
   ];
 
+
+  const exportDetail = () => {
+    setPopup(true);
+  };
+/////FALTA PASAR NOMBRE #coprobante y fecha
+  const confirmationExport = (remove, format = null) => {
+    remove
+      ? (setPopup(false),
+        format === "PDF" ? PrintPDF(items) : ExcelExport(items))
+      : setPopup(false);
+  };
+
   const renderItem = ({ item, index }) => {
     return <ItemDeComprobante item={item} index={index} />;
   };
 
   return (
+
+    
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.buttonsView}>
         <Button
-          onPress={() => {}}
+          onPress={() => exportDetail(items)}
           iconPosition="right"
           titleStyle={{ color: colors.text, fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
@@ -197,6 +216,57 @@ const DetalleComprobante = ({ navigation, route }) => {
           TOTAL : $ XXXXX
         </Text>
       </View>
+      <PopUp
+        visibility={popup}
+        message={"Selecciona el formato para exportar"}
+        child={
+          <View style={[styles.buttonContainer]}>
+            <View style={styles.buttonHeader}>
+              <Button
+                titleStyle={[styles.buttonText, { color: colors.text }]}
+                buttonStyle={[
+                  styles.buttonDialog,
+                  {
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary,
+                  },
+                ]}
+                onPress={() => confirmationExport(true, "PDF")}
+              >
+                PDF
+              </Button>
+              <Button
+                titleStyle={[styles.buttonText, { color: colors.text }]}
+                buttonStyle={[
+                  styles.buttonDialog,
+                  {
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary,
+                  },
+                ]}
+                onPress={() => confirmationExport(true, "XLS")}
+              >
+                XLS
+              </Button>
+            </View>
+            <Button
+              titleStyle={[styles.buttonText, { color: colors.text }]}
+              buttonStyle={[
+                styles.buttonBottom,
+                {
+                  backgroundColor: colors.primary,
+                  borderColor: colors.primary,
+                },
+              ]}
+              onPress={() => confirmationExport(false)}
+            >
+              CANCELAR
+            </Button>
+          </View>
+        }
+      />
+
+      
     </View>
   );
 };
@@ -258,5 +328,29 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-end",
+  },
+  buttonDialog: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#A1D6E2",
+    width: 100,
+    height: 50,
+  },
+  buttonContainer: {
+    justifyContent: "space-evenly",
+    marginVertical: 20,
+  },
+  buttonHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  buttonText: {
+    color: "#000",
+    fontWeight: "bold",
+  },
+  buttonBottom: {
+    borderRadius: 20,
+    height: 50,
+    marginTop: 20,
   },
 });
