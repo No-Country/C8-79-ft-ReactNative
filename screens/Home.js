@@ -17,13 +17,13 @@ export default function Home() {
 
   useFocusEffect(
     useCallback(() => {
-      setTimeout(() => setArr(true), 100);
+      setTimeout(() => setArr(true), 150);
       setTimeout(() => setArr1(true), 300);
-      setTimeout(() => setArr2(true), 600);
-      setTimeout(() => setArr3(true), 900);
-      setTimeout(() => setArr4(true), 1200);
-      setTimeout(() => setArr5(true), 1500);
-      setTimeout(() => setArr6(true), 1800);
+      setTimeout(() => setArr2(true), 450);
+      setTimeout(() => setArr3(true), 600);
+      setTimeout(() => setArr4(true),750);
+      setTimeout(() => setArr5(true), 900);
+      setTimeout(() => setArr6(true), 1050);
 
       return () => {
         setArr1(false),
@@ -53,7 +53,7 @@ export default function Home() {
           style={{
             color: colors.text,
             fontSize: 28,
-            padding: 20,
+            paddingTop: 20,
             textAlign: "center",
           }}
         >

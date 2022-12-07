@@ -4,6 +4,7 @@ import Menu from "./Menu";
 import Perfil from "../screens/Perfil";
 import SplashScreen from "../screens/SplashScreen";
 import Home from "../screens/Home";
+import Venta from "../screens/Venta";
 
 const Stack = createNativeStackNavigator();
 

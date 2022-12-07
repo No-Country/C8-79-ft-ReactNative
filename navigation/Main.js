@@ -10,7 +10,7 @@ import Spinner from "../components/Spinner";
 
   useEffect(() => {
     const unsuscribe = checkIsLogged(getToken);
-    return () => unsuscribe();
+    //return () => unsuscribe();
   }, []);
   return(
 <>

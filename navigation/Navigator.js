@@ -26,7 +26,7 @@ import { storeData,getData, removeData } from "../helpers/storageHelper";
         setLaunched(true)
       }else{
         await storeData("LAUNCHED","LOGEADO")
-        setChecked(true)
+        setLaunched(true)
       }
 
     }
