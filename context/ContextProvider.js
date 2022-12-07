@@ -1,3 +1,4 @@
+import { getAuth } from 'firebase/auth/react-native';
 import React, { createContext, useState } from 'react'
 
 
@@ -7,6 +8,9 @@ const Context = createContext();
 
 const ContextProvider = ({children}) => {
     
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const uid = auth.currentUser.uid;
     const [bandera, setBandera] = useState(false) 
 
     const handleBandera = () => {
@@ -16,7 +20,9 @@ const ContextProvider = ({children}) => {
     const data = {
         handleBandera,
         bandera,
-        setBandera
+        setBandera,
+        uid,
+        user
     }
 
 
