@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, View ,ActivityIndicator} from "react-native";
+import {FlatList, StyleSheet, View ,Text} from "react-native";
 import React, { useEffect, useState,useCallback, useContext} from "react";
 import { SearchBar } from "@rneui/themed";
 import { clients } from "../helpers/devData";
@@ -11,6 +11,7 @@ import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
 import { useTheme } from "@react-navigation/native";
 import { color } from "react-native-reanimated";
+import UserContext from "../context/UserContext";
 
 
 const sortData = (arr) => {
@@ -27,7 +28,7 @@ const sortData = (arr) => {
 }
 
 const Clients = ({navigation}) => {
-
+  const {setSpinner,setError} = useContext(UserContext)
   const {bandera} = useContext(Context)
   const [filter, setFilter] = useState("");
   const [click, setClick] = useState(null);
@@ -43,11 +44,13 @@ const Clients = ({navigation}) => {
 
     });
     setClientes(array)
+    setSpinner(false)
   };
   
   useEffect(() => {
-    
+    setSpinner(true)
     traerDatos()
+    
     
    
   }, [bandera])
@@ -100,7 +103,10 @@ const renderItem=({ item, index }) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        ListEmptyComponent={()=> <ActivityIndicator style={{marginTop:200}} size="large" color={colors.primary} />}
+        ListEmptyComponent={()=> 
+          <Text style={{color:colors.text,width:"100%",textAlign:"center"}}>No se encontraron coincidencias</Text>
+      
+        }
       />
       <FAB
         visible={true}

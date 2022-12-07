@@ -5,14 +5,11 @@ import {
   Text,
   Dimensions,
   ScrollView,
-  ActivityIndicator,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState,  useContext } from "react";
 import { SearchBar } from "@rneui/themed";
 import ItemDeInventario from "../components/ItemDeInventario";
 import { Icon, Button } from "@rneui/themed";
-import { useFocusEffect } from "@react-navigation/native";
-import { products } from "../helpers/devProcuctsData";
 import PrintPDF from "../components/PrintPDF";
 import ExcelExport from "../components/ExcelExport";
 import PopUp from "../components/PopUp";
@@ -20,18 +17,19 @@ import { useTheme } from "@react-navigation/native";
 import { useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/Config";
+import UserContext from "../context/UserContext";
 
 const windowWidth = Dimensions.get("window").width;
 
 const Inventario = () => {
+  const { setSpinner, setError } = useContext(UserContext);
   const { colors } = useTheme();
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [prod, setProd] = useState([]);
   const [popup, setPopup] = useState(false);
-  const [productos, setProductos] = useState([]);
-
+  const [products, setProducts] = useState([]);
 
   const traerDatos = async () => {
     const array = [];
@@ -39,21 +37,22 @@ const Inventario = () => {
     querySnapshot.forEach((doc) => {
       array.push(doc.data());
     });
-    setProductos(array);
+    setProducts(array);
+    pagination(array);
+
+    setSpinner(false);
   };
 
   useEffect(() => {
+    setSpinner(true);
     traerDatos();
-    console.log(productos)
   }, []);
 
-
-  useFocusEffect(
-    useCallback(() => {
-      setProd(products.slice(0, 9));
-      setTotalPage(Math.ceil(products.length / 9));
-    }, [])
-  );
+  const pagination = (arr) => {
+    setProd(arr.slice(0, 9));
+    setTotalPage(Math.ceil(arr.length / 9));
+    console.log("p", totalPage);
+  };
 
   const increment = (p) => {
     setPage(p + 1);
@@ -71,7 +70,7 @@ const Inventario = () => {
   const confirmationExport = (remove, format = null) => {
     remove
       ? (setPopup(false),
-        format === "PDF" ? PrintPDF(productos) : ExcelExport(productos))
+        format === "PDF" ? PrintPDF(products) : ExcelExport(products))
       : setPopup(false);
   };
 
@@ -79,6 +78,7 @@ const Inventario = () => {
     return <ItemDeInventario item={item} index={index} />;
   };
 
+  console.log(totalPage);
   return (
     <View
       style={[styles.viewContainer, { backgroundColor: colors.background }]}
@@ -105,7 +105,7 @@ const Inventario = () => {
       />
       <View style={styles.buttonsView}>
         <Button
-          onPress={() => exportDetail(productos)}
+          onPress={() => exportDetail(products)}
           iconPosition="right"
           titleStyle={{ color: colors.text, fontSize: 14, paddingLeft: 8 }}
           buttonStyle={{
@@ -136,6 +136,8 @@ const Inventario = () => {
             >
               <Text
                 style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
                   marginLeft: 10,
                   flexWrap: "wrap",
                   maxWidth: 100,
@@ -146,6 +148,8 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
                   color: colors.text,
                   width: windowWidth * 0.4,
                   textAlign: "center",
@@ -155,6 +159,8 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
                   color: colors.text,
                   width: windowWidth * 0.2,
                   textAlign: "center",
@@ -164,6 +170,8 @@ const Inventario = () => {
               </Text>
               <Text
                 style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
                   color: colors.text,
                   width: windowWidth * 0.25,
                   textAlign: "center",
@@ -171,9 +179,11 @@ const Inventario = () => {
               >
                 Stock
               </Text>
-              
+
               <Text
                 style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
                   color: colors.text,
                   marginRight: 10,
                   width: windowWidth * 0.3,
@@ -185,11 +195,16 @@ const Inventario = () => {
             </View>
           )}
           ListEmptyComponent={() => (
-            <ActivityIndicator
-              style={{ marginTop: 200 }}
-              size="large"
-              color={colors.primary}
-            />
+            <Text
+              style={{
+                color: colors.text,
+                width: "50%",
+                textAlign: "center",
+                marginTop: 50,
+              }}
+            >
+              No se encontraron coincidencias
+            </Text>
           )}
           horizontal={false}
           overScrollMode={"never"}
@@ -199,10 +214,10 @@ const Inventario = () => {
           }}
           data={
             filter !== ""
-              ? productos.filter((item) =>
+              ? products.filter((item) =>
                   item.nombre.toLowerCase().includes(filter.toLowerCase())
                 )
-              : productos
+              : products
           }
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.codigo}
@@ -226,7 +241,7 @@ const Inventario = () => {
           />
         ) : null}
         <Text style={{ color: colors.text }}>
-          {page} de {totalPage}{" "}
+          {page} de {totalPage}
         </Text>
 
         {page !== totalPage ? (

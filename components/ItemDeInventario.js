@@ -9,8 +9,8 @@ const ItemDeInventario = ({ item, index }) => {
     <View
       style={[
         index % 2 === 0
-          ? { backgroundColor: colors.primary }
-          : { backgroundColor: colors.background },
+          ? { backgroundColor: colors.background }
+          : { backgroundColor: colors.primary },
         styles.item,
       ]}
     >

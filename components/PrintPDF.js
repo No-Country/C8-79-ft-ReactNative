@@ -13,6 +13,7 @@ const PrintPDF = (productos) => {
             .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}
           </style>
           <h1>REPORTE DE INVENTARIO</h1>
+          <h3>${new Date()} </h3>
 
             <table class="tftable" border="1">
              <tr>

@@ -105,7 +105,7 @@ const Products = ({ navigation }) => {
           producto.nombre.toLowerCase().includes(filter.toLocaleLowerCase())
         )}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item,i) => i}
         renderItem={renderItem}
         ListEmptyComponent={() => (
           <ActivityIndicator
