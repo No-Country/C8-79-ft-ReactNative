@@ -13,9 +13,11 @@ import { useTheme } from "@react-navigation/native";
 import ProductInput from "../components/ProductInput";
 import { resetPassword } from "../firebase/session";
 import { useEffect } from "react";
-import { collection, doc, getDocs, increment, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, increment, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/Config";
 import SelectDropdown from 'react-native-select-dropdown'
+import { random } from "../helpers/random";
+
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -28,6 +30,8 @@ const Venta = () => {
   const [clientesFire, setClientesFire] = useState([]);
   const [productos, setProductos] = useState([]);
   const [idCodigo, setIdCodigo] = useState([])
+  const ram = random()
+ 
 
   const submit = async(data) => {
     let bandera = true
@@ -43,16 +47,22 @@ const Venta = () => {
     
     const aux = cliente.split(' ')
     const id = aux[aux.length-1]
+    const auxCliente = aux[0] + " " + aux[1] 
     
 
     if (confirmation === productInput && bandera === true) {
+      
       const comprobante = {
         fecha: new Date(),
-        cliente: cliente,
+        cliente: auxCliente,
         productos: {
           ...productData,
         },
+        id: ram
       };
+     
+      await setDoc(doc(db, "Facura", ram ), comprobante);
+
       const docRef = doc(db, "Clientes", id);
       await updateDoc(docRef, {
         cantidad : increment(1)
@@ -107,7 +117,7 @@ const Venta = () => {
   useEffect(() => {
     
     traerDatos()
-    console.log(idCodigo)
+    console.log(productos)
    
    
   }, [])
