@@ -67,7 +67,7 @@ const DetalleComprobante = ({ navigation, route }) => {
   const renderItem = ({ item, index }) => {
     return <ItemDeComprobante item={item} index={index} />;
   };
-
+//
   return (
 
     
