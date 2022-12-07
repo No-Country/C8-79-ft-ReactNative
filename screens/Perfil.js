@@ -105,7 +105,7 @@ export default function Perfil() {
       <Avatar
         size={150}
         rounded
-        source={{ uri: "https://randomuser.me/api/portraits/men/36.jpg" }}
+        source={{ uri: "https://res.cloudinary.com/dnont3pur/image/upload/v1670372416/Monshine/monshine_v9et2x.jpg" }}
       >
         <Avatar.Accessory size={23} />
       </Avatar>
