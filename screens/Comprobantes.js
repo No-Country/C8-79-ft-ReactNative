@@ -38,7 +38,7 @@ const Comprobantes = () => {
       let auxFecha 
       let fechaReal 
       let arrayFecha = []
-      facturas.forEach(factura => {
+      array.forEach(factura => {
         auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
         fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
         
@@ -185,13 +185,7 @@ const Comprobantes = () => {
             </Text>
           </View>
         )}
-        ListEmptyComponent={() => (
-          <ActivityIndicator
-            style={{ marginTop: 200 }}
-            size="large"
-            color={colors.primary}
-          />
-        )}
+        
         horizontal={false}
         overScrollMode={"never"}
         style={{
