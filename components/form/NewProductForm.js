@@ -22,13 +22,13 @@ const NewProductForm = () => {
     const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
     const aux = token(40)
 
-    await setDoc(doc(db, "Productos", aux), {
+    await setDoc(doc(db, "Productos", values.codigo), {
         nombre: values.nombre,
         descripcion: values.descripcion,
-        precioVenta: values.precioVenta,
-        precioCompra: values.precioCompra,
-        id:aux,
-        cantidad: values.cantidad,
+        precioVenta:  Number(values.precioVenta),
+        totalVentas:0,
+        precioCompra:  Number(values.precioCompra),
+        cantidad: Number(values.cantidad),
         codigo: values.codigo
       }).catch(error => {
         console.log(error)
