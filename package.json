@@ -38,7 +38,10 @@
     "react-native-dotenv": "^3.4.2",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-google-places-autocomplete": "^2.5.1",
+    "react-native-modal": "^13.0.1",
+    "react-native-paper": "^5.0.1",
     "react-native-reanimated": "~2.9.0",
+    "react-native-responsive-fontsize": "^0.5.1",
     "react-native-safe-area-context": "4.4.1",
     "react-native-screens": "~3.18.0",
     "react-native-select-dropdown": "^3.1.0",
@@ -46,11 +49,15 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-virtualized-view": "^1.0.0",
     "react-native-web": "~0.18.9",
+    "toastify-react-native": "^3.1.0",
     "xlsx": "^0.18.5",
     "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
+  },
+  "resolutions": {
+    "**/react": "*"
   },
   "private": true
 }

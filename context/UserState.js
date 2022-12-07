@@ -9,7 +9,7 @@ const UserState = (props) => {
     token:{ loading: true, token: false ,uid:null},
     theme:'Light',
     spinner:false,
-    error:{ user: false, network: false }
+    error:{status:false,message:""}
   };
 
   const [state, dispatch] = useReducer(UserReducer, initialState);
@@ -34,12 +34,19 @@ const setSpinner =  (value) => {
 
 };
 
-const setError =  (value) => {
-  console.log(value)
+
+
+const setError =  (status,value) => {
+  console.log(status,value.message)
    
-  dispatch({ type: SET_ERROR, payload:value });
+  dispatch({ type: SET_ERROR, payload:{status:status ,message:"Error de red, vuelve a intentarlo"} });
 
 };
+
+const throwError=(e)=>{
+  setError(true,e)
+  setTimeout(()=>setError(false,e),2000)
+}
 
   return (
     <UserContext.Provider
@@ -51,7 +58,8 @@ const setError =  (value) => {
         getToken,
         setTheme,
         setSpinner,
-        setError
+        setError,
+        throwError
       }}
     >
       {props.children}

@@ -22,7 +22,7 @@ export default (state, action) => {
     case SET_ERROR:
       return {
         ...state,
-        spinner: payload,
+        error: payload,
       };
 
     default:

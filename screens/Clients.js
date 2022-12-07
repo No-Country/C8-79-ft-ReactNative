@@ -1,18 +1,13 @@
-import {FlatList, StyleSheet, View ,Text} from "react-native";
-import React, { useEffect, useState,useCallback, useContext} from "react";
+import { FlatList, StyleSheet, View, Text } from "react-native";
+import React, { useEffect, useState,  useContext } from "react";
 import { SearchBar } from "@rneui/themed";
-import { clients } from "../helpers/devData";
 import Client from "../components/Client";
-import { FAB ,Icon} from '@rneui/themed';
-import { useNavigation } from "@react-navigation/native";
-import { useFocusEffect } from '@react-navigation/native'
+import { FAB } from "@rneui/themed";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
 import { useTheme } from "@react-navigation/native";
-import { color } from "react-native-reanimated";
 import UserContext from "../context/UserContext";
-
 
 const sortData = (arr) => {
   const sortedArray = arr.sort(function (a, b) {
@@ -25,65 +20,69 @@ const sortData = (arr) => {
     return 0;
   });
   return sortedArray;
-}
+};
 
-const Clients = ({navigation}) => {
-  const {setSpinner,setError} = useContext(UserContext)
-  const {bandera} = useContext(Context)
+const Clients = ({ navigation }) => {
+  const { setSpinner, throwError } = useContext(UserContext);
+  const { bandera } = useContext(Context);
+
   const [filter, setFilter] = useState("");
-  const [click, setClick] = useState(null);
-  const [clientes, setClientes] = useState([])
-  const {colors}=useTheme()
+  const [clientes, setClientes] = useState([]);
 
+  const { colors } = useTheme();
 
   const traerDatos = async () => {
-    const array = []
-    const querySnapshot = await getDocs(collection(db, "Clientes"));
-    querySnapshot.forEach((doc) => {
-      array.push(doc.data());
-
-    });
-    setClientes(array)
-    setSpinner(false)
+    try {
+      const array = [];
+      const querySnapshot = await getDocs(collection(db, "Clientes"));
+      querySnapshot.forEach((doc) => {
+        array.push(doc.data());
+      });
+      setClientes(array);
+      setSpinner(false);
+    } catch (e) {
+      setSpinner(false);
+      throwError(e)
+    }
   };
-  
+
   useEffect(() => {
-    setSpinner(true)
-    traerDatos()
-    
-    
-   
-  }, [bandera])
+    setSpinner(true);
+    traerDatos();
+  }, [bandera]);
   //
 
-  useFocusEffect(
-    useCallback(() => {
-   
-      return () => {
-        setClick(null)
-      
-      };
-    }, [])
-  );
-  
-const renderItem=({ item, index }) => {
+
+
+  const renderItem = ({ item, index }) => {
+    return (
+      <Client
+        item={item}
+        
+        index={index}
+        textColor={ colors.text}
+        fontSz={20}
+      />
+    );
+  };
   return (
-    <Client
-      item={item}
-      isPress={() => setClick(index)}
-      index={index}
-      textColor = {index === click? "#A1D6E2":colors.text}
-      fontSz={index === click? 22:20}
-    />
-  );
-}
-  return (
-    <View style={[styles.viewContainer,{backgroundColor:colors.background}]}>
+    <View
+      style={[styles.viewContainer, { backgroundColor: colors.background }]}
+    >
       <SearchBar
         platform="default"
-        containerStyle={[styles.container,{backgroundColor:colors.background}]}
-        inputContainerStyle={[styles.inputContainer,{backgroundColor:colors.background}]}
-        inputStyle={[styles.searchInput,{backgroundColor:colors.background}]}
+        containerStyle={[
+          styles.container,
+          { backgroundColor: colors.background },
+        ]}
+        inputContainerStyle={[
+          styles.inputContainer,
+          { backgroundColor: colors.background },
+        ]}
+        inputStyle={[
+          styles.searchInput,
+          { backgroundColor: colors.background },
+        ]}
         onChangeText={(value) => setFilter(value)}
         placeholder="Ingrese el nombre del cliente"
         placeholderTextColor={colors.text}
@@ -92,29 +91,33 @@ const renderItem=({ item, index }) => {
       />
 
       <FlatList
-       removeClippedSubviews={true}
+        removeClippedSubviews={true}
         overScrollMode={"never"}
         style={styles.flatlist}
         data={sortData(clientes).filter(
           (client) =>
-            client.firstName.toLowerCase().includes(filter.toLocaleLowerCase()) ||
+            client.firstName
+              .toLowerCase()
+              .includes(filter.toLocaleLowerCase()) ||
             client.lastName.toLowerCase().includes(filter.toLocaleLowerCase())
         )}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        ListEmptyComponent={()=> 
-          <Text style={{color:colors.text,width:"100%",textAlign:"center"}}>No se encontraron coincidencias</Text>
-      
-        }
+        ListEmptyComponent={() => (
+          <Text
+            style={{ color: colors.text, width: "100%", textAlign: "center" }}
+          >
+            No se encontraron coincidencias
+          </Text>
+        )}
       />
       <FAB
         visible={true}
-        icon={{ name: 'add', color: colors.text }}
+        icon={{ name: "add", color: colors.text }}
         color={colors.primary}
         placement="right"
-        onPress={()=>navigation.navigate("NewClient")}
-        
+        onPress={() => navigation.navigate("NewClient")} 
       />
     </View>
   );
@@ -149,5 +152,4 @@ const styles = StyleSheet.create({
     borderBottomColor: "#BCBABB",
     borderBottomWidth: 1,
   },
-
 });

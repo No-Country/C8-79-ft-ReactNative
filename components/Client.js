@@ -23,7 +23,7 @@ export const getInitials = (client) => {
 
 
 
-const Client = ({ fontSz, textColor, item, isPress, index }) => {
+const Client = ({ fontSz, textColor, item,  index }) => {
   const {colors}=useTheme()
   const navigation = useNavigation();
   
@@ -35,7 +35,7 @@ const Client = ({ fontSz, textColor, item, isPress, index }) => {
       activeOpacity={0.2}
       //onPressIn={isPress}
       onPress={() => {
-        isPress, navigation.navigate("ClientDetail", item);
+        navigation.navigate("ClientDetail", item);
       }}
       style={[
         index % 2 === 0
