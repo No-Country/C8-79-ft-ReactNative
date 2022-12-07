@@ -26,6 +26,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import { random } from "../helpers/random";
 import { color } from "react-native-reanimated";
 import UserContext from "../context/UserContext";
+import { Context } from "../context/ContextProvider";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -39,6 +40,8 @@ const Venta = () => {
   const [clientesFire, setClientesFire] = useState([]);
   const [productos, setProductos] = useState([]);
   const [idCodigo, setIdCodigo] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const {bandera, handleBandera} = useContext(Context)
   const ram = random();
 
   const submit = async (data) => {
@@ -53,13 +56,27 @@ const Venta = () => {
     const aux = cliente.split(" ");
     const id = aux[aux.length - 1];
     const auxCliente = aux[0] + " " + aux[1];
+    let arrayProductData = []
+    for(let i = 0; i < productData.length; i++){
+      let indice = allProducts.findIndex(e => e.codigo === productData[i].producto) 
+      const objeto = {
+        producto: productData[i].producto,
+        nombre: allProducts[indice].nombre,
+        cantidad: productData[i].cantidad,
+        precioUnitario: allProducts[indice].precioVenta
+      }
+      arrayProductData.push(objeto)
+      
+    };
+
 
     if (confirmation === productInput && bandera === true) {
       const comprobante = {
         fecha: new Date(),
         cliente: auxCliente,
         productos: {
-          ...productData,
+          ...arrayProductData, 
+          
         },
         id: ram,
       };
@@ -78,7 +95,8 @@ const Venta = () => {
           totalVentas: increment(e.cantidad),
         });
       });
-
+      handleBandera()
+      reset()
       return comprobante;
     } else {
       console.log("debe completar o su codigo de producto es invalido");
@@ -97,27 +115,34 @@ const Venta = () => {
     const querySnapshot = await getDocs(collection(db, "Clientes"));
     querySnapshot.forEach((doc) => {
       const nombre =
-        doc.data().firstName + " " + doc.data().lastName + " " + doc.data().id;
+        doc.data().firstName + " " + doc.data().lastName + "                     " + doc.data().id;
       array.push(nombre);
     });
     setClientesFire(array);
 
     const array2 = [];
+    const arrayPrecioUniario = []
 
     const querySnapshot2 = await getDocs(collection(db, "Productos"));
     querySnapshot2.forEach((doc) => {
       const codigo = doc.data().codigo;
+      const precioUnitario = {
+       precioVenta: doc.data().precioVenta, 
+       nombre: doc.data().nombre,
+       codigo: doc.data().codigo
+      }
       array2.push(codigo);
+      arrayPrecioUniario.push(precioUnitario)
     });
     setProductos(array2);
+    setAllProducts(arrayPrecioUniario)
     setSpinner(false)
   };
 
   useEffect(() => {
     traerDatos();
     setSpinner(true)
-    console.log(productos);
-  }, []);
+  }, [bandera]);
 
   return (
     <View

@@ -8,12 +8,15 @@ const windowWidth = Dimensions.get("window").width;
 const Comprobante = ({ item, index }) => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+  
   return (
+    
     <TouchableOpacity
       onPress={() => {
         navigation.navigate("Detalle de Comprobante");
       }}
     >
+      
       <View
         style={[
           index % 2 === 0
@@ -29,7 +32,7 @@ const Comprobante = ({ item, index }) => {
             width: windowWidth * 0.2,
           }}
         >
-          {"TEST"}
+          {item.operacion}
         </Text>
         <Text
           style={{
@@ -39,7 +42,7 @@ const Comprobante = ({ item, index }) => {
             flexWrap: "wrap",
           }}
         >
-          {"TEST"}
+          {item.cliente}
         </Text>
         <Text
           style={{
@@ -48,7 +51,7 @@ const Comprobante = ({ item, index }) => {
             textAlign: "center",
           }}
         >
-          ${"TEST"}
+          {item.fecha}
         </Text>
         <Text
           style={{
