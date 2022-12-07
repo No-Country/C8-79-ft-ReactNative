@@ -147,21 +147,22 @@ const Comprobantes = () => {
           >
             <Text
               style={{
+                //backgroundColor:"red",
                 marginLeft: 10,
-                flexWrap: "wrap",
-                minWidth: windowWidth * 0.2,
+                width: windowWidth * 0.15,
                 color: colors.text,
                 fontWeight: "bold",
                 fontSize: 18,
               }}
             >
-              Operacion
+              #
             </Text>
             <Text
               style={{
+                //backgroundColor:"blue",
                 flexWrap: "wrap",
                 color: colors.text,
-                minWidth: windowWidth * 0.35,
+                width: windowWidth * 0.35,
                 fontWeight: "bold",
                 textAlign: "center",
                 fontSize: 18,
@@ -171,8 +172,9 @@ const Comprobantes = () => {
             </Text>
             <Text
               style={{
+               // backgroundColor:"gray",
                 color: colors.text,
-                minWidth: windowWidth * 0.2,
+                width: windowWidth * 0.3,
                 textAlign: "center",
                 fontWeight: "bold",
                 fontSize: 18,
@@ -182,9 +184,10 @@ const Comprobantes = () => {
             </Text>
             <Text
               style={{
+               // backgroundColor:"yellow",
                 color: colors.text,
-                minWidth: windowWidth * 0.25,
-                textAlign: "center",
+                width: windowWidth * 0.20,
+                textAlign: "left",
                 fontWeight: "bold",
                 fontSize: 18,
               }}

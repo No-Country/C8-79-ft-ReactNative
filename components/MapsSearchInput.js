@@ -1,5 +1,5 @@
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { MAPS_KEY } from "@env";
+import { MAP_KEY } from "@env";
 import { useState } from "react";
 import { useTheme } from "@react-navigation/native";
 
@@ -23,7 +23,7 @@ const MapSearchInput = ({ isPress, refer, setFieldValue }) => {
       }}
       GooglePlacesDetailsQuery={{ fields: "geometry" }}
       ref={refer}
-      query={{ key: MAPS_KEY }}
+      query={{ key: MAP_KEY }}
       fetchDetails={true}
       keepResultsAfterBlur={true}
       textInputProps={{
