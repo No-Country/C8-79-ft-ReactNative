@@ -12,6 +12,10 @@ import { Button } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 import ProductInput from "../components/ProductInput";
 import { resetPassword } from "../firebase/session";
+import { useEffect } from "react";
+import { collection, doc, getDocs, increment, updateDoc } from "firebase/firestore";
+import { db } from "../firebase/Config";
+import SelectDropdown from 'react-native-select-dropdown'
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -21,9 +25,28 @@ const Venta = () => {
   const [cliente, setCliente] = useState("");
   const [productData, setProductData] = useState([]);
   const [confirmation, setConfirmation] = useState(0);
+  const [clientesFire, setClientesFire] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [idCodigo, setIdCodigo] = useState([])
 
-  const submit = (data) => {
-    if (confirmation === productInput) {
+  const submit = async(data) => {
+    let bandera = true
+    for (let i = 0; i < productData.length; i++) {
+      bandera  = productos.includes(productData[i].producto) 
+      if(bandera == false){
+        break
+      }
+    }
+
+    
+
+    
+    const aux = cliente.split(' ')
+    const id = aux[aux.length-1]
+    const code = idCodigo.filter(e => e.codigo === productData.producto)
+    console.log(code)
+
+    if (confirmation === productInput && bandera === true) {
       const comprobante = {
         fecha: new Date(),
         cliente: cliente,
@@ -31,19 +54,59 @@ const Venta = () => {
           ...productData,
         },
       };
+      const docRef = doc(db, "Clientes", id);
+      await updateDoc(docRef, {
+        cantidad : increment(1)
+      });
+
+
       return comprobante;
     } else {
-      console.log("debe completar");
+      console.log("debe completar o su codigo de producto es invalido");
     }
   };
 
-const reset=()=>{
-setProductInput(0)
-setConfirmation(0)
-setProductData([])
-setCliente("")
+  const reset = () => {
+    setProductInput(0);
+    setConfirmation(0);
+    setProductData([]);
+    setCliente("");
+  };
 
-  }
+  const traerDatos = async () => {
+    const array = []
+    const querySnapshot = await getDocs(collection(db, "Clientes"));
+    querySnapshot.forEach((doc) => {
+      const nombre = doc.data().firstName + ' ' + doc.data().lastName + ' ' + doc.data().id
+      array.push(nombre);
+
+    });
+    setClientesFire(array)
+
+    const array2 = [];
+    const array3 = []
+    const querySnapshot2 = await getDocs(collection(db, "Productos"));
+    querySnapshot2.forEach((doc) => {
+      const nombre = {
+        codigo: doc.data().codigo,
+        id: doc.data().id
+      }
+      
+      const codigo = doc.data().codigo
+      array2.push(codigo);
+      array3.push(nombre)
+    });
+    setProductos(array2);
+    setIdCodigo(array3)
+  };
+  
+  useEffect(() => {
+    
+    traerDatos()
+    console.log(idCodigo)
+   
+   
+  }, [])
 
   return (
     <View
@@ -65,11 +128,18 @@ setCliente("")
       >
         <Text style={styles.label}>Cliente</Text>
 
-        <TextInput
-          style={styles.textInput}
-          onChangeText={(d) => setCliente(d)}
-          selectionColor={"#000"}
-        />
+        {
+          clientesFire.length > 0 ? 
+            <SelectDropdown  
+              data={clientesFire}
+              onSelect={(selectedItem, index) => {
+                setCliente(selectedItem)
+              }}
+              search
+            />
+          : null
+        }
+
 
         {Array.from(Array(productInput)).map((item, index) => {
           return (
@@ -79,11 +149,11 @@ setCliente("")
               handleData={setProductData}
               confirm={setConfirmation}
             />
-          )
+          );
         })}
 
         <View style={styles.buttonContainer}>
-        <Button
+          <Button
             titleStyle={{ color: "#000", fontSize: 18 }}
             buttonStyle={styles.button}
             onPress={() => reset()}
@@ -149,7 +219,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 50,
-marginBottom:20,
+    marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
   },
