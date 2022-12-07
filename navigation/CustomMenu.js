@@ -10,10 +10,30 @@ import { Avatar } from "@rneui/themed";
 import { signOutUser } from "../firebase/session";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "@react-navigation/native";
+import { getAuth } from "firebase/auth";
+import { useEffect } from "react";
+import { useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/Config";
 
 
 const CustomMenu = (props) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const uid = auth.currentUser.uid;
+  const [usuario, setUsuario] = useState();
   const{colors}=useTheme()
+
+  const datosUsuario = async () => {
+    const docRef = doc(db, "Usuarios", uid);
+    const docSnap = await getDoc(docRef);
+    setUsuario(docSnap.data());
+  };
+
+  useEffect(() => {
+    datosUsuario();
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView
@@ -43,7 +63,7 @@ const CustomMenu = (props) => {
 
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     flexWrap: "wrap",
                     width: "50%",
                     textAlign: "center",
@@ -52,7 +72,7 @@ const CustomMenu = (props) => {
                     color:colors.text
                   }}
                 >
-                  Bienvenido Nombre
+                  Bienvenido {usuario?.userName}
                 </Text>
               </View>
             </View>
