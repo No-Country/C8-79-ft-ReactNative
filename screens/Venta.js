@@ -43,8 +43,7 @@ const Venta = () => {
     
     const aux = cliente.split(' ')
     const id = aux[aux.length-1]
-    const code = idCodigo.filter(e => e.codigo === productData.producto)
-    console.log(code)
+    
 
     if (confirmation === productInput && bandera === true) {
       const comprobante = {
@@ -57,6 +56,14 @@ const Venta = () => {
       const docRef = doc(db, "Clientes", id);
       await updateDoc(docRef, {
         cantidad : increment(1)
+      });
+
+      productData.forEach(async(e) => {
+        const docRef = doc(db, "Productos", e.producto);
+        await updateDoc(docRef, {
+          cantidad : increment(-e.cantidad),
+          totalVentas: increment(e.cantidad)
+        });
       });
 
 
@@ -84,20 +91,17 @@ const Venta = () => {
     setClientesFire(array)
 
     const array2 = [];
-    const array3 = []
+
     const querySnapshot2 = await getDocs(collection(db, "Productos"));
     querySnapshot2.forEach((doc) => {
-      const nombre = {
-        codigo: doc.data().codigo,
-        id: doc.data().id
-      }
+      
       
       const codigo = doc.data().codigo
       array2.push(codigo);
-      array3.push(nombre)
+   
     });
     setProductos(array2);
-    setIdCodigo(array3)
+  
   };
   
   useEffect(() => {
@@ -136,6 +140,7 @@ const Venta = () => {
                 setCliente(selectedItem)
               }}
               search
+              
             />
           : null
         }
