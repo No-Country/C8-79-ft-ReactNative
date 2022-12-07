@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const MapSearchInput = ({ isPress, refer, setFieldValue }) => {
   const [text, setText] = useState("");
-
+  /* console.log(MAP_KEY); */
   return (
     <GooglePlacesAutocomplete
       styles={{
@@ -21,7 +21,7 @@ const MapSearchInput = ({ isPress, refer, setFieldValue }) => {
       }}
       GooglePlacesDetailsQuery={{ fields: "geometry" }}
       ref={refer}
-      query={{ key: MAP_KEY }}
+      query={{ key: "AIzaSyCAclAozzAGIVW78beT5p12oQbBDc1xeYs" }}
       fetchDetails={true}
       keepResultsAfterBlur={true}
       textInputProps={{
@@ -42,7 +42,7 @@ const MapSearchInput = ({ isPress, refer, setFieldValue }) => {
       //   </View>
       // )}
       onPress={(data, details = null) => {
-        isPress(data, details, details?.geometry?.location, setFieldValue);
+        isPress(data, details, details?.geometry?.location, setFieldValue/* , console.log(data.description.split(",")[1]) */);
       }}
     />
   );
