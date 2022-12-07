@@ -41,14 +41,15 @@ const Comprobantes = () => {
      
 
       array.forEach(factura => {
-        auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
-        fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
+        date= moment(factura?.fecha.seconds * 1000).format("DD/MMM/YY")
+       // auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
+        //fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
         const todosProductos = factura.productos
         const sumall = todosProductos.map(item => item.total).reduce((prev, curr) => prev + curr, 0);
         const objeto = {
           cliente: factura.cliente,
           operacion: "Venta",
-          fecha: fechaReal,
+          fecha: date,
           id: factura.id,
           monto: sumall
         }
