@@ -57,7 +57,7 @@ const CustomMenu = (props) => {
                   size={100}
                   rounded
                   source={{
-                    uri: "https://randomuser.me/api/portraits/men/36.jpg",
+                    uri: "https://res.cloudinary.com/dnont3pur/image/upload/v1670372416/Monshine/monshine_v9et2x.jpg",
                   }}
                 />
 

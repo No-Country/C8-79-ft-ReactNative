@@ -1,31 +1,51 @@
-import {
-  StyleSheet,
-  TextInput,
-  Text,
-  View,
-  FlatList,
-} from "react-native";
-import React, { useState, useRef } from "react";
+import { StyleSheet, TextInput, Text, View, FlatList } from "react-native";
+import React, { useState, useRef, useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
-import { useNavigation , useTheme} from "@react-navigation/native";
-import MapSearchInput from "../MapsSearchInput"
-import { doc, setDoc } from "firebase/firestore"; 
+import { useNavigation, useTheme } from "@react-navigation/native";
+import MapSearchInput from "../MapsSearchInput";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
 
-const NewClientForm = () => {
+import { Context } from "../../context/ContextProvider";
 
-  const { colors}=useTheme()
+const NewClientForm = () => {
+  const { colors } = useTheme();
   const nav = useNavigation();
   const placesRef = useRef();
-
   const [popup, setPopup] = useState(false);
-  const [location, setLocation] = useState({coordinates:"" ,address:""})
+  const [getCity, setGetCity] = useState("");
+  const {handleBandera} = useContext(Context)
+  const [location, setLocation] = useState({ coordinates: "", address: "" });
 
-  const submitForm = (values, clear) => {
-    console.log(values);
+  const submitForm = async(values, clear) => {
+    let min = 83.1;
+    let max = 193.3;
+    const rand=()=>Math.random(0).toString(36).substr(2);
+    const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
+    const aux = token(40)
+    console.log(aux);
+    await setDoc(doc(db, "Clientes", aux), {
+      firstName: values.user,
+      lastName: values.lastName,
+      email: values.email,
+      phone: values.phoneNumber,
+      id:aux,
+      address: {
+        address: values.address,
+        city: getCity,
+        coordinates: {
+          lat: Math.random() * (max - min) + min,
+          lng: Math.random() * (max - min) + min,
+        },
+      },
+    }).catch(error => {
+      console.log(error)
+      setError(error)
+    });
+    handleBandera()
     setPopup(true);
     clear();
     setTimeout(() => {
@@ -33,32 +53,17 @@ const NewClientForm = () => {
     }, 1000);
   };
 
+
   const getAddress = () => {
-    return (placesRef.current.getAddressText());
+    const aux = placesRef.current.getAddressText().split(",")[1];
+    setGetCity(aux);
+    return placesRef.current.getAddressText();
   };
 
-  const getLocation = (data,details,coordinates,setter)=> {
-    
-    setter("address",getAddress().split(",")[0])
-    setLocation({coordinates:coordinates ,address:getAddress()})
-    
-  }
-
-  const addClient = (values) => {
-    console.log(values);
-   /*  await setDoc(doc(db, "cities", "LA"), {
-      firstName: values.user,
-      lastName: values.lastName,
-      email: values.email,
-      phone: values.phone,
-      address: {
-        address:values.address,
-        city:
-      }
-
-    }); */
-  }
-
+  const getLocation = (data, details, coordinates, setter) => {
+    setter("address", getAddress().split(",")[0]);
+    setLocation({ coordinates: coordinates, address: getAddress() });
+  };
 
   return (
     <Formik
@@ -73,7 +78,7 @@ const NewClientForm = () => {
         user: Yup.string()
           .max(20, "Must be 20 characters or less")
           .required("Debe completar este campo"),
-         
+
         lastName: Yup.string().max(20, "Must be 20 characters or less"),
         email: Yup.string()
           .email("Direccion invalida")
@@ -85,99 +90,128 @@ const NewClientForm = () => {
       })}
       onSubmit={(values, { resetForm }) => {
         submitForm(values, resetForm);
-        addClient(values)
       }}
     >
-      {({setFieldValue , handleChange, handleSubmit, values, errors, touched }) => (
-        <FlatList 
-        overScrollMode={"never"}
+      {({
+        setFieldValue,
+        handleChange,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+      }) => (
+        <FlatList
+          overScrollMode={"never"}
           showsVerticalScrollIndicator={false}
-         style={styles.form}
-         ListHeaderComponent={
-          <>
-          <Text style={[styles.label,{color:colors.text}]}>Nombre</Text>
-          <TextInput
-            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
-            onChangeText={handleChange("user")}
-            value={values.user}
-            selectionColor={colors.text}
-            placeholder="Nombre"
-          />
-          {errors.user && touched.user && (
-            <Text style={styles.error}>{errors.user}</Text>
-          )}
-          <Text style={[styles.label,{color:colors.text}]}>Apellido</Text>
-          <TextInput
-            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
-            onChangeText={handleChange("lastName")}
-            value={values.lastName}
-            selectionColor={colors.text}
-            placeholder="Apellido"
-          />
-          {errors.lastName && touched.lastName && (
-            <Text style={styles.error}>{errors.lastName}</Text>
-          )}
+          style={styles.form}
+          ListHeaderComponent={
+            <>
+              <Text style={[styles.label, { color: colors.text }]}>Nombre</Text>
+              <TextInput
+                style={[
+                  styles.textInput,
+                  {
+                    backgroundColor: colors.card,
+                    color: colors.text,
+                    placeholder: colors.text,
+                  },
+                ]}
+                onChangeText={handleChange("user")}
+                value={values.user}
+                selectionColor={colors.text}
+                placeholder="Nombre"
+              />
+              {errors.user && touched.user && (
+                <Text style={styles.error}>{errors.user}</Text>
+              )}
+              <Text style={[styles.label, { color: colors.text }]}>
+                Apellido
+              </Text>
+              <TextInput
+                style={[
+                  styles.textInput,
+                  { backgroundColor: colors.card, color: colors.text },
+                ]}
+                onChangeText={handleChange("lastName")}
+                value={values.lastName}
+                selectionColor={colors.text}
+                placeholder="Apellido"
+              />
+              {errors.lastName && touched.lastName && (
+                <Text style={styles.error}>{errors.lastName}</Text>
+              )}
 
-          <Text style={[styles.label,{color:colors.text}]}>Correo Elentrónico</Text>
-          <TextInput
-            autoCorrect={false}
-            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
-            onChangeText={handleChange("email")}
-            value={values.email}
-            selectionColor={colors.text}
-            placeholder="Corre@example.com"
-          />
-          {errors.email && touched.email && (
-            <Text style={styles.error}>{errors.email}</Text>
-          )}
-          <Text style={[styles.label,{color:colors.text}]}>Telefono Celular</Text>
+              <Text style={[styles.label, { color: colors.text }]}>
+                Correo Elentrónico
+              </Text>
+              <TextInput
+                autoCorrect={false}
+                style={[
+                  styles.textInput,
+                  { backgroundColor: colors.card, color: colors.text },
+                ]}
+                onChangeText={handleChange("email")}
+                value={values.email}
+                selectionColor={colors.text}
+                placeholder="Corre@example.com"
+              />
+              {errors.email && touched.email && (
+                <Text style={styles.error}>{errors.email}</Text>
+              )}
+              <Text style={[styles.label, { color: colors.text }]}>
+                Telefono Celular
+              </Text>
 
-          <TextInput
-            keyboardType={"numeric"}
-            style={[styles.textInput,{backgroundColor:colors.card,color:colors.text}]}
-            onChangeText={handleChange("phoneNumber")}
-            value={values.phoneNumber}
-            selectionColor={colors.text}
-            placeholder="xxx xxxxxxx"
-          />
-          {errors.phoneNumber && touched.phoneNumber && (
-            <Text style={styles.error}>{errors.phoneNumber}</Text>
-          )}
+              <TextInput
+                keyboardType={"numeric"}
+                style={[
+                  styles.textInput,
+                  { backgroundColor: colors.card, color: colors.text },
+                ]}
+                onChangeText={handleChange("phoneNumber")}
+                value={values.phoneNumber}
+                selectionColor={colors.text}
+                placeholder="xxx xxxxxxx"
+              />
+              {errors.phoneNumber && touched.phoneNumber && (
+                <Text style={styles.error}>{errors.phoneNumber}</Text>
+              )}
 
-          <Text style={[styles.label,{color:colors.text}]}>Direccion</Text>
+              <Text style={[styles.label, { color: colors.text }]}>
+                Direccion
+              </Text>
 
-          <MapSearchInput
-            onChangeText={(()=>handleChange("address"))}
-            value={values.address}
-            isPress={getLocation}
-            refer={placesRef}
-            setFieldValue={setFieldValue}
-            placeholder="Address-City"
-          ></MapSearchInput>
+              <MapSearchInput
+                onChangeText={() => handleChange("address")}
+                value={values.address}
+                isPress={getLocation}
+                refer={placesRef}
+                setFieldValue={setFieldValue}
+              ></MapSearchInput>
 
-          {errors.address && touched.address && (
-            <Text style={styles.error}>{errors.address}</Text>
-          )}
+              {errors.address && touched.address && (
+                <Text style={styles.error}>{errors.address}</Text>
+              )}
 
-          <View style={styles.buttonContainer}>
-            <Button
-              titleStyle={{ color: colors.text, fontSize: 18 }}
-              buttonStyle={[styles.button,{backgroundColor:colors.primary}]}
-              onPress={handleSubmit}
-              title="Guardar"
-            />
-          </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  titleStyle={{ color: colors.text, fontSize: 18 }}
+                  buttonStyle={[
+                    styles.button,
+                    { backgroundColor: colors.primary },
+                  ]}
+                  onPress={handleSubmit}
+                  title="Guardar"
+                />
+              </View>
 
-          <PopUp
-            visibility={popup}
-            message="¡Se creo el Cliente con exito!"
-          ></PopUp>
-          
-          </>
-         }
-         >
-          
-        </FlatList>
+              <PopUp
+                visibility={popup}
+                message="¡Se creo el Cliente con exito!"
+              ></PopUp>
+            </>
+          }
+        ></FlatList>
       )}
     </Formik>
   );
