@@ -11,7 +11,7 @@ import UserContext from "../context/UserContext";
 import { color } from "react-native-reanimated";
 import { Context } from "../context/ContextProvider";
 import { Switch } from "@rneui/themed";
-import { getAuth } from "firebase/auth/react-native";
+import { getAuth, updateEmail, updatePassword } from "firebase/auth/react-native";
 import { useEffect } from "react";
 
 export default function Perfil() {
@@ -47,14 +47,33 @@ export default function Perfil() {
     resetForm
   ) => {
     const data = {
+      id: uid,
       userName: user,
       lastName: lastName ? lastName : usuario.lastName,
       email,
       phoneNumber: phone ? phone : usuario.phoneNumber,
       password
     }
-    console.log(data)
+    
+    const usuarioDB = doc(db, "Usuarios", uid);
+    await setDoc(usuarioDB, data)
     setSpinner(false)
+    updateEmail(auth.currentUser, data.email).then(() => {
+      console.log("email update")
+    }).catch((error) => {
+      console.log(error)
+    });
+    
+
+    updatePassword(auth.currentUser, data.password).then(() => {
+      console.log("pass update")
+    }).catch((error) => {
+      console.log(error)
+    });
+
+    
+    
+    
   };
 
   const handleTheme = () => {
