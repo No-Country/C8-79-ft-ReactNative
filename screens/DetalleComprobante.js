@@ -32,11 +32,14 @@ const DetalleComprobante = ({ navigation, route }) => {
 
   const traerDatos = async () => {
     try {
+      
       const docRef = doc(db, "Facura", idFactura);
       const docSnap = await getDoc(docRef);
+      console.log(docSnap.data())
       setFactura(docSnap.data());
       setItems(docSnap.data().productos);
-      date = moment(docSnap.data()?.fecha.seconds * 1000).format("DD/MMM/YY");
+      let date = moment(docSnap.data()?.fecha.seconds * 1000).format("DD/MMM/YY");
+      console.log(date)
       // let auxFecha = String(new Date(docSnap.data()?.fecha.seconds * 1000)).split(' ')
       // let fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
       setFecha(date);

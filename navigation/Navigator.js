@@ -21,7 +21,7 @@ import { storeData,getData, removeData } from "../helpers/storageHelper";
 
     const req=async ()=>{
       const hasLaunched=await getData("LAUNCHED")
-      console.log(hasLaunched)
+      //console.log(hasLaunched)
       if(hasLaunched){
         setLaunched(true)
       }else{
