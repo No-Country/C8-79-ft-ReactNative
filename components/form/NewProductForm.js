@@ -5,17 +5,44 @@ import * as Yup from "yup";
 import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
 import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase/Config";
+import { Context } from "../../context/ContextProvider";
+import UserContext from "../../context/UserContext";
 
 export const NewProductForm = () => {
 
+
+
   const nav = useNavigation();
   const placesRef = useRef();
+  const { setSpinner, throwError } = useContext(UserContext);
 
   const [popup, setPopup] = useState(false);
   
 
-  const submitForm = (values, clear) => {
-    console.log(values);
+  const submitForm = async(values, clear) => {
+    setSpinner(true)
+
+    const rand=()=>Math.random(0).toString(36).substr(2);
+    const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
+    const aux = token(40)
+
+    await setDoc(doc(db, "Productos", values.codigo), {
+        nombre: values.nombre,
+        descripcion: values.descripcion,
+        precioVenta:  Number(values.precioVenta),
+        totalVentas:0,
+        precioCompra:  Number(values.precioCompra),
+        cantidad: Number(values.cantidad),
+        codigo: values.codigo
+      }).catch(error => {
+        console.log(error)
+        setError(error)
+      });
+      handleBandera()
+      setSpinner(false)
     setPopup(true);
     clear();
     setTimeout(() => {

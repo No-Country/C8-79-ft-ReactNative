@@ -31,9 +31,9 @@ export default function Home() {
           setArr3(false),
           setArr4(false),
           setArr5(false),
-          setArr6(false),
-          console.log("salio");
-      };
+          setArr6(false)
+         // console.log("salio")
+      }
     }, [])
   );
 

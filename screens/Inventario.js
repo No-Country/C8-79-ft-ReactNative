@@ -51,7 +51,7 @@ const Inventario = () => {
   const pagination = (arr) => {
     setProd(arr.slice(0, 9));
     setTotalPage(Math.ceil(arr.length / 9));
-    console.log("p", totalPage);
+    //console.log("p", totalPage);
   };
 
   const increment = (p) => {
@@ -78,7 +78,7 @@ const Inventario = () => {
     return <ItemDeInventario item={item} index={index} />;
   };
 
-  console.log(totalPage);
+  
   return (
     <View
       style={[styles.viewContainer, { backgroundColor: colors.background }]}

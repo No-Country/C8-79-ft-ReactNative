@@ -17,7 +17,6 @@ import { auth, db } from "../../firebase/Config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import Spinner from "../Spinner";
 
-
 const RegisterForm = () => {
   const [popup, setPopup] = useState(false);
   const nav = useNavigation();
@@ -36,17 +35,13 @@ const RegisterForm = () => {
 
   const submitForm = (formData, clear) => {
     setSpinner(true);
-    handleCreateUser(formData,clear)
-    
+    handleCreateUser(formData, clear);
   };
 
-  const handleCreateUser = async ({
-    userName,
-    lastName,
-    email,
-    phoneNumber,
-    password,
-  },clear) => {
+  const handleCreateUser = async (
+    { userName, lastName, email, phoneNumber, password },
+    clear
+  ) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
@@ -56,41 +51,38 @@ const RegisterForm = () => {
           email,
           phoneNumber,
           password,
-          id: auth.currentUser.uid
+          id: auth.currentUser.uid,
         };
-        console.log(auth.currentUser.uid)
-      await setDoc(doc(db, "Usuarios",auth.currentUser.uid), data);
-       setPopup(true);
-       clear();
-       setTimeout(() => {
-         setPopup(false), nav.navigate("Login");
-       }, 1000);
-     
+        console.log(auth.currentUser.uid);
+        await setDoc(doc(db, "Usuarios", auth.currentUser.uid), data);
+        setPopup(true);
+        clear();
+        setTimeout(() => {
+          setPopup(false), nav.navigate("Login");
+        }, 1000);
       })
       .catch((error) => {
-if(error.message.includes("email-already-in-use")){
-  setError((prev) => ({
-    ...prev,
-    user: true,
-  }));
+        if (error.message.includes("email-already-in-use")) {
+          setError((prev) => ({
+            ...prev,
+            user: true,
+          }));
+        } else {
+          setError((prev) => ({
+            ...prev,
+            network: true,
+          }));
+          setTimeout(
+            () =>
+              setError((prev) => ({
+                ...prev,
+                network: false,
+              })),
+            5000
+          );
+        }
 
-}else{
-  setError((prev) => ({
-    ...prev,
-    network: true,
-  }));
-  setTimeout(
-    () =>
-      setError((prev) => ({
-        ...prev,
-        network: false,
-      })),
-    5000
-  );
-
-}
-
-        console.log(error)
+        console.log(error);
         setSpinner(false);
       });
   };
@@ -111,13 +103,11 @@ if(error.message.includes("email-already-in-use")){
     });
   };
 
-  
-
   return (
     <>
-     {spinner ? <Spinner></Spinner> : null}
+      {spinner ? <Spinner></Spinner> : null}
       <Formik
-        initialValues={{ userName: "", lastName: "", email: "", password: "" }}
+        initialValues={{ userName: "", lastName: "", email: "", password: "" ,phoneNumber:""}}
         validationSchema={Yup.object({
           userName: Yup.string()
             .max(20, "Must be 20 characters or less")
@@ -130,6 +120,7 @@ if(error.message.includes("email-already-in-use")){
             .email("Direccion invalida")
             .required("Debe completar este campo"),
 
+          phoneNumber: Yup.number().required("Debe completar este campo"),
           password: Yup.string()
             .min(6, "Debe contener 6 caracteres o mas")
             .required("Debe completar este campo"),
@@ -140,7 +131,6 @@ if(error.message.includes("email-already-in-use")){
         })}
         onSubmit={(values, { resetForm }) => {
           submitForm(values, resetForm);
-         
         }}
       >
         {({
@@ -183,11 +173,11 @@ if(error.message.includes("email-already-in-use")){
               style={styles.textInput}
               onChangeText={handleChange("email")}
               onFocus={() =>
-                  setError((prev) => ({
-                    ...prev,
-                    user: false,
-                  }))
-                }
+                setError((prev) => ({
+                  ...prev,
+                  user: false,
+                }))
+              }
               value={values.email}
               selectionColor={"#000"}
             />
@@ -252,7 +242,9 @@ if(error.message.includes("email-already-in-use")){
               <Text style={styles.error}>{errors.passwordConfirmation}</Text>
             )}
             {error.user && (
-              <Text style={styles.error}>Direccion de email en uso ,prueba reestablecer tu contraseña</Text>
+              <Text style={styles.error}>
+                Direccion de email en uso ,prueba reestablecer tu contraseña
+              </Text>
             )}
             {error.network && (
               <Text style={styles.error}>
@@ -309,7 +301,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   error: {
-    marginTop:20,
+    marginTop: 20,
     color: "red",
   },
   label: {

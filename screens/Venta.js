@@ -27,6 +27,7 @@ import { random } from "../helpers/random";
 import { color } from "react-native-reanimated";
 import UserContext from "../context/UserContext";
 import { Context } from "../context/ContextProvider";
+import PopUp from "../components/PopUp";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -42,10 +43,18 @@ const Venta = () => {
   const [idCodigo, setIdCodigo] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const {bandera, handleBandera} = useContext(Context)
+  const [productos2, setProductos2] = useState([])
   const ram = random();
+  const [popup, setPopup] = useState(false);
+  
 
   const submit = async (data) => {
+    setSpinner(true)
+   console.log("desde submit",productData)
+    // console.log("desde submit",cliente)
+    console.log(productos2)
     let bandera = true;
+   
     for (let i = 0; i < productData.length; i++) {
       bandera = productos.includes(productData[i].producto);
       if (bandera == false) {
@@ -56,21 +65,23 @@ const Venta = () => {
     const aux = cliente.split(" ");
     const id = aux[aux.length - 1];
     const auxCliente = aux[0] + " " + aux[1];
+    console.log(auxCliente)
     let arrayProductData = []
     for(let i = 0; i < productData.length; i++){
-      let indice = allProducts.findIndex(e => e.codigo === productData[i].producto) 
+      let indice = allProducts.findIndex(e => e.nombre === productData[i].producto) 
       const objeto = {
         producto: productData[i].producto,
         nombre: allProducts[indice].nombre,
         cantidad: productData[i].cantidad,
         precioUnitario: allProducts[indice].precioVenta,
+        precioCompra: allProducts[indice].precioCompra,
         total: productData[i].cantidad * allProducts[indice].precioVenta
       }
       arrayProductData.push(objeto)
-      
+      console.log(arrayProductData)
     };
 
-
+    console.log(confirmation , productInput, bandera)
     if (confirmation === productInput && bandera === true) {
       const comprobante = {
         fecha: new Date(),
@@ -90,14 +101,19 @@ const Venta = () => {
       });
 
       productData.forEach(async (e) => {
-        const docRef = doc(db, "Productos", e.producto);
+        const docRef = doc(db, "Productos", e.codigo);
         await updateDoc(docRef, {
           cantidad: increment(-e.cantidad),
           totalVentas: increment(e.cantidad),
         });
       });
       handleBandera()
+      setPopup(true);
       reset()
+      setTimeout(() => {
+        setPopup(false)
+      }, 1000);
+     
       return comprobante;
     } else {
       console.log("debe completar o su codigo de producto es invalido");
@@ -115,30 +131,41 @@ const Venta = () => {
     const array = [];
     const querySnapshot = await getDocs(collection(db, "Clientes"));
     querySnapshot.forEach((doc) => {
+   
       const nombre =
-        doc.data().firstName + " " + doc.data().lastName + "                     " + doc.data().id;
+        doc.data().firstName + " " + doc.data().lastName +"                                                                                                      "+doc.data().id
+              
       array.push(nombre);
     });
+   // console.log(array)
     setClientesFire(array);
 
     const array2 = [];
     const arrayPrecioUniario = []
+    const prod=[]
 
     const querySnapshot2 = await getDocs(collection(db, "Productos"));
     querySnapshot2.forEach((doc) => {
-      const codigo = doc.data().codigo;
+      const codigo = doc.data().nombre;
       const precioUnitario = {
        precioVenta: doc.data().precioVenta, 
+       precioCompra: doc.data().precioCompra, 
        nombre: doc.data().nombre,
        codigo: doc.data().codigo
       }
       array2.push(codigo);
       arrayPrecioUniario.push(precioUnitario)
     });
+    querySnapshot2.forEach((doc) => {
+      prod.push(doc.data());
+    });
+   
+    setProductos2(prod);
     setProductos(array2);
     setAllProducts(arrayPrecioUniario)
     setSpinner(false)
   };
+
 
   useEffect(() => {
     traerDatos();
@@ -154,6 +181,10 @@ const Venta = () => {
         backgroundColor: colors.background,
       }}
     >
+      <PopUp
+            visibility={popup}
+            message="¡Se guardaron los cambios con exito!"
+          ></PopUp>
       <ScrollView
         overScrollMode={"never"}
         showsVerticalScrollIndicator={false}
@@ -195,6 +226,7 @@ const Venta = () => {
               id={index}
               handleData={setProductData}
               confirm={setConfirmation}
+              data={productos2}
             />
           );
         })}
