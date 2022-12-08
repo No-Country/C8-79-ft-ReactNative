@@ -45,7 +45,7 @@ const Comprobantes = () => {
       let date;
 
       array.forEach((factura) => {
-        date = moment(factura?.fecha.seconds * 1000).format("DD/MMM/YY");
+     
         // auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
         //fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
         const todosProductos = factura.productos;
@@ -55,7 +55,7 @@ const Comprobantes = () => {
         const objeto = {
           cliente: factura.cliente,
           operacion: "Venta",
-          fecha: date,
+          fecha: factura?.fecha.seconds,
           id: factura.id,
           monto: sumall,
         };
@@ -85,12 +85,14 @@ const Comprobantes = () => {
   };
 
   const closeFilter = (end) => {
+    console.log((filter.startDate).unix(),end.unix()+100000)
     const filteredArr = facturas
       .filter(
         (item) =>
-          item.fecha.seconds > filter.startDate.unix() &&
-          item.fecha.seconds < end.unix()
-      )
+        (console.log(item.fecha.seconds),
+          item.fecha.seconds >= filter.startDate.unix()-4000 &&
+          item.fecha.seconds <= end.unix()+50000
+      ))
       .map((item) => ({
         cliente: item.cliente,
         operacion: "Venta",
@@ -129,7 +131,9 @@ const Comprobantes = () => {
           type="ionicon"
           color={colors.text}
           onPress={() =>
-            setFilter((prev) => ({
+            setFilter((prev) => (
+             
+             {
               ...prev,
               visibility: true,
             }))
