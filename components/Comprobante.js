@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import moment from "moment";
+
 
 const windowWidth = Dimensions.get("window").width;
 
