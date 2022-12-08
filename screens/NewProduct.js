@@ -1,19 +1,23 @@
-import { StyleSheet, SafeAreaView, Text } from "react-native";
-import React from 'react'
+import {StyleSheet, TextInput, Text, View, FlatList, SafeAreaView } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import NewProductForm from '../components/form/NewProductForm'
+import { NewProductForm } from '../components/form/NewProductForm';
 
-export default function NewProduct() {
-    const {colors}=useTheme()
+
+const NewProduct = () => {
+  const {colors}=useTheme()
   return (
     <SafeAreaView style={[styles.container,{backgroundColor:colors.background}]}>
      
-      <Text style={[styles.title,{backgroundColor:colors.primary,color:colors.text}]}>Ingresar nuevo producto</Text>
-      <NewProductForm></NewProductForm>
+     <Text style={[styles.title,{backgroundColor:colors.primary,color:colors.text}]}>Crear nuevo Producto</Text>
+      <NewProductForm/>
       
     </SafeAreaView>
   )
-}
+};
+
+export default NewProduct;
+
+//Estilos:
 
 const styles = StyleSheet.create({
     container: {
@@ -21,6 +25,12 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       alignItems: "center",
     },
+  top:{
+    backgroundColor: "#EFEFEF",
+    height:14,
+    width:"100%"
+  }
+    ,
     title: {
       textAlign: "center",
       textAlignVertical: "center",
@@ -34,4 +44,3 @@ const styles = StyleSheet.create({
       width: "100%",
     },
   });
-  

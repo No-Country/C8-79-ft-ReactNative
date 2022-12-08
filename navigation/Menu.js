@@ -24,25 +24,12 @@ import Comprobantes from "../screens/Comprobantes";
 import DetalleComprobante from "../screens/DetalleComprobante";
 import Venta from "../screens/Venta";
 import NewProduct from "../screens/NewProduct";
+import { ProductDetail } from "../screens/ProductDetail";
+import { EditProduct } from "../screens/EditProduct";
 
 const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
-
-const ProductStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        headerStyle: { backgroundColor: "#A1D6E2" },
-      }}
-    >
-      <Stack.Screen name="ProductScreen" component={Products} />
-      <Stack.Screen name="NewProduct" component={NewProduct} />
-      
-    </Stack.Navigator>
-  );
-};
 
 const ClientsStack = () => {
   return (
@@ -59,6 +46,21 @@ const ClientsStack = () => {
     </Stack.Navigator>
   );
 };
+
+const ProductStack = () => {
+  return (
+    
+        <Stack.Navigator
+            screenOptions={{ headerShown: false}}
+        >
+            <Stack.Screen name="ProductsScreen" component={Products} />
+            <Stack.Screen name="ProductDetail" component={ProductDetail} />
+            <Stack.Screen name="NewProduct" component={NewProduct} />
+            <Stack.Screen name="EditProduct" component={EditProduct} />
+        </Stack.Navigator>
+    
+  )
+}
 
 const ComprobantesStack = () => {
   return (
@@ -95,27 +97,6 @@ const Menu = ({ route }) => {
       useLegacyImplementation={true}
       initialRouteName={route.params}
     >
-      {/* <ion-icon name="reader"></ion-icon> */}
-
-      {/* <Drawer.Screen
-        name="Perfil"
-        component={Perfil}
-        options={{
-          title: "Perfil",
-          drawerIcon: () => <Icon name="people" type="ionicon"></Icon>,
-        }}
-      /> */}
-
-      {/* <Drawer.Screen
-        name="Home"
-        
-        component={Home}
-        options={{
-          
-          title: "Home",
-          drawerIcon: () => <Icon color={ colors.text} name="home" type="ionicon"></Icon>,
-        }}
-      /> */}
 
       <Drawer.Screen
         name="Clientes"

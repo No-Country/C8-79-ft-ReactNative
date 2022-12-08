@@ -12,20 +12,10 @@ import { color } from "react-native-reanimated";
 import Product from "../components/Product";
 import { Dimensions } from "react-native";
 
-const sortData = (arr) => {
-  const sortedArray = arr.sort(function (a, b) {
-    if (a.nombre.toLowerCase() < b.nombre.toLowerCase()) {
-      return -1;
-    }
-    if (a.nombre.toLowerCase() > b.nombre.toLowerCase()) {
-      return 1;
-    }
-    return 0;
-  });
-  return sortedArray;
-};
-
-const Products = ({ navigation }) => {
+const sortProductos = (array) =>{
+  return array.sort()
+}
+const Products = () => {
   const window = Dimensions.get("screen");
   const { bandera } = useContext(Context);
   const [filter, setFilter] = useState("");
@@ -33,17 +23,22 @@ const Products = ({ navigation }) => {
   const [productos, setProductos] = useState([]);
   const { colors } = useTheme();
 
+  const navigation=useNavigation()
+
   const traerDatos = async () => {
     const array = [];
     const querySnapshot = await getDocs(collection(db, "Productos"));
     querySnapshot.forEach((doc) => {
       array.push(doc.data());
     });
+
     setProductos(array);
+    
   };
 
   useEffect(() => {
     traerDatos();
+    console.log(productos)
   }, [bandera]);
 
   useFocusEffect(
@@ -61,7 +56,8 @@ const Products = ({ navigation }) => {
         isPress={() => setClick(index)}
         index={index}
         textColor={index === click ? "#A1D6E2" : colors.text}
-        fontSz={index === click ? 22 : 20}
+        //fontSz={index === click ? 22 : 20}
+       
       />
     );
   };
@@ -85,11 +81,12 @@ const Products = ({ navigation }) => {
         ]}
         onChangeText={(value) => setFilter(value)}
         placeholder="Ingrese el nombre del Producto"
-        placeholderTextColor={colors.text}
+        placeholderTextColor={'#BCBABB'}
         round
         value={filter}
+        
       />
-        <View style={[styles.encabezado,{width: "100%"} ]}>
+        <View style={[styles.encabezado,{width: "100%"}  ]}>
           <Text style={styles.title}>Nombre</Text>
           <Text style={styles.title}>Cantidad</Text>
           <Text style={styles.title}>Precio</Text>
@@ -101,11 +98,11 @@ const Products = ({ navigation }) => {
         removeClippedSubviews={true}
         overScrollMode={"never"}
         style={styles.flatlist}
-        data={sortData(productos).filter((producto) =>
-          producto.nombre.toLowerCase().includes(filter.toLocaleLowerCase())
-        )}
+        data={productos          // sortData(productos).filter((producto) =>
+          // producto.nombre.toLowerCase().includes(filter.toLocaleLowerCase()))
+        }
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item,i) => i}
+        keyExtractor={(item,i) => item.codigo}
         renderItem={renderItem}
         ListEmptyComponent={() => (
           <ActivityIndicator
@@ -120,7 +117,7 @@ const Products = ({ navigation }) => {
         icon={{ name: "add", color: colors.text }}
         color={colors.primary}
         placement="right"
-        onPress={()=>navigation.navigate("NewProduct")}
+        onPress={() => navigation.navigate("NewProduct")}
       />
     </View>
   );
@@ -147,6 +144,8 @@ const styles = StyleSheet.create({
   searchInput: {
     textAlign: "center",
     backgroundColor: "#fff",
+    fontSize: 16,
+    
   },
   inputContainer: {
     backgroundColor: "#fff",
@@ -156,14 +155,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   encabezado: {
-    flex: 0.2,
+    height: 50,
     flexDirection: "row",
     display: "flex",
     alignItems: "center",
-    backgroundColor: "#D4d4d4",
+    backgroundColor: "#D4d4d9",
     justifyContent: "space-between",
     paddingHorizontal: 30,
     borderBottomWidth: 2,
+    
 
 
   },

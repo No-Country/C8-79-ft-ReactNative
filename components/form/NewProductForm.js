@@ -1,218 +1,184 @@
-import { StyleSheet, TextInput, Text, View, FlatList } from "react-native";
-import React, { useState, useRef, useContext } from "react";
+import {StyleSheet, TextInput, Text, View, FlatList } from "react-native";
+import React, { useState, useRef } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
-import { useNavigation, useTheme } from "@react-navigation/native";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../firebase/Config";
-import { Context } from "../../context/ContextProvider";
+import { useNavigation } from "@react-navigation/native";
 
-const NewProductForm = () => {
-  const { colors } = useTheme();
+export const NewProductForm = () => {
+
   const nav = useNavigation();
+  const placesRef = useRef();
 
   const [popup, setPopup] = useState(false);
-  const {handleBandera} = useContext(Context)
+  
 
-  const submitForm = async(values, clear) => {
-
-    const rand=()=>Math.random(0).toString(36).substr(2);
-    const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
-    const aux = token(40)
-
-    await setDoc(doc(db, "Productos", values.codigo), {
-        nombre: values.nombre,
-        descripcion: values.descripcion,
-        precioVenta:  Number(values.precioVenta),
-        totalVentas:0,
-        precioCompra:  Number(values.precioCompra),
-        cantidad: Number(values.cantidad),
-        codigo: values.codigo
-      }).catch(error => {
-        console.log(error)
-        setError(error)
-      });
-      handleBandera()
+  const submitForm = (values, clear) => {
+    console.log(values);
     setPopup(true);
     clear();
     setTimeout(() => {
-      setPopup(false), nav.navigate("ProductScreen");
+      setPopup(false), nav.navigate("ProductsScreen");
     }, 1000);
   };
+
+ 
 
   return (
     <Formik
       initialValues={{
-        nombre: "",
-        descripcion: "",
-        precioVenta: "",
-        precioCompra: "",
-        cantidad: "",
-        codigo: "",
+        name: "",
+        description: "",
+        cost: "",
+        sale: "",
+        quantity: "",
+        category: ""
       }}
-      validationSchema={Yup.object({
-        nombre: Yup.string()
-          .max(20, "Must be 20 characters or less")
-          .required("Debe completar este campo"),
 
-        descripcion: Yup.string()
-          .max(80, "Must be 80 characters or less")
+      validationSchema={Yup.object({
+        name: Yup.string()
+          .required("Debe completar este campo"),         
+        description: Yup.string()
+        .required("Debe completar este campo"),
+        cost: Yup.string()
           .required("Debe completar este campo"),
-        precioVenta: Yup.string().required("Debe completar este campo"),
-        precioCompra: Yup.string().required("Debe completar este campo"),
-        cantidad: Yup.string()
-          .max(5, "Must be 5 characters or more")
+        sale: Yup.string()
+        .required("Debe completar este campo"),
+        quantity: Yup.string()
           .required("Debe completar este campo"),
-          codigo: Yup.string()
-          .max(6, "Must be 6 characters or more")
+        category: Yup.string()
           .required("Debe completar este campo"),
       })}
+
       onSubmit={(values, { resetForm }) => {
         submitForm(values, resetForm);
       }}
     >
-      {({
-        setFieldValue,
-        handleChange,
-        handleSubmit,
-        values,
-        errors,
-        touched,
-      }) => (
-        <FlatList
+
+      {({setFieldValue , handleChange, handleSubmit, values, errors, touched }) => (
+        
+        <FlatList 
           overScrollMode={"never"}
           showsVerticalScrollIndicator={false}
           style={styles.form}
           ListHeaderComponent={
-            <>
-              <Text style={[styles.label, { color: colors.text }]}>Nombre</Text>
-              <TextInput
-                style={[
-                  styles.textInput,
-                  { backgroundColor: colors.card, color: colors.text },
-                ]}
-                onChangeText={handleChange("nombre")}
-                value={values.nombre}
-                selectionColor={colors.text}
-              />
-              {errors.nombre && touched.nombre && (
-                <Text style={styles.error}>{errors.nombre}</Text>
-              )}
-              <Text style={[styles.label, { color: colors.text }]}>
-                Descripcion
-              </Text>
-              <TextInput
-                style={[
-                  styles.textInput,
-                  { backgroundColor: colors.card, color: colors.text },
-                ]}
-                onChangeText={handleChange("descripcion")}
-                value={values.descripcion}
-                selectionColor={colors.text}
-              />
-              {errors.descripcion && touched.descripcion && (
-                <Text style={styles.error}>{errors.descripcion}</Text>
-              )}
+          <>
+            <Text style={styles.label}>Nombre</Text>
+            <TextInput
+                style={styles.textInput}
+                onChangeText={handleChange("name")}
+                value={values.name}
+                selectionColor={"#000"}
+          />
 
-              <Text style={[styles.label, { color: colors.text }]}>
-                Precio de venta
-              </Text>
-              <TextInput
+          {errors.name && touched.name && (
+
+            <Text style={styles.error}>{errors.name}</Text>
+
+          )}
+
+            <Text style={styles.label}>Descripción</Text>
+            <TextInput
+                style={styles.textInput}
+                onChangeText={handleChange("description")}
+                value={values.description}
+                selectionColor={"#000"}
+          />
+
+          {errors.description && touched.description && (
+
+            <Text style={styles.error}>{errors.description}</Text>
+
+          )}
+
+            <Text style={styles.label}>Precio de costo</Text>
+            <TextInput
                 keyboardType={"numeric"}
-                style={[
-                  styles.textInput,
-                  { backgroundColor: colors.card, color: colors.text },
-                ]}
-                onChangeText={handleChange("precioVenta")}
-                value={values.precioVenta}
-                selectionColor={colors.text}
-              />
-              {errors.precioVenta && touched.precioVenta && (
-                <Text style={styles.error}>{errors.precioVenta}</Text>
-              )}
-              <Text style={[styles.label, { color: colors.text }]}>
-                Precio de compra
-              </Text>
+                style={styles.textInput}
+                onChangeText={handleChange("cost")}
+                value={values.cost}
+                selectionColor={"#000"}
+          />
 
-              <TextInput
-                keyboardType={"numeric"}
-                style={[
-                  styles.textInput,
-                  { backgroundColor: colors.card, color: colors.text },
-                ]}
-                onChangeText={handleChange("precioCompra")}
-                value={values.precioCompra}
-                selectionColor={colors.text}
-              />
-              {errors.precioCompra && touched.precioCompra && (
-                <Text style={styles.error}>{errors.precioCompra}</Text>
-              )}
+          {errors.cost && touched.cost && (
 
-              <Text style={[styles.label, { color: colors.text }]}>
-                Cantidad en stock
-              </Text>
+            <Text style={styles.error}>{errors.cost}</Text>
 
-              <TextInput
-                keyboardType={"numeric"}
-                style={[
-                  styles.textInput,
-                  { backgroundColor: colors.card, color: colors.text },
-                ]}
-                onChangeText={handleChange("cantidad")}
-                value={values.cantidad}
-                selectionColor={colors.text}
-              />
+          )}
+          
+          <Text style={styles.label}>Precio de venta</Text>
 
-              {errors.cantidad && touched.cantidad && (
-                <Text style={styles.error}>{errors.cantidad}</Text>
-              )}
+          <TextInput
+            keyboardType={"numeric"}
+            style={styles.textInput}
+            onChangeText={handleChange("sale")}
+            value={values.sale}
+            selectionColor={"#000"}
+          />
 
-<Text style={[styles.label, { color: colors.text }]}>
-                Codigo del producto
-              </Text>
+          {errors.sale && touched.sale && (
 
-              <TextInput
-                
-                style={[
-                  styles.textInput,
-                  { backgroundColor: colors.card, color: colors.text },
-                ]}
-                onChangeText={handleChange("codigo")}
-                value={values.codigo}
-                selectionColor={colors.text}
-              />
+            <Text style={styles.error}>{errors.sale}</Text>
 
-              {errors.codigo && touched.codigo && (
-                <Text style={styles.error}>{errors.codigo}</Text>
-              )}
+          )}
 
-              <View style={styles.buttonContainer}>
-                <Button
-                  titleStyle={{ color: colors.text, fontSize: 18 }}
-                  buttonStyle={[
-                    styles.button,
-                    { backgroundColor: colors.primary },
-                  ]}
-                  onPress={handleSubmit}
-                  title="Guardar"
-                />
-              </View>
+          <Text style={styles.label}>Cantidad</Text>
+          <TextInput
+            keyboardType={"numeric"}
+            style={styles.textInput}
+            onChangeText={handleChange("quantity")}
+            value={values.quantity}
+            selectionColor={"#000"}
+          />
 
-              <PopUp
-                visibility={popup}
-                message="¡Se creo el Producto con exito!"
-              ></PopUp>
-            </>
-          }
-        ></FlatList>
+          {errors.quantity && touched.quantity && (
+
+            <Text style={styles.error}>{errors.quantity}</Text>
+
+          )}
+
+          <Text style={styles.label}>Categoría</Text>
+            <TextInput
+                style={styles.textInput}
+                onChangeText={handleChange("category")}
+                value={values.category}
+                selectionColor={"#000"}
+          />
+
+          {errors.category && touched.category && (
+
+            <Text style={styles.error}>{errors.category}</Text>
+
+          )}
+
+
+          <View style={styles.buttonContainer}>
+            <Button
+              titleStyle={{ color: "#000", fontSize: 18 }}
+              buttonStyle={styles.button}
+              onPress={handleSubmit}
+              title="Guardar producto"
+            />
+          </View>
+
+          <PopUp
+            visibility={popup}
+            message="¡Se creó el Producto con éxito!"
+          ></PopUp>
+          
+          </>
+         }
+         >
+          
+        </FlatList>
       )}
     </Formik>
-  );
-};
 
+  )
+};
 export default NewProductForm;
+//estilos
 
 const styles = StyleSheet.create({
   form: {

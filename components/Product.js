@@ -1,15 +1,9 @@
-import {
-  TouchableHighlight,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Avatar, Icon } from "@rneui/themed";
+import { TouchableHighlight, TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/Config";
 import { useTheme } from "@react-navigation/native";
+import { Icon } from "@rneui/base";
 
 const Product = ({ fontSz, textColor, item, isPress, index }) => {
   const { colors } = useTheme();
@@ -19,9 +13,9 @@ const Product = ({ fontSz, textColor, item, isPress, index }) => {
     <TouchableOpacity
       activeOpacity={0.2}
       //onPressIn={isPress}
-      // onPress={() => {
-      //   isPress, navigation.navigate("ClientDetail", item);
-      // }}
+       onPress={() => {
+         isPress, navigation.navigate("ProductDetail", item);
+       }}
       style={[
         index % 2 === 0
           ? { backgroundColor: colors.primary }
@@ -34,12 +28,18 @@ const Product = ({ fontSz, textColor, item, isPress, index }) => {
           <Text style={[styles.title, { color: textColor, fontSize: fontSz}]}>
             {item.nombre}
           </Text>
-          <Text style={[styles.title, { color: textColor, fontSize: fontSz }]}>
+          <Text style={[styles.title, { color: textColor, fontSize: fontSz, width: '50%' }]}>
             {item.cantidad}
           </Text>
           <Text style={[styles.title, { color: textColor, fontSize: fontSz }]}>
             {`$ ${item.precioVenta}`}
           </Text>
+          {/* <Icon
+              style={{ paddingRight: 10 }}
+              name="chevron-right"
+              type="feather"
+              color="#BCBABB"
+            /> */}
         </View>
       </View>
     </TouchableOpacity>
@@ -61,6 +61,8 @@ const styles = StyleSheet.create({
   title: {
     paddingLeft: 20,
     paddingRight: 20,
+    flex: 1,
+    justifyContent: 'flex-start'
   },
   contact: {
     flexDirection: "row",
