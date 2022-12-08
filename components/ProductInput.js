@@ -118,7 +118,10 @@ const ProductInput = ({ handleData, confirm, data }) => {
             onPress={() => {
               setEdit(false);
               confirm((prev) => prev + 1);
-              handleData((prev) => [...prev, { producto, cantidad }]);
+
+              let i=data.map(item=>item.nombre).indexOf(producto)
+              let codigo=data[i].codigo 
+              handleData((prev) => [...prev, { producto, cantidad ,codigo}]);
             }}
           >
             <Icon

@@ -48,65 +48,69 @@ const Venta = () => {
   
 
   const submit = async (data) => {
-    console.log("desde submit",productData)
-    console.log("desde submit",cliente)
-    // let bandera = true;
-    // for (let i = 0; i < productData.length; i++) {
-    //   bandera = productos.includes(productData[i].producto);
-    //   if (bandera == false) {
-    //     break;
-    //   }
-    // }
+   console.log("desde submit",productData)
+   
+    console.log(productos2)
+    let bandera = true;
+   
+    for (let i = 0; i < productData.length; i++) {
+      bandera = productos.includes(productData[i].producto);
+      if (bandera == false) {
+        break;
+      }
+    }
 
-    // const aux = cliente.split(" ");
-    // const id = aux[aux.length - 1];
-    // const auxCliente = aux[0] + " " + aux[1];
-    // let arrayProductData = []
-    // for(let i = 0; i < productData.length; i++){
-    //   let indice = allProducts.findIndex(e => e.codigo === productData[i].producto) 
-    //   const objeto = {
-    //     producto: productData[i].producto,
-    //     nombre: allProducts[indice].nombre,
-    //     cantidad: productData[i].cantidad,
-    //     precioUnitario: allProducts[indice].precioVenta,
-    //     total: productData[i].cantidad * allProducts[indice].precioVenta
-    //   }
-    //   arrayProductData.push(objeto)
-      
-    // };
+    const aux = cliente.split(" ");
+    const id = aux[aux.length - 1];
+    const auxCliente = aux[0] + " " + aux[1];
+    console.log(auxCliente)
+    let arrayProductData = []
+    for(let i = 0; i < productData.length; i++){
+      let indice = allProducts.findIndex(e => e.nombre === productData[i].producto) 
+      const objeto = {
+        producto: productData[i].producto,
+        nombre: allProducts[indice].nombre,
+        cantidad: productData[i].cantidad,
+        precioUnitario: allProducts[indice].precioVenta,
+        precioCompra: allProducts[indice].precioCompra,
+        total: productData[i].cantidad * allProducts[indice].precioVenta
+      }
+      arrayProductData.push(objeto)
+      console.log(arrayProductData)
+    };
 
-
-    // if (confirmation === productInput && bandera === true) {
-    //   const comprobante = {
-    //     fecha: new Date(),
-    //     cliente: auxCliente,
-    //     productos: [
-    //       ...arrayProductData, 
+    console.log(confirmation , productInput, bandera)
+    if (confirmation === productInput && bandera === true) {
+      const comprobante = {
+        fecha: new Date(),
+        cliente: auxCliente,
+        productos: [
+          ...arrayProductData, 
           
-    //   ],
-    //     id: ram,
-    //   };
+      ],
+        id: ram,
+      };
 
-    //   await setDoc(doc(db, "Facura", ram), comprobante);
+      await setDoc(doc(db, "Facura", ram), comprobante);
 
-    //   const docRef = doc(db, "Clientes", id);
-    //   await updateDoc(docRef, {
-    //     cantidad: increment(1),
-    //   });
+      const docRef = doc(db, "Clientes", id);
+      await updateDoc(docRef, {
+        cantidad: increment(1),
+      });
 
-    //   productData.forEach(async (e) => {
-    //     const docRef = doc(db, "Productos", e.producto);
-    //     await updateDoc(docRef, {
-    //       cantidad: increment(-e.cantidad),
-    //       totalVentas: increment(e.cantidad),
-    //     });
-    //   });
-    //   handleBandera()
-    //   reset()
-    //   return comprobante;
-    // } else {
-    //   console.log("debe completar o su codigo de producto es invalido");
-    // }
+      productData.forEach(async (e) => {
+        const docRef = doc(db, "Productos", e.codigo);
+        await updateDoc(docRef, {
+          cantidad: increment(-e.cantidad),
+          totalVentas: increment(e.cantidad),
+        });
+      });
+      handleBandera()
+      reset()
+      return comprobante;
+    } else {
+      console.log("debe completar o su codigo de producto es invalido");
+    }
   };
 
   const reset = () => {
@@ -120,9 +124,9 @@ const Venta = () => {
     const array = [];
     const querySnapshot = await getDocs(collection(db, "Clientes"));
     querySnapshot.forEach((doc) => {
-    
+   
       const nombre =
-        doc.data().firstName + " " + doc.data().lastName 
+        doc.data().firstName + " " + doc.data().lastName +"                                                                                                      "+doc.data().id
               
       array.push(nombre);
     });
@@ -135,9 +139,10 @@ const Venta = () => {
 
     const querySnapshot2 = await getDocs(collection(db, "Productos"));
     querySnapshot2.forEach((doc) => {
-      const codigo = doc.data().codigo;
+      const codigo = doc.data().nombre;
       const precioUnitario = {
        precioVenta: doc.data().precioVenta, 
+       precioCompra: doc.data().precioCompra, 
        nombre: doc.data().nombre,
        codigo: doc.data().codigo
       }

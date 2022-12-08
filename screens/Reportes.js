@@ -19,6 +19,7 @@ const Reportes = () => {
   const [comprobante, setComprobante] = useState();
   const [bandera2, setBandera2] = useState(false);
   const [filtered, setfiltered] = useState([]);
+  const [ingreso, setIngreso] = useState("0")
  
   const {colors}=useTheme()
   const [filter, setFilter] = useState({
@@ -30,18 +31,23 @@ const Reportes = () => {
   
   })
 
+
+  // const querySnapshot = await getDocs(collection(db, "Productos"));
+  //   querySnapshot.forEach((doc) => {
+  //     array.push(doc.data());
+  //   });
   
   const traerDatos = async () => {
+
     try {
       const array = [];
       const querySnapshot = await getDocs(collection(db, "Facura"));
       querySnapshot.forEach((doc) => {
-        array.push(doc.data());
+       array.push(doc.data())
       });
 
       setFacturas(array);
-      let auxFecha;
-      let fechaReal;
+      console.log(array)
       let arrayFecha = [];
       let date;
 
@@ -61,8 +67,14 @@ const Reportes = () => {
           monto: sumall,
         };
         arrayFecha.push(objeto);
+      
+
+   
       });
 
+      const ingresoTemp=arrayFecha.reduce((prev, curr) => prev + curr.monto,0);
+      
+      setIngreso(ingresoTemp)
       setFilter((prev) => ({ ...prev, data: arrayFecha }));
       setComprobante(arrayFecha);
       setSpinner(false);
@@ -181,7 +193,7 @@ const Reportes = () => {
               Ganancia
             </Text>
             <Text style={[styles.resumeText, { color:colors.text,borderLeftWidth: 0,borderColor:colors.primary }]}>
-              $80000
+              {ingreso}
             </Text>
             <Text style={[styles.resumeText, { color:colors.text,borderRightWidth: 0,borderColor:colors.primary }]}>
               $80000
