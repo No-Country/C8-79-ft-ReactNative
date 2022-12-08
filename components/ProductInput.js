@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     flex: 1,
     borderRadius: 10,
+    width: "70%"
   },
   button: {
     borderRadius: 10,

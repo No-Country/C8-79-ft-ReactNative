@@ -6,6 +6,9 @@ const windowWidth = Dimensions.get("window").width;
 const ItemDeComprobante = ({ item, index }) => {
   const navigation = useNavigation();
   const { colors } = useTheme();
+ 
+
+
   return (
     <View
       style={[
@@ -22,7 +25,7 @@ const ItemDeComprobante = ({ item, index }) => {
           width: windowWidth * 0.35,
         }}
       >
-        {item.producto}
+        {item.nombre}
       </Text>
       <Text
         style={{
@@ -41,7 +44,7 @@ const ItemDeComprobante = ({ item, index }) => {
           textAlign: "center",
         }}
       >
-        ${item.uni}
+        ${item.precioUnitario}
       </Text>
       <Text
         style={{
@@ -51,7 +54,7 @@ const ItemDeComprobante = ({ item, index }) => {
           textAlign: "right",
         }}
       >
-        ${item.uni * item.cantidad}
+        ${item.total}
       </Text>
     </View>
   );
