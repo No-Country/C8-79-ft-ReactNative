@@ -90,7 +90,7 @@ const NewClientForm = () => {
         email: Yup.string()
           .email("Direccion invalida")
           .required("Debe completar este campo"),
-        phone: Yup.string().required("Debe completar este campo"),
+        //phone: Yup.string().required("Debe completar este campo"),
         address: Yup.string()
           .min(5, "Must be 5 characters or more")
           .required("Debe completar este campo"),

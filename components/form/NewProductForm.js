@@ -12,7 +12,7 @@ import { Context } from "../../context/ContextProvider";
 import UserContext from "../../context/UserContext";
 
 export const NewProductForm = () => {
-
+  const {handleBandera} = useContext(Context)
 
 
   const nav = useNavigation();
@@ -23,20 +23,21 @@ export const NewProductForm = () => {
   
 
   const submitForm = async(values, clear) => {
+    console.log(values)
     setSpinner(true)
 
     const rand=()=>Math.random(0).toString(36).substr(2);
     const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
     const aux = token(40)
 
-    await setDoc(doc(db, "Productos", values.codigo), {
-        nombre: values.nombre,
-        descripcion: values.descripcion,
-        precioVenta:  Number(values.precioVenta),
+    await setDoc(doc(db, "Productos", values.category), {
+        nombre: values.name,
+        descripcion: values.description,
+        precioVenta:  Number(values.sale),
         totalVentas:0,
-        precioCompra:  Number(values.precioCompra),
-        cantidad: Number(values.cantidad),
-        codigo: values.codigo
+        precioCompra:  Number(values.cost),
+        cantidad: Number(values.quantity),
+        codigo: values.category
       }).catch(error => {
         console.log(error)
         setError(error)
@@ -165,7 +166,7 @@ export const NewProductForm = () => {
 
           )}
 
-          <Text style={styles.label}>Categoría</Text>
+          <Text style={styles.label}>Codigo</Text>
             <TextInput
                 style={styles.textInput}
                 onChangeText={handleChange("category")}
