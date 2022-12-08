@@ -1,10 +1,10 @@
 import {StyleSheet, TextInput, Text, View, FlatList } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@rneui/themed";
 import PopUp from "../PopUp";
-import { useNavigation } from "@react-navigation/native";
+
 import { useNavigation, useTheme } from "@react-navigation/native";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
