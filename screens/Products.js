@@ -33,7 +33,7 @@ const Products = () => {
     });
 
     setProductos(array);
-    
+    console.log(array)
   };
 
   useEffect(() => {

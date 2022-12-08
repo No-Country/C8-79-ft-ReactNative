@@ -19,17 +19,20 @@ const navigation=useNavigation()
   const {handleBandera, bandera} = useContext(Context)
   const product = route.params;
 
+
   const {colors}=useTheme()
 
   const deleteProduct = (product) => {
-    console.log("Intenta BORRAR " + product.name );
+    console.log("Intenta BORRAR " + product.nombre );
     setDeletePopUp(true);
   };
 
+
+
   const confirmationDelete = async (remove, product) => {
     remove
-      ? (console.log("BORRAR " + product),
-        await deleteDoc(doc(db, "Productos", product.id)),
+      ? (console.log("BORRAR " + product.nombre),
+        await deleteDoc(doc(db, "Productos", product.codigo)),
         handleBandera(),
         setDeletePopUp(false),
         setDeleted(true),
@@ -80,7 +83,7 @@ const navigation=useNavigation()
         </View>
         <View style={styles.itemInfo}>
           <Text style={[styles.text,{color:colors.text}]}>Categoría: </Text>
-          <Text style={[styles.value,{color:colors.text}]}>{product.categoria}</Text>
+          <Text style={[styles.value,{color:colors.text}]}>{product.codigo}</Text>
         </View>
       </View>
 
