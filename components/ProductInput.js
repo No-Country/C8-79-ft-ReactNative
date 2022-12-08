@@ -15,7 +15,7 @@ const ProductInput = ({ handleData, confirm, data }) => {
   const { colors } = useTheme();
   const [producto, setProducto] = useState("");
   const [edit, setEdit] = useState(true);
-  console.log(data.map((item) => item.nombre));
+  //console.log(data.map((item) => item.nombre));
   return (
     <View
       style={{

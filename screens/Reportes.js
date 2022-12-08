@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React, { useState,useContext } from "react";
+import React, { useState,useContext, useEffect } from "react";
 import { Icon } from "@rneui/themed";
 import PieChartComponent from "../components/PieChartComponent";
 import BarGraphComponent from "../components/BarGraphComponent";
@@ -8,22 +8,78 @@ import DateRangeFilter from "../components/DateRangeFilter";
 import moment from "moment";
 import { useTheme } from "@react-navigation/native";
 import UserContext from "../context/UserContext";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/Config";
+import { Context } from "../context/ContextProvider";
 
 const Reportes = () => {
-  const { setSpinner, setError } = useContext(UserContext);
+  const { setSpinner, setError, throwError } = useContext(UserContext);
+  const { bandera, handleBandera } = useContext(Context);
+  const [facturas, setFacturas] = useState([]);
+  const [comprobante, setComprobante] = useState();
+  const [bandera2, setBandera2] = useState(false);
+  const [filtered, setfiltered] = useState([]);
+ 
   const {colors}=useTheme()
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
     endDate: moment(),
     displayedDate: moment(),
     visibility: false,
-    title: {
-      month: moment().startOf("month").format("MMMM"),
-      year: moment().year(),
-    },
-  });
+    data: [],
+  
+  })
 
-  console.log(moment().startOf("month").format("DD/MMM/YY"));
+  
+  const traerDatos = async () => {
+    try {
+      const array = [];
+      const querySnapshot = await getDocs(collection(db, "Facura"));
+      querySnapshot.forEach((doc) => {
+        array.push(doc.data());
+      });
+
+      setFacturas(array);
+      let auxFecha;
+      let fechaReal;
+      let arrayFecha = [];
+      let date;
+
+      array.forEach((factura) => {
+        date = moment(factura?.fecha.seconds * 1000).format("DD/MMM/YY");
+        // auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
+        //fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
+        const todosProductos = factura.productos;
+        const sumall = todosProductos
+          .map((item) => item.total)
+          .reduce((prev, curr) => prev + curr, 0);
+        const objeto = {
+          cliente: factura.cliente,
+          operacion: "Venta",
+          fecha: date,
+          id: factura.id,
+          monto: sumall,
+        };
+        arrayFecha.push(objeto);
+      });
+
+      setFilter((prev) => ({ ...prev, data: arrayFecha }));
+      setComprobante(arrayFecha);
+      setSpinner(false);
+    } catch (e) {
+      console.log(e);
+      setSpinner(false);
+      throwError(e);
+    }
+  };
+
+  useEffect(() => {
+    setSpinner(true);
+    traerDatos();
+  }, [bandera]);
+
+
+
 
   const handleFilter = (obj) => {
     setFilter((prev) => ({
@@ -32,14 +88,32 @@ const Reportes = () => {
     }));
   };
 
-  const closeFilter = () => {
+  const closeFilter = (end) => {
+    // const filteredArr = facturas
+    //   .filter(
+    //     (item) =>
+    //       item.fecha.seconds > filter.startDate.unix() &&
+    //       item.fecha.seconds < end.unix()
+    //   )
+    //   .map((item) => ({
+    //     cliente: item.cliente,
+    //     operacion: "Venta",
+    //     fecha: item.fecha.seconds,
+    //     id: item.id,
+    //     monto: item.productos
+    //       .map((item) => item.total)
+    //       .reduce((prev, curr) => prev + curr, 0),
+    //   }));
+
     setFilter((prev) => ({
       ...prev,
       visibility: false,
+      //data: filteredArr,
     }));
-  };
 
-  console.log("REPORTE", filter);
+    setSpinner(false);
+  };
+  
 
   return (
     <View style={{ height: "100%",backgroundColor:colors.background }}>

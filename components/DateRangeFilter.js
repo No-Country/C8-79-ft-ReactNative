@@ -11,7 +11,7 @@ const DateRangeFilter = ({ close, handleFilter, state }) => {
   return (
     <DateRangePicker
       onChange={(obj) => {
-        console.log(obj);
+      //  console.log(obj);
         handleFilter(obj)
         if (obj.endDate) {
           setSpinner(true);

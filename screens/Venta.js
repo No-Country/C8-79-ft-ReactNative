@@ -120,14 +120,18 @@ const Venta = () => {
     const array = [];
     const querySnapshot = await getDocs(collection(db, "Clientes"));
     querySnapshot.forEach((doc) => {
+    
       const nombre =
-        doc.data().firstName + " " + doc.data().lastName + "                     " + doc.data().id;
+        doc.data().firstName + " " + doc.data().lastName 
+              
       array.push(nombre);
     });
+   // console.log(array)
     setClientesFire(array);
 
     const array2 = [];
     const arrayPrecioUniario = []
+    const prod=[]
 
     const querySnapshot2 = await getDocs(collection(db, "Productos"));
     querySnapshot2.forEach((doc) => {
@@ -140,25 +144,19 @@ const Venta = () => {
       array2.push(codigo);
       arrayPrecioUniario.push(precioUnitario)
     });
+    querySnapshot2.forEach((doc) => {
+      prod.push(doc.data());
+    });
+   
+    setProductos2(prod);
     setProductos(array2);
     setAllProducts(arrayPrecioUniario)
     setSpinner(false)
   };
 
 
-  const traerDatos2 = async () => {
-    const array = [];
-    const querySnapshot = await getDocs(collection(db, "Productos"));
-    querySnapshot.forEach((doc) => {
-      array.push(doc.data());
-    });
-    setProductos2(array);
-  };
-
-
   useEffect(() => {
     traerDatos();
-    traerDatos2()
     setSpinner(true)
   }, [bandera]);
 
