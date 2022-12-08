@@ -23,6 +23,7 @@ const NewClientForm = () => {
   const [location, setLocation] = useState({ coordinates: "", address: "" });
 
   const submitForm = async(values, clear) => {
+    console.log("press")
     setSpinner(true)
     let min = 83.1;
     let max = 193.3;

@@ -3,7 +3,7 @@ import {
   Text,
   View,
   Dimensions,
-  ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import React, { useState,useContext, useEffect } from "react";
 import DateRangeFilter from "../components/DateRangeFilter";
@@ -64,6 +64,7 @@ const Comprobantes = () => {
       setComprobante(arrayFecha)
       setSpinner(false);
     } catch (e) {
+      console.log(e)
       setSpinner(false);
       throwError(e)
     }
@@ -75,7 +76,7 @@ const Comprobantes = () => {
    
   }, [bandera]);
 
-
+console.log(facturas)
 
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
@@ -141,74 +142,101 @@ const Comprobantes = () => {
       </View>
       {
         facturas ? 
-        <FlatList
-        ListHeaderComponent={() => (
-          <View
-            style={[styles.headerStyle, { backgroundColor: colors.primary }]}
-          >
-            <Text
-              style={{
-                //backgroundColor:"red",
-                marginLeft: 10,
-                width: windowWidth * 0.15,
-                color: colors.text,
-                fontWeight: "bold",
-                fontSize: 18,
-              }}
-            >
-              #
-            </Text>
-            <Text
-              style={{
-                //backgroundColor:"blue",
-                flexWrap: "wrap",
-                color: colors.text,
-                width: windowWidth * 0.35,
-                fontWeight: "bold",
-                textAlign: "center",
-                fontSize: 18,
-              }}
-            >
-              Cliente
-            </Text>
-            <Text
-              style={{
-               // backgroundColor:"gray",
-                color: colors.text,
-                width: windowWidth * 0.3,
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: 18,
-              }}
-            >
-              Fecha
-            </Text>
-            <Text
-              style={{
-               // backgroundColor:"yellow",
-                color: colors.text,
-                width: windowWidth * 0.20,
-                textAlign: "left",
-                fontWeight: "bold",
-                fontSize: 18,
-              }}
-            >
-              Monto
-            </Text>
-          </View>
-        )}
-        
-        horizontal={false}
+    
+
+      <ScrollView
+        horizontal={true}
         overScrollMode={"never"}
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
-        data={comprobante}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => index}
-        renderItem={renderItem}
-      ></FlatList> : <View></View>
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ width: windowWidth * 2,}}
+      >
+        <FlatList
+          ListHeaderComponent={() => (
+                <View
+                  style={[styles.headerStyle, { backgroundColor: colors.primary }]}
+                >
+                  <Text
+                    style={{
+                      //backgroundColor:"red",
+                      marginLeft: 10,
+                      width: windowWidth * 0.3,
+                      color: colors.text,
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                   Identificador
+                  </Text>
+                  <Text
+                    style={{
+                      //backgroundColor:"blue",
+                      flexWrap: "wrap",
+                      color: colors.text,
+                      width: windowWidth * 0.7,
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      fontSize: 18,
+                    }}
+                  >
+                    Cliente
+                  </Text>
+                  <Text
+                    style={{
+                     // backgroundColor:"gray",
+                      color: colors.text,
+                      width: windowWidth * 0.6,
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    Fecha
+                  </Text>
+                  <Text
+                    style={{
+                     // backgroundColor:"yellow"
+                     paddingRight:30,
+                      color: colors.text,
+                      width: windowWidth * 0.4,
+                      textAlign: "right",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    Monto
+                  </Text>
+                </View>
+              )}
+
+
+          ListEmptyComponent={() => (
+            <Text
+              style={{
+                color: colors.text,
+                width: "50%",
+                textAlign: "center",
+                marginTop: 50,
+              }}
+            >
+              No se encontraron coincidencias
+            </Text>
+          )}
+          horizontal={false}
+          overScrollMode={"never"}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+          data={
+            comprobante
+          }
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item,index) => index}
+          renderItem={renderItem}
+        />
+      </ScrollView>
+      
+      : <View></View>
       }
       
     </View>

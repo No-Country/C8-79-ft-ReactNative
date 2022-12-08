@@ -8,15 +8,19 @@ import { useNavigation, useTheme } from "@react-navigation/native";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
 import { Context } from "../../context/ContextProvider";
+import UserContext from "../../context/UserContext";
+
 
 const NewProductForm = () => {
   const { colors } = useTheme();
   const nav = useNavigation();
+  const { setSpinner, throwError } = useContext(UserContext);
 
   const [popup, setPopup] = useState(false);
   const {handleBandera} = useContext(Context)
 
   const submitForm = async(values, clear) => {
+    setSpinner(true)
 
     const rand=()=>Math.random(0).toString(36).substr(2);
     const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
@@ -35,6 +39,7 @@ const NewProductForm = () => {
         setError(error)
       });
       handleBandera()
+      setSpinner(false)
     setPopup(true);
     clear();
     setTimeout(() => {

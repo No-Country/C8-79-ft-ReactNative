@@ -30,15 +30,15 @@ const Comprobante = ({ item, index }) => {
           style={{
             color: colors.text,
             marginLeft: 10,
-            width: windowWidth * 0.15,
+            width: windowWidth * 0.3,
           }}
         >
-          {item.operacion}
+          {item.id}
         </Text>
         <Text
           style={{
             color: colors.text,
-            width: windowWidth * 0.35,
+            width: windowWidth * 0.7,
             textAlign: "center",
             flexWrap: "wrap",
           }}
@@ -47,8 +47,9 @@ const Comprobante = ({ item, index }) => {
         </Text>
         <Text
           style={{
+            //backgroundColor:"gray",
             color: colors.text,
-            width: windowWidth * 0.3,
+            width: windowWidth * 0.6,
             textAlign: "center",
           }}
         >
@@ -56,10 +57,11 @@ const Comprobante = ({ item, index }) => {
         </Text>
         <Text
           style={{
+            paddingRight:30,
             color: colors.text,
             marginRight: 10,
-            width: windowWidth * 0.2,
-            textAlign: "left",
+            width: windowWidth * 0.4,
+            textAlign: "right",
           }}
         >
           ${item.monto}

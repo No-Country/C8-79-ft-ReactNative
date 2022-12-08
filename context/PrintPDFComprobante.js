@@ -1,7 +1,7 @@
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 
-const PrintPDFComprobante = (productos) => {
+const PrintPDFComprobante = (productos,date) => {
   const html = 
   `<html>
       <body>
@@ -13,7 +13,7 @@ const PrintPDFComprobante = (productos) => {
             .tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}
           </style>
           <h1>REPORTE FACTURA</h1>
-          <h3>${new Date()} </h3>
+          <h3>${date} </h3>
 
             <table class="tftable" border="1">
              <tr>

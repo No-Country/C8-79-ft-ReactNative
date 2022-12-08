@@ -10,57 +10,60 @@ import {
 import { Icon, Button } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 import ItemDeComprobante from "../components/ItemDeComprobante";
-import ExcelExport from  "../components/ExcelExport"
-import PopUp from  "../components/PopUp"
+import ExcelExport from "../components/ExcelExport";
+import PopUp from "../components/PopUp";
 import { db } from "../firebase/Config";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import PrintPDFComprobante from "../context/PrintPDFComprobante";
-
+import UserContext from "../context/UserContext";
+import moment from "moment";
 
 const windowWidth = Dimensions.get("window").width;
 
 const DetalleComprobante = ({ navigation, route }) => {
+  const { setSpinner, setError, throwError } = useContext(UserContext);
   const { colors } = useTheme();
   const [popup, setPopup] = useState(false);
   const [facturas, setFactura] = useState([]);
-  const idFactura = route.params
-  const [items, setItems] = useState()
-  const [fecha, setFecha] = useState()
-  const [monto, setMonto] = useState()
-
+  const idFactura = route.params;
+  const [items, setItems] = useState();
+  const [fecha, setFecha] = useState();
+  const [monto, setMonto] = useState();
 
   const traerDatos = async () => {
     try {
-
       const docRef = doc(db, "Facura", idFactura);
       const docSnap = await getDoc(docRef);
       setFactura(docSnap.data());
-      setItems(docSnap.data().productos)
-      let auxFecha = String(new Date(docSnap.data()?.fecha.seconds * 1000)).split(' ')
-      let fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
-      setFecha(fechaReal)
-      const sumall = docSnap.data().productos.map(item => item.total).reduce((prev, curr) => prev + curr, 0);
-      setMonto(sumall)
+      setItems(docSnap.data().productos);
+      date = moment(docSnap.data()?.fecha.seconds * 1000).format("DD/MMM/YY");
+      // let auxFecha = String(new Date(docSnap.data()?.fecha.seconds * 1000)).split(' ')
+      // let fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
+      setFecha(date);
+      const sumall = docSnap
+        .data()
+        .productos.map((item) => item.total)
+        .reduce((prev, curr) => prev + curr, 0);
+      setMonto(sumall);
     } catch (e) {
-;
-      throwError(e)
+      console.log(e);
+      throwError(e);
     }
   };
 
   useEffect(() => {
     traerDatos();
-    console.log(items)
+    console.log(items);
   }, []);
-
 
   const exportDetail = () => {
     setPopup(true);
   };
-/////FALTA PASAR NOMBRE #coprobante y fecha
+  /////FALTA PASAR NOMBRE #coprobante y fecha
   const confirmationExport = (remove, format = null) => {
     remove
       ? (setPopup(false),
-        format === "PDF" ? PrintPDFComprobante(items) : ExcelExport(items))
+        format === "PDF" ? PrintPDFComprobante(items,fecha) : ExcelExport(items))
       : setPopup(false);
   };
 
@@ -69,8 +72,6 @@ const DetalleComprobante = ({ navigation, route }) => {
   };
 
   return (
-
-    
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.buttonsView}>
         <Button
@@ -106,8 +107,7 @@ const DetalleComprobante = ({ navigation, route }) => {
           {facturas?.cliente}
         </Text>
         <Text style={{ fontSize: 18, padding: 2, color: colors.text }}>
-        
-          Comprobante {' '}
+          Comprobante
           <Text style={{ fontWeight: "bold", color: colors.text }}>
             #{idFactura}
           </Text>
@@ -120,15 +120,36 @@ const DetalleComprobante = ({ navigation, route }) => {
             color: colors.text,
           }}
         >
-        
-          Fecha: {' '}
+          Fecha:
           <Text style={{ fontWeight: "bold", color: colors.text }}>
-        
             {fecha}
           </Text>
         </Text>
       </View>
       <FlatList
+        ListFooterComponentStyle={{ paddingRight: 10 }}
+        ListFooterComponent={() => (
+          <View
+            style={{
+              width: "100%",
+              justifyContent: "flex-end",
+              flexDirection: "row",
+              marginRight: 20,
+              paddingTop: 10,
+            }}
+          >
+            <Text
+              style={{
+                height: 100,
+                fontWeight: "bold",
+                fontSize: 20,
+                color: colors.text,
+              }}
+            >
+              TOTAL : $ {monto}
+            </Text>
+          </View>
+        )}
         ListHeaderComponent={() => (
           <View
             style={[
@@ -208,27 +229,7 @@ const DetalleComprobante = ({ navigation, route }) => {
         keyExtractor={(item, index) => index}
         renderItem={renderItem}
       ></FlatList>
-      <View
-        style={{
-          height: 70,
-          width: "100%",
-          justifyContent: "flex-end",
-          flexDirection: "row",
-          marginRight: 20,
-          paddingTop: 10,
-        }}
-      >
-        <Text
-          style={{
-            height: 100,
-            fontWeight: "bold",
-            fontSize: 20,
-            color: colors.text,
-          }}
-        >
-          TOTAL : $ {monto}
-        </Text>
-      </View>
+
       <PopUp
         visibility={popup}
         message={"Selecciona el formato para exportar"}
@@ -278,8 +279,6 @@ const DetalleComprobante = ({ navigation, route }) => {
           </View>
         }
       />
-
-      
     </View>
   );
 };
