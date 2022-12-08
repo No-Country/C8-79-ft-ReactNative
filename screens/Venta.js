@@ -49,7 +49,7 @@ const Venta = () => {
   
 
   const submit = async (data) => {
-    setSpinner(true)
+    
    console.log("desde submit",productData)
     // console.log("desde submit",cliente)
     console.log(productos2)
@@ -110,6 +110,7 @@ const Venta = () => {
       handleBandera()
       setPopup(true);
       reset()
+  
       setTimeout(() => {
         setPopup(false)
       }, 1000);
