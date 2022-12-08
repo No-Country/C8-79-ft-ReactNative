@@ -78,10 +78,6 @@ const navigation=useNavigation()
           <Text style={[styles.text,{color:colors.text}]}>Cantidad: </Text>
           <Text style={[styles.value,{color:colors.text}]}>{product.cantidad}</Text>
         </View>
-        <View style={styles.itemInfo}>
-          <Text style={[styles.text,{color:colors.text}]}>Categoría: </Text>
-          <Text style={[styles.value,{color:colors.text}]}>{product.categoria}</Text>
-        </View>
       </View>
 
       <FAB

@@ -9,7 +9,6 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
 import { Context } from "../../context/ContextProvider";
 import UserContext from "../../context/UserContext";
-import { color } from "react-native-reanimated";
 
 
 
@@ -22,21 +21,21 @@ const EditProductForm = ({product}) => {
  
   const [popup, setPopup] = useState(false)
 
-console.log(product.cantidad)
 
  
   const submitForm = async(formData,clear) => {
     const producto = doc(db, "Productos", product.id);
-    await setDoc(producto, {
+    const aux = await setDoc(producto, {
       id: product.id,
       name: formData.name,
       descripcion:formData.descripcion,
       precioCompra: formData.precioCompra,
       precioVenta: formData.precioVenta,
-      cantidad: formData.cantidad,
-      categoria: formData.categoria
+      cantidad: formData.cantidad
       
-  }).catch(error => {
+  }
+  
+  ).then(console.log(aux)).catch(error => {
     console.log(error)
     setError(error)
 
@@ -62,9 +61,7 @@ console.log(product.cantidad)
             precioVenta: Yup.number()
             .required("Debe completar este campo"),
             cantidad: Yup.number()
-            .required("Debe completar este campo"),
-            categoria: Yup.string()
-            .required("Debe completar este campo"),
+            .required("Debe completar este campo")
             })
         }
       onSubmit={(values  ,{ resetForm }) => {submitForm(values,resetForm); } }
@@ -152,21 +149,6 @@ console.log(product.cantidad)
           {errors.cantidad && touched.cantidad && (
 
             <Text style={styles.error}>{errors.cantidad}</Text>
-
-          )}
-
-          <Text style={[styles.label,{color:colors.text}]}>Categoría</Text>
-          
-            <TextInput
-              style={[styles.textInput,{color:colors.text,backgroundColor:colors.card}]}
-              onChangeText={handleChange("categoria")}
-              value={values.categoria}
-              selectionColor={colors.text}
-            /> 
-         
-          {errors.categoria && touched.categoria && (
-
-            <Text style={styles.error}>{errors.categoria}</Text>
 
           )}
           
