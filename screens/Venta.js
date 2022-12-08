@@ -27,6 +27,7 @@ import { random } from "../helpers/random";
 import { color } from "react-native-reanimated";
 import UserContext from "../context/UserContext";
 import { Context } from "../context/ContextProvider";
+import PopUp from "../components/PopUp";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -44,12 +45,13 @@ const Venta = () => {
   const {bandera, handleBandera} = useContext(Context)
   const [productos2, setProductos2] = useState([])
   const ram = random();
-
+  const [popup, setPopup] = useState(false);
   
 
   const submit = async (data) => {
+    setSpinner(true)
    console.log("desde submit",productData)
-   
+    // console.log("desde submit",cliente)
     console.log(productos2)
     let bandera = true;
    
@@ -106,7 +108,12 @@ const Venta = () => {
         });
       });
       handleBandera()
+      setPopup(true);
       reset()
+      setTimeout(() => {
+        setPopup(false)
+      }, 1000);
+     
       return comprobante;
     } else {
       console.log("debe completar o su codigo de producto es invalido");
@@ -174,6 +181,10 @@ const Venta = () => {
         backgroundColor: colors.background,
       }}
     >
+      <PopUp
+            visibility={popup}
+            message="¡Se guardaron los cambios con exito!"
+          ></PopUp>
       <ScrollView
         overScrollMode={"never"}
         showsVerticalScrollIndicator={false}
