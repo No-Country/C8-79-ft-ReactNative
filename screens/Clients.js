@@ -38,6 +38,7 @@ const Clients = ({ navigation }) => {
       querySnapshot.forEach((doc) => {
         array.push(doc.data());
       });
+      
       setClientes(array);
       setSpinner(false);
     } catch (e) {
@@ -94,13 +95,17 @@ const Clients = ({ navigation }) => {
         removeClippedSubviews={true}
         overScrollMode={"never"}
         style={styles.flatlist}
-        data={sortData(clientes).filter(
+        data={clientes.length!==0?
+          sortData(clientes).filter(
           (client) =>
             client.firstName
               .toLowerCase()
               .includes(filter.toLocaleLowerCase()) ||
             client.lastName.toLowerCase().includes(filter.toLocaleLowerCase())
-        )}
+        )
+        :
+        clientes
+      }
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}

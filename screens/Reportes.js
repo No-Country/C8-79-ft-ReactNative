@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
-import React, { useState,useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Icon } from "@rneui/themed";
 import PieChartComponent from "../components/PieChartComponent";
 import BarGraphComponent from "../components/BarGraphComponent";
-import { graphone, graphTwo } from "../helpers/devData";
+
 import DateRangeFilter from "../components/DateRangeFilter";
 import moment from "moment";
 import { useTheme } from "@react-navigation/native";
@@ -19,79 +19,183 @@ const Reportes = () => {
   const [comprobante, setComprobante] = useState();
   const [bandera2, setBandera2] = useState(false);
   const [filtered, setfiltered] = useState([]);
-  const [ingreso, setIngreso] = useState("0")
- 
-  const {colors}=useTheme()
+  const [ingreso, setIngreso] = useState("0");
+  const [ganancia, setGanancia] = useState("0");
+  const [mejorCliente, setMejorCliente] = useState(null);
+  const [masVendido, setMasVendido] = useState(null);
+  const [mejorClientes, setMejorClientes] = useState(null);
+
+  const { colors } = useTheme();
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
     endDate: moment(),
     displayedDate: moment(),
     visibility: false,
     data: [],
-  
-  })
+  });
 
 
-  // const querySnapshot = await getDocs(collection(db, "Productos"));
-  //   querySnapshot.forEach((doc) => {
-  //     array.push(doc.data());
-  //   });
-  
+  const populate= (arr)=>{
+
+
+    const ingresoTemp = arr
+    .map((item) => item.productos.map((item) => item.total))
+    .flat()
+    .reduce((prev, curr) => prev + curr, 0);
+  setIngreso(ingresoTemp);
+
+  const gananciaTemp =
+    ingresoTemp -
+    arr
+      .map((item) =>
+        item.productos.map((item) => item.precioCompra * item.cantidad)
+      )
+      .flat()
+      .reduce((prev, curr) => prev + curr, 0);
+  setGanancia(gananciaTemp);
+
+  const mejorClienteTemp = Array.from(
+    arr
+      .map((item) => ({
+        cliente: item.cliente,
+        total: item.productos.reduce((prev, acc) => prev + acc.total, 0),
+      }))
+      .reduce(
+        (prev, acc) =>
+          prev.set(acc.cliente, (prev.get(acc.cliente) || 0) + acc.total),
+        new Map()
+      ),
+    (item) => item
+  ).reduce((prev, acc) => (prev > acc ? acc : prev));
+  setMejorCliente(mejorClienteTemp[0]);
+
+  const masVendidoTemp = Array.from(
+    arr
+      .map((item) =>
+        item.productos.map((item) => {
+          return { producto: item.producto, cantidad: item.cantidad };
+        })
+      )
+      .flat()
+
+      .reduce(
+        (prev, acc) =>
+          prev.set(
+            acc.producto,
+            (prev.get(acc.producto) || 0) + acc.cantidad
+          ),
+        new Map()
+      ),
+    (item) => item
+  ).sort((a, b) => b[1] - a[1]);
+  const colorForGraph = [
+    "#99CCCC",
+    "#E2ADA1",
+    "#C7C7C7",
+    "#6B9FAB",
+    "#B8DAE2",
+  ];
+  const formatoParaGraphVendido = masVendidoTemp
+    .slice(0, 5)
+    .map((item, index) => {
+      return {
+        name: item[0],
+        population: item[1],
+        color: colorForGraph[index],
+        legendFontColor: colors.text,
+        legendFontSize: 15,
+      };
+    });
+
+  setMasVendido(formatoParaGraphVendido);
+
+  const mejorClientesTemp = Array.from(
+    arr
+      .map((item) => ({
+        cliente: item.cliente,
+        total: item.productos.reduce((prev, acc) => prev + acc.total, 0),
+      }))
+      .reduce(
+        (prev, acc) =>
+          prev.set(acc.cliente, (prev.get(acc.cliente) || 0) + acc.total),
+        new Map()
+      ),
+    (item) => item
+  ).sort((a, b) => b[1] - a[1]);
+
+  const formatoParaGraphCliente = mejorClientesTemp
+    .slice(0, 5)
+    .map((item, index) => {
+      return {
+        name: item[0],
+        population: item[1],
+        color: colorForGraph[index],
+        legendFontColor: colors.text,
+        legendFontSize: 15,
+      };
+    });
+
+  setMejorClientes(formatoParaGraphCliente);
+  }
+
   const traerDatos = async () => {
-
     try {
       const array = [];
       const querySnapshot = await getDocs(collection(db, "Facura"));
       querySnapshot.forEach((doc) => {
-       array.push(doc.data())
+        array.push(doc.data());
       });
-
+      setFilter(prev=>{return{...prev,data:array}})
       setFacturas(array);
-      console.log(array)
-      let arrayFecha = [];
-      let date;
+      // console.log(array);
 
-      array.forEach((factura) => {
-        date = moment(factura?.fecha.seconds * 1000).format("DD/MMM/YY");
-        // auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
-        //fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
-        const todosProductos = factura.productos;
-        const sumall = todosProductos
-          .map((item) => item.total)
-          .reduce((prev, curr) => prev + curr, 0);
-        const objeto = {
-          cliente: factura.cliente,
-          operacion: "Venta",
-          fecha: date,
-          id: factura.id,
-          monto: sumall,
-        };
-        arrayFecha.push(objeto);
-      
+      // array.forEach((obj) => {
+      //   //date = moment(factura?.fecha.seconds * 1000).format("DD/MMM/YY");
+      //   // auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
+      //   //fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
 
-   
-      });
+      //   const costoTotal = obj.productos
+      //     .map((item) => item.precioCompra * item.cantidad)
+      //     .reduce((prev, curr) => prev + curr, 0);
 
-      const ingresoTemp=arrayFecha.reduce((prev, curr) => prev + curr.monto,0);
-      
-      setIngreso(ingresoTemp)
-      setFilter((prev) => ({ ...prev, data: arrayFecha }));
-      setComprobante(arrayFecha);
+      //   // const objeto = {
+      //   //   cliente: factura.cliente,
+      //   //   operacion: "Venta",
+      //   //   fecha: date,
+      //   //   id: factura.id,
+      //   //   monto: sumall,
+      //   // };
+      //   // arrayFecha.push(objeto);
+      // });
+
+     
+
+      //setFilter((prev) => ({ ...prev, data: arrayFecha }));
+      //setComprobante(arrayFecha);
       setSpinner(false);
+      return array
     } catch (e) {
       console.log(e);
       setSpinner(false);
       throwError(e);
     }
   };
+ 
+  const aux=async()=>{
+    const a=  await traerDatos()
+    if (a){
+      populate(a)
+    }
+    
+     
+  }
 
   useEffect(() => {
     setSpinner(true);
-    traerDatos();
+    aux()
+    
+   
   }, [bandera]);
-
-
-
 
   const handleFilter = (obj) => {
     setFilter((prev) => ({
@@ -101,41 +205,43 @@ const Reportes = () => {
   };
 
   const closeFilter = (end) => {
-    // const filteredArr = facturas
-    //   .filter(
-    //     (item) =>
-    //       item.fecha.seconds > filter.startDate.unix() &&
-    //       item.fecha.seconds < end.unix()
-    //   )
-    //   .map((item) => ({
-    //     cliente: item.cliente,
-    //     operacion: "Venta",
-    //     fecha: item.fecha.seconds,
-    //     id: item.id,
-    //     monto: item.productos
-    //       .map((item) => item.total)
-    //       .reduce((prev, curr) => prev + curr, 0),
-    //   }));
+    const filteredArr = facturas
+      .filter(
+        (item) =>
+          item.fecha.seconds > filter.startDate.unix() -4000&&
+          item.fecha.seconds < end.unix()+50000
+      )
+      .map((item) => ({
+        cliente: item.cliente,
+        operacion: "Venta",
+        fecha: item.fecha.seconds,
+        id: item.id,
+        monto: item.productos
+          .map((item) => item.total)
+          .reduce((prev, curr) => prev + curr, 0),
+      }));
 
     setFilter((prev) => ({
       ...prev,
       visibility: false,
-      //data: filteredArr,
+      data: filteredArr,
     }));
 
     setSpinner(false);
   };
-  
 
   return (
-    <View style={{ height: "100%",backgroundColor:colors.background }}>
+    <View style={{ height: "100%", backgroundColor: colors.background }}>
       <DateRangeFilter
         state={filter}
         close={closeFilter}
         handleFilter={handleFilter}
       ></DateRangeFilter>
       <ScrollView
-        contentContainerStyle={[styles.globalContainer,{backgroundColor:colors.background}]}
+        contentContainerStyle={[
+          styles.globalContainer,
+          { backgroundColor: colors.background },
+        ]}
         overScrollMode="never"
       >
         <View style={styles.topContainer}>
@@ -151,7 +257,7 @@ const Reportes = () => {
               }))
             }
           />
-          <Text style={{ marginRight: 10, fontSize: 16 ,color:colors.text}}>
+          <Text style={{ marginRight: 10, fontSize: 16, color: colors.text }}>
             <Text style={{ fontWeight: "bold" }}>
               {!filter.visibility && filter.startDate.format("DD/MMM/YY")}
             </Text>
@@ -164,7 +270,7 @@ const Reportes = () => {
         <View style={styles.resume}>
           <Text
             style={{
-              color:colors.text,
+              color: colors.text,
               width: "100%",
               textAlign: "center",
               fontSize: 22,
@@ -179,7 +285,12 @@ const Reportes = () => {
             <Text
               style={[
                 styles.resumeText,
-                { borderLeftWidth: 0, fontWeight: "bold" ,color:colors.text,borderColor:colors.primary},
+                {
+                  borderLeftWidth: 0,
+                  fontWeight: "bold",
+                  color: colors.text,
+                  borderColor: colors.primary,
+                },
               ]}
             >
               Ingresos
@@ -187,36 +298,82 @@ const Reportes = () => {
             <Text
               style={[
                 styles.resumeText,
-                { borderRightWidth: 0, fontWeight: "bold",color:colors.text,borderColor:colors.primary },
+                {
+                  borderRightWidth: 0,
+                  fontWeight: "bold",
+                  color: colors.text,
+                  borderColor: colors.primary,
+                },
               ]}
             >
               Ganancia
             </Text>
-            <Text style={[styles.resumeText, { color:colors.text,borderLeftWidth: 0,borderColor:colors.primary }]}>
+            <Text
+              style={[
+                styles.resumeText,
+                {
+                  color: colors.text,
+                  borderLeftWidth: 0,
+                  borderColor: colors.primary,
+                },
+              ]}
+            >
               {ingreso}
             </Text>
-            <Text style={[styles.resumeText, { color:colors.text,borderRightWidth: 0,borderColor:colors.primary }]}>
-              $80000
+            <Text
+              style={[
+                styles.resumeText,
+                {
+                  color: colors.text,
+                  borderRightWidth: 0,
+                  borderColor: colors.primary,
+                },
+              ]}
+            >
+              {ganancia}
             </Text>
           </View>
         </View>
         <View style={styles.bestClient}>
-          <Text style={[styles.bestClientText,{color:colors.text}]}>Mejor cliente: </Text>
+          <Text style={[styles.bestClientText, { color: colors.text }]}>
+            Mejor cliente:
+          </Text>
           <Text
             style={[
               styles.bestClientText,
-              { width: "100%", textAlign: "center",color:colors.text,fontWeight:"bold" },
+              {
+                width: "100%",
+                textAlign: "center",
+                color: colors.text,
+                fontWeight: "bold",
+              },
             ]}
           >
-            Nombre de cliente
+            {mejorCliente}
           </Text>
         </View>
 
-        <View style={[styles.graph,{backgroundColor:colors.background,borderColor:colors.primary}]}>
-          <PieChartComponent title={"Productos mas vendidos"} data={graphone} />
+        <View
+          style={[
+            styles.graph,
+            { backgroundColor: colors.background, borderColor: colors.primary },
+          ]}
+        >
+          <PieChartComponent
+            title={"Productos mas vendidos"}
+            data={masVendido ? masVendido : []}
+          />
         </View>
-        <View style={[styles.graph,{backgroundColor:colors.background,borderColor:colors.primary}]}>
-          <PieChartComponent title={"Mejores Clientes"} data={graphTwo} />
+        <View
+          style={[
+            styles.graph,
+            { backgroundColor: colors.background, borderColor: colors.primary },
+          ]}
+        >
+          <PieChartComponent
+            title={"Mejores Clientes"}
+            data={mejorClientes ? mejorClientes : []}
+          />
         </View>
         {/* <View style={styles.graph}>
           <BarGraphComponent dates={filter} title={"Ganancias"} />
