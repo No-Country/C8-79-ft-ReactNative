@@ -3,7 +3,6 @@ import React, { useState, useContext, useEffect } from "react";
 import { Icon } from "@rneui/themed";
 import PieChartComponent from "../components/PieChartComponent";
 import BarGraphComponent from "../components/BarGraphComponent";
-
 import DateRangeFilter from "../components/DateRangeFilter";
 import moment from "moment";
 import { useTheme } from "@react-navigation/native";
@@ -13,19 +12,15 @@ import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
 
 const Reportes = () => {
-  const { setSpinner, setError, throwError } = useContext(UserContext);
+  const { colors } = useTheme();
+  const { setSpinner,  throwError } = useContext(UserContext);
   const { bandera, handleBandera } = useContext(Context);
   const [facturas, setFacturas] = useState([]);
-  const [comprobante, setComprobante] = useState();
-  const [bandera2, setBandera2] = useState(false);
-  const [filtered, setfiltered] = useState([]);
-  const [ingreso, setIngreso] = useState("0");
-  const [ganancia, setGanancia] = useState("0");
+  const [ingreso, setIngreso] = useState(null);
+  const [ganancia, setGanancia] = useState(null);
   const [mejorCliente, setMejorCliente] = useState(null);
   const [masVendido, setMasVendido] = useState(null);
   const [mejorClientes, setMejorClientes] = useState(null);
-
-  const { colors } = useTheme();
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
     endDate: moment(),
@@ -34,109 +29,109 @@ const Reportes = () => {
     data: [],
   });
 
-
-  const populate= (arr)=>{
-
-
+  const populate = (arr) => {
+    
     const ingresoTemp = arr
-    .map((item) => item.productos.map((item) => item.total))
-    .flat()
-    .reduce((prev, curr) => prev + curr, 0);
-  setIngreso(ingresoTemp);
-
-  const gananciaTemp =
-    ingresoTemp -
-    arr
-      .map((item) =>
-        item.productos.map((item) => item.precioCompra * item.cantidad)
-      )
+      .map((item) => item.productos.map((item) => item.total))
       .flat()
       .reduce((prev, curr) => prev + curr, 0);
-  setGanancia(gananciaTemp);
+    setIngreso(ingresoTemp);
 
-  const mejorClienteTemp = Array.from(
-    arr
-      .map((item) => ({
-        cliente: item.cliente,
-        total: item.productos.reduce((prev, acc) => prev + acc.total, 0),
-      }))
-      .reduce(
-        (prev, acc) =>
-          prev.set(acc.cliente, (prev.get(acc.cliente) || 0) + acc.total),
-        new Map()
-      ),
-    (item) => item
-  ).reduce((prev, acc) => (prev > acc ? acc : prev));
-  setMejorCliente(mejorClienteTemp[0]);
+    const gananciaTemp =
+      ingresoTemp -
+      arr
+        .map((item) =>
+          item.productos.map((item) => item.precioCompra * item.cantidad)
+        )
+        .flat()
+        .reduce((prev, curr) => prev + curr, 0);
+    setGanancia(gananciaTemp);
 
-  const masVendidoTemp = Array.from(
-    arr
-      .map((item) =>
-        item.productos.map((item) => {
-          return { producto: item.producto, cantidad: item.cantidad };
-        })
-      )
-      .flat()
+    const mejorClienteTemp = Array.from(
+      arr
+        .map((item) => ({
+          cliente: item.cliente,
+          total: item.productos.reduce((prev, acc) => prev + acc.total, 0),
+        }))
+        .reduce(
+          (prev, acc) =>
+            prev.set(acc.cliente, (prev.get(acc.cliente) || 0) + acc.total),
+          new Map()
+        ),
+      (item) => item
+    ).reduce((prev, acc) => (prev > acc ? acc : prev));
+    setMejorCliente(mejorClienteTemp[0]);
 
-      .reduce(
-        (prev, acc) =>
-          prev.set(
-            acc.producto,
-            (prev.get(acc.producto) || 0) + acc.cantidad
-          ),
-        new Map()
-      ),
-    (item) => item
-  ).sort((a, b) => b[1] - a[1]);
-  const colorForGraph = [
-    "#99CCCC",
-    "#E2ADA1",
-    "#C7C7C7",
-    "#6B9FAB",
-    "#B8DAE2",
-  ];
-  const formatoParaGraphVendido = masVendidoTemp
-    .slice(0, 5)
-    .map((item, index) => {
-      return {
-        name: item[0],
-        population: item[1],
-        color: colorForGraph[index],
-        legendFontColor: colors.text,
-        legendFontSize: 15,
-      };
-    });
+    const masVendidoTemp = Array.from(
+      arr
+        .map((item) =>
+          item.productos.map((item) => {
+            return { producto: item.producto, cantidad: item.cantidad };
+          })
+        )
+        .flat()
 
-  setMasVendido(formatoParaGraphVendido);
+        .reduce(
+          (prev, acc) =>
+            prev.set(
+              acc.producto,
+              (prev.get(acc.producto) || 0) + acc.cantidad
+            ),
+          new Map()
+        ),
+      (item) => item
+    ).sort((a, b) => b[1] - a[1]);
+    const colorForGraph = [
+      "#99CCCC",
+      "#E2ADA1",
+      "#C7C7C7",
+      "#6B9FAB",
+      "#B8DAE2",
+    ];
+    const formatoParaGraphVendido = masVendidoTemp
+      .slice(0, 5)
+      .map((item, index) => {
+        return {
+          name: item[0],
+          population: item[1],
+          color: colorForGraph[index],
+          legendFontColor: colors.text,
+          legendFontSize: 15,
+        };
+      });
 
-  const mejorClientesTemp = Array.from(
-    arr
-      .map((item) => ({
-        cliente: item.cliente,
-        total: item.productos.reduce((prev, acc) => prev + acc.total, 0),
-      }))
-      .reduce(
-        (prev, acc) =>
-          prev.set(acc.cliente, (prev.get(acc.cliente) || 0) + acc.total),
-        new Map()
-      ),
-    (item) => item
-  ).sort((a, b) => b[1] - a[1]);
+    setMasVendido(formatoParaGraphVendido);
 
-  const formatoParaGraphCliente = mejorClientesTemp
-    .slice(0, 5)
-    .map((item, index) => {
-      return {
-        name: item[0],
-        population: item[1],
-        color: colorForGraph[index],
-        legendFontColor: colors.text,
-        legendFontSize: 15,
-      };
-    });
+    const mejorClientesTemp = Array.from(
+      arr
+        .map((item) => ({
+          cliente: item.cliente,
+          total: item.productos.reduce((prev, acc) => prev + acc.total, 0),
+        }))
+        .reduce(
+          (prev, acc) =>
+            prev.set(acc.cliente, (prev.get(acc.cliente) || 0) + acc.total),
+          new Map()
+        ),
+      (item) => item
+    ).sort((a, b) => b[1] - a[1]);
 
-  setMejorClientes(formatoParaGraphCliente);
-  }
+    const formatoParaGraphCliente = mejorClientesTemp
+      .slice(0, 5)
+      .map((item, index) => {
+        return {
+          name: item[0],
+          population: item[1],
+          color: colorForGraph[index],
+          legendFontColor: colors.text,
+          legendFontSize: 15,
+        };
+      });
+
+    setMejorClientes(formatoParaGraphCliente);
+  };
+
+
 
   const traerDatos = async () => {
     try {
@@ -145,56 +140,29 @@ const Reportes = () => {
       querySnapshot.forEach((doc) => {
         array.push(doc.data());
       });
-      setFilter(prev=>{return{...prev,data:array}})
+      setFilter((prev) => {
+        return { ...prev, data: array };
+      });
       setFacturas(array);
-      // console.log(array);
-
-      // array.forEach((obj) => {
-      //   //date = moment(factura?.fecha.seconds * 1000).format("DD/MMM/YY");
-      //   // auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
-      //   //fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
-
-      //   const costoTotal = obj.productos
-      //     .map((item) => item.precioCompra * item.cantidad)
-      //     .reduce((prev, curr) => prev + curr, 0);
-
-      //   // const objeto = {
-      //   //   cliente: factura.cliente,
-      //   //   operacion: "Venta",
-      //   //   fecha: date,
-      //   //   id: factura.id,
-      //   //   monto: sumall,
-      //   // };
-      //   // arrayFecha.push(objeto);
-      // });
-
-     
-
-      //setFilter((prev) => ({ ...prev, data: arrayFecha }));
-      //setComprobante(arrayFecha);
       setSpinner(false);
-      return array
+      return array;
     } catch (e) {
       console.log(e);
       setSpinner(false);
       throwError(e);
     }
   };
- 
-  const aux=async()=>{
-    const a=  await traerDatos()
-    if (a){
-      populate(a)
+
+  const aux = async () => {
+    const a = await traerDatos();
+    if (a) {
+      populate(a);
     }
-    
-     
-  }
+  };
 
   useEffect(() => {
     setSpinner(true);
-    aux()
-    
-   
+    aux();
   }, [bandera]);
 
   const handleFilter = (obj) => {
@@ -205,21 +173,11 @@ const Reportes = () => {
   };
 
   const closeFilter = (end) => {
-    const filteredArr = facturas
-      .filter(
-        (item) =>
-          item.fecha.seconds > filter.startDate.unix() -4000&&
-          item.fecha.seconds < end.unix()+50000
-      )
-      .map((item) => ({
-        cliente: item.cliente,
-        operacion: "Venta",
-        fecha: item.fecha.seconds,
-        id: item.id,
-        monto: item.productos
-          .map((item) => item.total)
-          .reduce((prev, curr) => prev + curr, 0),
-      }));
+    const filteredArr = facturas.filter(
+      (item) =>
+        item.fecha.seconds > filter.startDate.unix() - 4000 &&
+        item.fecha.seconds < end.unix() + 50000
+    );
 
     setFilter((prev) => ({
       ...prev,
@@ -228,6 +186,7 @@ const Reportes = () => {
     }));
 
     setSpinner(false);
+    populate(filteredArr);
   };
 
   return (
