@@ -13,14 +13,18 @@ import { Context } from "../context/ContextProvider";
 
 const Reportes = () => {
   const { colors } = useTheme();
-  const { setSpinner,  throwError } = useContext(UserContext);
+  const { setSpinner, throwError } = useContext(UserContext);
   const { bandera, handleBandera } = useContext(Context);
   const [facturas, setFacturas] = useState([]);
-  const [ingreso, setIngreso] = useState(null);
-  const [ganancia, setGanancia] = useState(null);
-  const [mejorCliente, setMejorCliente] = useState(null);
-  const [masVendido, setMasVendido] = useState(null);
-  const [mejorClientes, setMejorClientes] = useState(null);
+
+  const [information, setInformation] = useState({
+    ingreso: null,
+    ganancia: null,
+    mejorCliente: null,
+    masVendido: null,
+    mejorClientes: null,
+  });
+
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
     endDate: moment(),
@@ -30,12 +34,11 @@ const Reportes = () => {
   });
 
   const populate = (arr) => {
-    
     const ingresoTemp = arr
       .map((item) => item.productos.map((item) => item.total))
       .flat()
       .reduce((prev, curr) => prev + curr, 0);
-    setIngreso(ingresoTemp);
+    setInformation((prev) => ({ ...prev, ingreso: ingresoTemp }));
 
     const gananciaTemp =
       ingresoTemp -
@@ -45,7 +48,7 @@ const Reportes = () => {
         )
         .flat()
         .reduce((prev, curr) => prev + curr, 0);
-    setGanancia(gananciaTemp);
+    setInformation((prev) => ({ ...prev, ganancia: gananciaTemp }));
 
     const mejorClienteTemp = Array.from(
       arr
@@ -60,7 +63,7 @@ const Reportes = () => {
         ),
       (item) => item
     ).reduce((prev, acc) => (prev > acc ? acc : prev));
-    setMejorCliente(mejorClienteTemp[0]);
+    setInformation((prev) => ({ ...prev, mejorCliente: mejorClienteTemp[0] }));
 
     const masVendidoTemp = Array.from(
       arr
@@ -100,7 +103,10 @@ const Reportes = () => {
         };
       });
 
-    setMasVendido(formatoParaGraphVendido);
+    setInformation((prev) => ({
+      ...prev,
+      masVendido: formatoParaGraphVendido,
+    }));
 
     const mejorClientesTemp = Array.from(
       arr
@@ -128,10 +134,11 @@ const Reportes = () => {
         };
       });
 
-    setMejorClientes(formatoParaGraphCliente);
+    setInformation((prev) => ({
+      ...prev,
+      mejorClientes: formatoParaGraphCliente,
+    }));
   };
-
-
 
   const traerDatos = async () => {
     try {
@@ -175,9 +182,22 @@ const Reportes = () => {
   const closeFilter = (end) => {
     const filteredArr = facturas.filter(
       (item) =>
-        item.fecha.seconds > filter.startDate.unix() - 4000 &&
-        item.fecha.seconds < end.unix() + 50000
+        item.fecha.seconds > filter.startDate.unix() &&
+        item.fecha.seconds < end.unix() + 86280
     );
+
+   
+    if (filteredArr.length !== 0) {
+      populate(filteredArr);
+    } else {
+      setInformation({
+        ingreso: null,
+        ganancia: null,
+        mejorCliente: null,
+        masVendido: null,
+        mejorClientes: null,
+      });
+    }
 
     setFilter((prev) => ({
       ...prev,
@@ -186,7 +206,6 @@ const Reportes = () => {
     }));
 
     setSpinner(false);
-    populate(filteredArr);
   };
 
   return (
@@ -277,7 +296,7 @@ const Reportes = () => {
                 },
               ]}
             >
-              {ingreso}
+              ${information.ingreso}
             </Text>
             <Text
               style={[
@@ -289,7 +308,7 @@ const Reportes = () => {
                 },
               ]}
             >
-              {ganancia}
+              ${information.ganancia}
             </Text>
           </View>
         </View>
@@ -308,7 +327,7 @@ const Reportes = () => {
               },
             ]}
           >
-            {mejorCliente}
+            {information.mejorCliente}
           </Text>
         </View>
 
@@ -320,7 +339,7 @@ const Reportes = () => {
         >
           <PieChartComponent
             title={"Productos mas vendidos"}
-            data={masVendido ? masVendido : []}
+            data={information.masVendido ? information.masVendido : []}
           />
         </View>
         <View
@@ -331,7 +350,7 @@ const Reportes = () => {
         >
           <PieChartComponent
             title={"Mejores Clientes"}
-            data={mejorClientes ? mejorClientes : []}
+            data={information.mejorClientes ? information.mejorClientes : []}
           />
         </View>
         {/* <View style={styles.graph}>

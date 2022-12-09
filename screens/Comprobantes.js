@@ -85,13 +85,13 @@ const Comprobantes = () => {
   };
 
   const closeFilter = (end) => {
-    console.log((filter.startDate).unix(),end.unix()+100000)
+    
     const filteredArr = facturas
       .filter(
         (item) =>
-        (console.log(item.fecha.seconds),
-          item.fecha.seconds >= filter.startDate.unix()-4000 &&
-          item.fecha.seconds <= end.unix()+50000
+        (
+          item.fecha.seconds >= filter.startDate.unix() &&
+          item.fecha.seconds <= end.unix()+86280
       ))
       .map((item) => ({
         cliente: item.cliente,

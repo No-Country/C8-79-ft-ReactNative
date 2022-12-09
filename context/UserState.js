@@ -30,7 +30,7 @@ const UserState = (props) => {
 
 const setSpinner =  (value) => {
 
-  console.log(value)
+
    
   dispatch({ type: SET_SPINNER, payload:value });
 
