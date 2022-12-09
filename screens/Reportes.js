@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
-import { Icon } from "@rneui/themed";
+import { Icon,Button } from "@rneui/themed";
 import PieChartComponent from "../components/PieChartComponent";
 import BarGraphComponent from "../components/BarGraphComponent";
 import DateRangeFilter from "../components/DateRangeFilter";
@@ -10,19 +10,23 @@ import UserContext from "../context/UserContext";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
+import PopUp from "../components/PopUp";
+import PrintPDF from "../components/PrintPDF";
+import ExcelExport from "../components/ExcelExport";
 
 const Reportes = () => {
   const { colors } = useTheme();
   const { setSpinner, throwError } = useContext(UserContext);
   const { bandera, handleBandera } = useContext(Context);
   const [facturas, setFacturas] = useState([]);
-
+  const [popup, setPopup] = useState(false);
   const [information, setInformation] = useState({
     ingreso: null,
     ganancia: null,
     mejorCliente: null,
     masVendido: null,
     mejorClientes: null,
+    historico:null
   });
 
   const [filter, setFilter] = useState({
@@ -32,6 +36,7 @@ const Reportes = () => {
     visibility: false,
     data: [],
   });
+  const [exportData, setExportData] = useState(null)
 
   const populate = (arr) => {
     const ingresoTemp = arr
@@ -41,7 +46,7 @@ const Reportes = () => {
     setInformation((prev) => ({ ...prev, ingreso: ingresoTemp }));
 
     const gananciaTemp =
-      ingresoTemp -
+      //ingresoTemp -
       arr
         .map((item) =>
           item.productos.map((item) => item.precioCompra * item.cantidad)
@@ -95,7 +100,7 @@ const Reportes = () => {
       .slice(0, 5)
       .map((item, index) => {
         return {
-          name: item[0],
+          name: item[0].split(" ")[0],
           population: item[1],
           color: colorForGraph[index],
           legendFontColor: colors.text,
@@ -126,7 +131,7 @@ const Reportes = () => {
       .slice(0, 5)
       .map((item, index) => {
         return {
-          name: item[0],
+          name: item[0].split(" ")[0],
           population: item[1],
           color: colorForGraph[index],
           legendFontColor: colors.text,
@@ -138,6 +143,35 @@ const Reportes = () => {
       ...prev,
       mejorClientes: formatoParaGraphCliente,
     }));
+
+  //   const historical = Array.from(
+  //     arr.map((item) => {
+  //       return {
+  //         fecha: moment(item.fecha.seconds * 1000)
+  //           .startOf("day")
+  //           .unix(),
+  //         total: item.productos
+  //           .map((item) => item.total)
+  //           .reduce((pre, acc) => pre + acc, 0),
+  //       };
+  //     })
+  //       .reduce(
+  //         (prev, acc) =>
+  //           prev.set(acc.fecha, (prev.get(acc.fecha) || 0) + acc.total),
+  //         new Map()
+  //       ),
+  //     (item) => item
+  //   ).sort((a, b) =>  a[0]-b[0] );
+
+  //  const formatoParaBarGraph={
+  //   data:historical.map(item=>item[1]),
+  //   dates:historical.map(item=>item[0])
+  //  }
+  //  setInformation((prev) => ({
+  //   ...prev,
+  //   historico: formatoParaBarGraph,
+  // }));
+
   };
 
   const traerDatos = async () => {
@@ -182,11 +216,10 @@ const Reportes = () => {
   const closeFilter = (end) => {
     const filteredArr = facturas.filter(
       (item) =>
-        item.fecha.seconds > filter.startDate.unix() &&
+        item.fecha.seconds > filter.startDate.unix()-2000 &&
         item.fecha.seconds < end.unix() + 86280
     );
 
-   
     if (filteredArr.length !== 0) {
       populate(filteredArr);
     } else {
@@ -207,6 +240,21 @@ const Reportes = () => {
 
     setSpinner(false);
   };
+
+
+
+  const exportDetail = () => {
+    setPopup(true);
+  };
+
+  const confirmationExport = (ok, format = null) => {
+    ok
+      ? (setPopup(false),
+        format === "PDF" ? PrintPDF(exportData) : ExcelExport(exportData))
+      : setPopup(false);
+      setExportData(null)
+  };
+
 
   return (
     <View style={{ height: "100%", backgroundColor: colors.background }}>
@@ -340,7 +388,9 @@ const Reportes = () => {
           <PieChartComponent
             title={"Productos mas vendidos"}
             data={information.masVendido ? information.masVendido : []}
-          />
+            exports={setExportData}
+
+         />
         </View>
         <View
           style={[
@@ -351,12 +401,63 @@ const Reportes = () => {
           <PieChartComponent
             title={"Mejores Clientes"}
             data={information.mejorClientes ? information.mejorClientes : []}
+            exports={setExportData}
           />
         </View>
         {/* <View style={styles.graph}>
-          <BarGraphComponent dates={filter} title={"Ganancias"} />
+          <BarGraphComponent data={information.historico ? information.historico : {data:[],dates:[]}}  title={"Ganancias"} />
         </View> */}
       </ScrollView>
+
+      <PopUp
+        visibility={exportData!==null?true:false}
+        message={"Selecciona el formato para exportar"}
+        child={
+          <View style={[styles.buttonContainer]}>
+            <View style={styles.buttonHeader}>
+              <Button
+                titleStyle={[styles.buttonText, { color: colors.text }]}
+                buttonStyle={[
+                  styles.buttonDialog,
+                  {
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary,
+                  },
+                ]}
+                onPress={() => confirmationExport(true, "PDF")}
+              >
+                PDF
+              </Button>
+              <Button
+                titleStyle={[styles.buttonText, { color: colors.text }]}
+                buttonStyle={[
+                  styles.buttonDialog,
+                  {
+                    backgroundColor: colors.background,
+                    borderColor: colors.primary,
+                  },
+                ]}
+                onPress={() => confirmationExport(true, "XLS")}
+              >
+                XLS
+              </Button>
+            </View>
+            <Button
+              titleStyle={[styles.buttonText, { color: colors.text }]}
+              buttonStyle={[
+                styles.buttonBottom,
+                {
+                  backgroundColor: colors.primary,
+                  borderColor: colors.primary,
+                },
+              ]}
+              onPress={() => confirmationExport(false)}
+            >
+              CANCELAR
+            </Button>
+          </View>
+        }
+      />
     </View>
   );
 };
@@ -422,5 +523,29 @@ const styles = StyleSheet.create({
     width: "50%",
     textAlign: "center",
     paddingVertical: 5,
+  },
+  buttonDialog: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#A1D6E2",
+    width: 100,
+    height: 50,
+  },
+  buttonContainer: {
+    justifyContent: "space-evenly",
+    marginVertical: 20,
+  },
+  buttonHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  buttonText: {
+    color: "#000",
+    fontWeight: "bold",
+  },
+  buttonBottom: {
+    borderRadius: 20,
+    height: 50,
+    marginTop: 20,
   },
 });

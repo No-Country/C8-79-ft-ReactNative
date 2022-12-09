@@ -19,8 +19,7 @@ const Comprobantes = () => {
   const { bandera, handleBandera } = useContext(Context);
   const [facturas, setFacturas] = useState([]);
   const [comprobante, setComprobante] = useState();
-  const [bandera2, setBandera2] = useState(false);
-  const [filtered, setfiltered] = useState([]);
+  
 
   const [filter, setFilter] = useState({
     startDate: moment().startOf("month"),
@@ -85,12 +84,13 @@ const Comprobantes = () => {
   };
 
   const closeFilter = (end) => {
+   
     
     const filteredArr = facturas
       .filter(
         (item) =>
         (
-          item.fecha.seconds >= filter.startDate.unix() &&
+          item.fecha.seconds >= filter.startDate.unix()-2000 &&
           item.fecha.seconds <= end.unix()+86280
       ))
       .map((item) => ({

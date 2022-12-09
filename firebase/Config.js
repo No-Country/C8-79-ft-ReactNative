@@ -8,17 +8,12 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 export const firebaseConfig = {
-  apiKey: "AIzaSyAMY-gOgiPn5YtnlRO0DkD5zjyi0tifwh0",
-
-  authDomain: "react-native-c23eb.firebaseapp.com",
-
-  projectId: "react-native-c23eb",
-
-  storageBucket: "react-native-c23eb.appspot.com",
-
-  messagingSenderId: "346874723095",
-
-  appId: "1:346874723095:web:e9e4641a78bbd92dc19552"
+  apiKey: "AIzaSyBVep0VBEbHu5hk7VXver5vE4d9BimudtA",
+  authDomain: "c8-79-react-native.firebaseapp.com",
+  projectId: "c8-79-react-native",
+  storageBucket: "c8-79-react-native.appspot.com",
+  messagingSenderId: "326484106808",
+  appId: "1:326484106808:web:248533195fa692282510cd"
 };
 
 

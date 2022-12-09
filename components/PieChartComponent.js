@@ -4,8 +4,9 @@ import { Button, Icon } from "@rneui/themed";
 import { PieChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 import { useTheme } from "@react-navigation/native";
+import { View } from "react-native-web";
 
-const PieChartComponent = ({ title, data }) => {
+const PieChartComponent = ({ title, data,exports }) => {
   const{colors}=useTheme()
   return (
     <>
@@ -35,12 +36,15 @@ const PieChartComponent = ({ title, data }) => {
           marginTop: 30,
         }}
         accessor="population"
+        avoidFalseZero
+        hasLegend={true}
+        
       />
 
       <Button
         titleStyle={[styles.buttonText,{color:colors.text}]}
         buttonStyle={[styles.button,{backgroundColor:colors.background,borderColor:colors.primary}]}
-        //onPress={() => confirmationExport(true, "XLS")}
+        onPress={() => exports(data)}
       >
         <Icon name="chevrons-down" type="feather" color={colors.text} /> Exportar
       </Button>

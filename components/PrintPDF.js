@@ -2,7 +2,8 @@ import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 
 const PrintPDF = (productos) => {
-  const html = 
+  
+  const html = "<html></html>"
   `<html>
       <body>
         
