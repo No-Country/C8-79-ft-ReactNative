@@ -61,12 +61,14 @@ const CustomMenu = (props) => {
                 />
                 <View style={{ width: "50%", marginTop: 0 }}>
                   <Text
+                   adjustsFontSizeToFit
                     style={{
                       fontWeight: "bold",
-                      fontSize: 20,
+                      fontSize:18,
                       textAlign: "center",
                       color: colors.text,
                       paddingVertical:10
+                     
                     }}
                   >
                     Bienvenido

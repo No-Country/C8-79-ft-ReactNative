@@ -3,30 +3,22 @@ import { StyleSheet, Text, View, Linking } from "react-native";
 import { ButtonGroup, Icon, FAB, Avatar, Button } from "@rneui/themed";
 import PopUp from "../components/PopUp";
 import PopUpInfo from "../components/PopUpInfo";
-import { getInitials } from "../components/Client";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
 import { useTheme } from "@react-navigation/native";
-
-
-
+import { getInitials } from "../helpers/getInitials";
 
 const ClientDetail = ({ navigation, route }) => {
-
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  const {handleBandera, bandera} = useContext(Context)
+  const { handleBandera, bandera } = useContext(Context);
+  const { colors } = useTheme();
   const client = route.params;
 
-  const {colors}=useTheme()
-
-
-
-
   const deleteClient = (client) => {
-    console.log("Intenta BORRAR " + client.firstName );
+    console.log("Intenta BORRAR " + client.firstName);
     setDeletePopUp(true);
   };
 
@@ -43,25 +35,20 @@ const ClientDetail = ({ navigation, route }) => {
       : (console.log("NO BORRAR " + client.firstName), setDeletePopUp(false));
   };
 
-
   const makeCall = (client) => {
-    client.phone&& Linking.openURL(`tel:${client.phone}`);
+    client.phone && Linking.openURL(`tel:${client.phone}`);
   };
 
   const sendMessage = async (client) => {
-
-    const link=`whatsapp://send?text=hello&phone=${client.phone}`
-if(client.phone){
-    try {
-            const supported = await Linking.canOpenURL(link);
-              if (supported) Linking.openURL(link);
-          } catch (error) {
-            
-              console.log(error)
-          }
-
-        }
-          
+    const link = `whatsapp://send?text=hello&phone=${client.phone}`;
+    if (client.phone) {
+      try {
+        const supported = await Linking.canOpenURL(link);
+        if (supported) Linking.openURL(link)
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   const openMap = (client) => {
@@ -75,11 +62,10 @@ if(client.phone){
     };
 
     client.address &&
-    openAddressOnMap(
-      client.address.coordinates.lat,
-      client.address.coordinates.lng
-    );
-
+      openAddressOnMap(
+        client.address.coordinates.lat,
+        client.address.coordinates.lng
+      );
   };
 
   const openReport = () => {
@@ -95,11 +81,13 @@ if(client.phone){
 
   const handleButtonAction = (value) => {
     setSelectedIndex(value),
-    setTimeout(()=>{setSelectedIndex(-1),actions[value](client)},200)
+      setTimeout(() => {
+        setSelectedIndex(-1), actions[value](client);
+      }, 200);
   };
 
   return (
-    <View style={[styles.container,{backgroundColor: colors.background,}]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <FAB
         visible={true}
         onPress={() => navigation.navigate("EditClient", client)}
@@ -114,14 +102,18 @@ if(client.phone){
         title={getInitials(client)}
         containerStyle={{ marginVertical: 5, backgroundColor: "#676f72" }}
       />
-      <Text style={[styles.name,{color:colors.text}]}>
+      <Text style={[styles.name, { color: colors.text }]}>
         {client.firstName} {client.lastName}
       </Text>
       <ButtonGroup
         activeOpacity={0}
-        selectedButtonStyle={{backgroundColor: colors.primary}}
-        containerStyle={[styles.actionsButtons,{backgroundColor:colors.background}]}
+        selectedButtonStyle={{ backgroundColor: colors.primary }}
+        containerStyle={[
+          styles.actionsButtons,
+          { backgroundColor: colors.background },
+        ]}
         buttonStyle={{
+          backgroundColor:colors.primary,
           borderWidth: 1,
           borderRadius: 20,
           marginHorizontal: 10,
@@ -129,7 +121,11 @@ if(client.phone){
           display: "flex",
           alignItems: "center",
         }}
-        buttonContainerStyle={{ borderWidth: 0, borderRightWidth: 0,color:colors.button }}
+        buttonContainerStyle={{
+          borderWidth: 0,
+          borderRightWidth: 0,
+          color: colors.button,
+        }}
         buttons={[
           <Icon name="phone" type="feather" color={colors.text} />,
           <Icon name="mail" type="feather" color={colors.text} />,
@@ -142,28 +138,38 @@ if(client.phone){
         }}
       />
 
-      <View style={[styles.information,{borderColor: colors.primary,}]}>
+      <View style={[styles.information, { borderColor: colors.primary }]}>
         <View style={styles.itemInfo}>
-          <Text style={[styles.text,{color:colors.text}]}>Nombre Y Apellido: </Text>
-          <Text style={[styles.value,{color:colors.text}]}>
+          <Text style={[styles.text, { color: colors.text }]}>
+            Nombre Y Apellido:{" "}
+          </Text>
+          <Text style={[styles.value, { color: colors.text }]}>
             {client.firstName} {client.lastName}
           </Text>
         </View>
         <View style={styles.itemInfo}>
-          <Text style={[styles.text,{color:colors.text}]}>Email: </Text>
-          <Text style={[styles.value,{color:colors.text}]}>{client.email}</Text>
+          <Text style={[styles.text, { color: colors.text }]}>Email: </Text>
+          <Text style={[styles.value, { color: colors.text }]}>
+            {client.email}
+          </Text>
         </View>
         <View style={styles.itemInfo}>
-          <Text style={[styles.text,{color:colors.text}]}>Telefono: </Text>
-          <Text style={[styles.value,{color:colors.text}]}>{client.phone}</Text>
+          <Text style={[styles.text, { color: colors.text }]}>Telefono: </Text>
+          <Text style={[styles.value, { color: colors.text }]}>
+            {client.phone}
+          </Text>
         </View>
         <View style={styles.itemInfo}>
-          <Text style={[styles.text,{color:colors.text}]}>Direccion: </Text>
-          <Text style={[styles.value,{color:colors.text}]}>{client.address.address}</Text>
+          <Text style={[styles.text, { color: colors.text }]}>Direccion: </Text>
+          <Text style={[styles.value, { color: colors.text }]}>
+            {client.address.address}
+          </Text>
         </View>
         <View style={styles.itemInfo}>
-          <Text style={[styles.text,{color:colors.text}]}>id: </Text>
-          <Text style={[styles.value,{color:colors.text}]}>{client.id}</Text>
+          <Text style={[styles.text, { color: colors.text }]}>id: </Text>
+          <Text style={[styles.value, { color: colors.text }]}>
+            {client.id}
+          </Text>
         </View>
       </View>
 
@@ -187,17 +193,26 @@ if(client.phone){
         child={
           <View style={styles.buttonContainer}>
             <Button
-              titleStyle={[styles.buttonText,{ color:colors.text,}]}
-              buttonStyle={[styles.buttonDialog, { backgroundColor: colors.background,borderColor:colors.primary }]}
+              titleStyle={[styles.buttonText, { color: colors.text }]}
+              buttonStyle={[
+                styles.buttonDialog,
+                {
+                  backgroundColor: colors.background,
+                  borderColor: colors.primary,
+                },
+              ]}
               onPress={() => confirmationDelete(true, client)}
             >
               SI
             </Button>
             <Button
-              titleStyle={[styles.buttonText,{ color:colors.text,}]}
+              titleStyle={[styles.buttonText, { color: colors.text }]}
               buttonStyle={[
                 styles.buttonDialog,
-                { backgroundColor: colors.primary,borderColor:colors.primary },
+                {
+                  backgroundColor: colors.primary,
+                  borderColor: colors.primary,
+                },
               ]}
               onPress={() => confirmationDelete(false, client)}
             >
@@ -216,6 +231,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent:"space-evenly"
   },
   name: {
     fontSize: 32,
@@ -235,6 +251,7 @@ const styles = StyleSheet.create({
     padding: 10,
     display: "flex",
     justifyContent: "space-evenly",
+    marginBottom:100
   },
   text: {
     fontWeight: "bold",
@@ -252,7 +269,7 @@ const styles = StyleSheet.create({
     width: 90,
   },
   buttonContainer: {
-  flexDirection:"row",
+    flexDirection: "row",
     justifyContent: "space-evenly",
     marginVertical: 20,
   },

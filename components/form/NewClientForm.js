@@ -8,35 +8,35 @@ import { useNavigation, useTheme } from "@react-navigation/native";
 import MapSearchInput from "../MapsSearchInput";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
-
 import { Context } from "../../context/ContextProvider";
 import UserContext from "../../context/UserContext";
 
 const NewClientForm = () => {
+
+  const placesRef = useRef();
+  const nav = useNavigation();
   const { setSpinner, throwError } = useContext(UserContext);
   const { colors } = useTheme();
-  const nav = useNavigation();
-  const placesRef = useRef();
   const [popup, setPopup] = useState(false);
   const [getCity, setGetCity] = useState("");
-  const {handleBandera} = useContext(Context)
+  const { handleBandera } = useContext(Context);
   const [location, setLocation] = useState({ coordinates: "", address: "" });
 
-  const submitForm = async(values, clear) => {
-    console.log("press")
-    setSpinner(true)
+  const submitForm = async (values, clear) => {
+    setSpinner(true);
     let min = 83.1;
     let max = 193.3;
-    const rand=()=>Math.random(0).toString(36).substr(2);
-    const token=(length)=>(rand()+rand()+rand()+rand()).substr(0,length);
-    const aux = token(40)
+    const rand = () => Math.random(0).toString(36).substr(2);
+    const token = (length) =>
+      (rand() + rand() + rand() + rand()).substr(0, length);
+    const aux = token(40);
     console.log(aux);
     await setDoc(doc(db, "Clientes", aux), {
       firstName: values.user,
       lastName: values.lastName,
       email: values.email,
       phone: values.phoneNumber,
-      id:aux,
+      id: aux,
       cantidad: 0,
       address: {
         address: values.address,
@@ -46,20 +46,20 @@ const NewClientForm = () => {
           lng: Math.random() * (max - min) + min,
         },
       },
-    }).catch(error => {
-      console.log(error)
-      setError(error)
-      setSpinner(false)
+    }).catch((error) => {
+      console.log(error);
+      setSpinner(false);
+      throwError(error)
     });
-    setSpinner(false)
-    handleBandera()
+    
+    setSpinner(false);
+    handleBandera();
     setPopup(true);
     clear();
     setTimeout(() => {
       setPopup(false), nav.navigate("ClientsScreen");
     }, 1000);
   };
-
 
   const getAddress = () => {
     const aux = placesRef.current.getAddressText().split(",")[1];
@@ -232,10 +232,8 @@ const styles = StyleSheet.create({
   },
   textInput: {
     paddingHorizontal: 10,
-    backgroundColor: "#F1F1F2",
     height: 44,
     width: "100%",
-    color: "#000000",
     fontSize: 18,
     flex: 1,
     borderRadius: 10,
@@ -244,8 +242,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 50,
     width: 200,
-    backgroundColor: "#A1D6E2",
-    color: "#000000",
   },
   passwordInput: {
     flex: 1,
@@ -260,8 +256,8 @@ const styles = StyleSheet.create({
     textAlign: "left",
     flex: 1,
     marginVertical: "3%",
-    color: "#BCBABE",
     fontSize: 18,
+    fontWeight: "bold",
   },
   buttonContainer: {
     alignItems: "center",

@@ -4,7 +4,7 @@ import { useTheme } from "@react-navigation/native";
 const windowWidth = Dimensions.get("window").width;
 
 const ItemDeInventario = ({ item, index }) => {
-  const { colors }=useTheme()
+  const { colors } = useTheme();
   return (
     <View
       style={[
@@ -15,23 +15,55 @@ const ItemDeInventario = ({ item, index }) => {
       ]}
     >
       <Text
-        style={{color:colors.text, marginLeft: 10, flexWrap: "wrap", width: windowWidth * 0.2 }}
+        style={{
+          color: colors.text,
+          flexWrap: "wrap",
+          width: (windowWidth * 2) / 5,
+          fontSize: 18,
+          textAlign: "center",
+        }}
       >
         {item.codigo}
       </Text>
-      <Text style={{color:colors.text, width: windowWidth * 0.4, textAlign: "center" }}>
-        {item.nombre}
-      </Text>
-      <Text style={{color:colors.text, width: windowWidth * 0.2, textAlign: "center" }}>
-        ${item.precioCompra}
-      </Text>
-      <Text style={[styles.Ex,{color:colors.text,}]}>{item.cantidad}</Text>
       <Text
         style={{
-          color:colors.text,
-          marginRight: 10,
-          width: windowWidth * 0.3,
+          color: colors.text,
+          width: (windowWidth * 2) / 5,
           textAlign: "center",
+          fontSize: 18,
+        }}
+      >
+        {item.nombre}
+      </Text>
+      <Text
+        style={[
+          styles.Ex,
+          {
+            color: colors.text,
+            fontSize: 18,
+            width: (windowWidth * 2) / 5,
+          },
+        ]}
+      >
+        {item.cantidad}
+      </Text>
+      <Text
+        style={{
+          color: colors.text,
+          width: (windowWidth * 2) / 5,
+          textAlign: "center",
+          fontSize: 18,
+        }}
+      >
+        ${item.precioCompra}
+      </Text>
+
+      <Text
+        style={{
+          color: colors.text,
+          fontSize: 18,
+          textAlign: "center",
+          width: (windowWidth * 2) / 5,
         }}
       >
         ${item.precioVenta}
@@ -48,7 +80,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    height: 40,
+    height: "auto",
+    paddingVertical:10
   },
   Ex: {
     width: windowWidth * 0.25,

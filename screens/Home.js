@@ -82,23 +82,24 @@ export default function Home() {
               title={"Inventario"}
             ></AnimatedButton>
           )}
-          {arr3 && (
-            <AnimatedButton
-              icon={"document-text"}
-              title={"Reportes"}
-            ></AnimatedButton>
-          )}
+          
 
-          {arr4 && (
+          {arr3 && (
             <AnimatedButton
               icon={"md-cash-outline"}
               title={"Venta"}
             ></AnimatedButton>
           )}
-          {arr5 && (
+          {arr4 && (
             <AnimatedButton
               icon={"bar-chart"}
               title={"Comprobantes"}
+            ></AnimatedButton>
+          )}
+          {arr5 && (
+            <AnimatedButton
+              icon={"document-text"}
+              title={"Reportes"}
             ></AnimatedButton>
           )}
 

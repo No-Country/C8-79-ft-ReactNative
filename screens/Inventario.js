@@ -6,23 +6,25 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import React, { useState,  useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { SearchBar } from "@rneui/themed";
 import ItemDeInventario from "../components/ItemDeInventario";
 import { Icon, Button } from "@rneui/themed";
 import PrintPDF from "../components/PrintPDF";
 import ExcelExport from "../components/ExcelExport";
 import PopUp from "../components/PopUp";
-import { useTheme } from "@react-navigation/native";
+import { useFocusEffect, useTheme } from "@react-navigation/native";
 import { useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/Config";
 import UserContext from "../context/UserContext";
+import { TouchableOpacity } from "react-native";
+import { inventoryhtml } from "../helpers/formatReportHTML";
 
 const windowWidth = Dimensions.get("window").width;
 
 const Inventario = () => {
-  const { setSpinner, setError } = useContext(UserContext);
+  const { setSpinner, throwError } = useContext(UserContext);
   const { colors } = useTheme();
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
@@ -30,23 +32,31 @@ const Inventario = () => {
   const [prod, setProd] = useState([]);
   const [popup, setPopup] = useState(false);
   const [products, setProducts] = useState([]);
+  const [hide, setHide] = useState(false)
 
   const traerDatos = async () => {
-    const array = [];
-    const querySnapshot = await getDocs(collection(db, "Productos"));
-    querySnapshot.forEach((doc) => {
-      array.push(doc.data());
-    });
-    setProducts(array);
-    pagination(array);
-
-    setSpinner(false);
+    try {
+      const array = [];
+      const querySnapshot = await getDocs(collection(db, "Productos"));
+      querySnapshot.forEach((doc) => {
+        array.push(doc.data());
+      });
+      setProducts(array);
+      pagination(array);
+      setSpinner(false);
+    } catch (error) {
+      throwError(error);
+    }
   };
 
-  useEffect(() => {
-    setSpinner(true);
-    traerDatos();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setSpinner(true);
+      traerDatos();
+
+     
+    }, [])
+  );
 
   const pagination = (arr) => {
     setProd(arr.slice(0, 9));
@@ -54,13 +64,13 @@ const Inventario = () => {
     //console.log("p", totalPage);
   };
 
-  const increment = (p) => {
-    setPage(p + 1);
-    setProd(products.slice((p + 1) * 10 - 10, (p + 1) * 9));
+  const increment = () => {
+    setPage((prev) => prev + 1);
+    setProd(products.slice((page + 1) * 10 - 11, (page + 1) * 9));
   };
   const decrement = (p) => {
-    setPage(p - 1);
-    setProd(products.slice((p - 1) * 10 - 10, (p - 1) * 9));
+    setPage((prev) => prev - 1);
+    setProd(products.slice((page - 1) * 10 - 10, (page - 1) * 9));
   };
 
   const exportDetail = () => {
@@ -68,17 +78,17 @@ const Inventario = () => {
   };
 
   const confirmationExport = (remove, format = null) => {
+
     remove
       ? (setPopup(false),
-        format === "PDF" ? PrintPDF(products) : ExcelExport(products))
-      : setPopup(false);
+        format === "PDF" ? PrintPDF(inventoryhtml(products)) : ExcelExport(products))
+      : setPopup(false)
   };
 
   const renderItem = ({ item, index }) => {
     return <ItemDeInventario item={item} index={index} />;
   };
 
-  
   return (
     <View
       style={[styles.viewContainer, { backgroundColor: colors.background }]}
@@ -101,6 +111,8 @@ const Inventario = () => {
         placeholder="Ingrese el nombre del producto"
         placeholderTextColor={colors.text}
         round
+        onFocus={()=>setHide(true)}
+        onBlur={()=>setHide(false)}
         value={filter}
       />
       <View style={styles.buttonsView}>
@@ -127,7 +139,7 @@ const Inventario = () => {
         horizontal={true}
         overScrollMode={"never"}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ width: windowWidth * 2, height: 410 }}
+        contentContainerStyle={{ width: windowWidth * 2, height: "100%" }}
       >
         <FlatList
           ListHeaderComponent={() => (
@@ -136,11 +148,11 @@ const Inventario = () => {
             >
               <Text
                 style={{
+                  textAlign:"center",
                   fontSize: 18,
                   fontWeight: "bold",
-                  marginLeft: 10,
                   flexWrap: "wrap",
-                  maxWidth: 100,
+                 width: (windowWidth * 2)/5,
                   color: colors.text,
                 }}
               >
@@ -151,48 +163,50 @@ const Inventario = () => {
                   fontSize: 18,
                   fontWeight: "bold",
                   color: colors.text,
-                  width: windowWidth * 0.4,
+               width: (windowWidth * 2)/5,
                   textAlign: "center",
                 }}
               >
-                Descripcion
+              Nombre
               </Text>
               <Text
                 style={{
                   fontSize: 18,
                   fontWeight: "bold",
                   color: colors.text,
-                  width: windowWidth * 0.2,
-                  textAlign: "center",
-                }}
-              >
-                Precio Unitario
-              </Text>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: "bold",
-                  color: colors.text,
-                  width: windowWidth * 0.25,
+                  width: (windowWidth * 2)/5,
                   textAlign: "center",
                 }}
               >
                 Stock
               </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  color: colors.text,
+                  width: (windowWidth * 2)/5,
+                  textAlign: "center",
+                }}
+              >
+                Precio Unitario
+              </Text>
+             
 
               <Text
                 style={{
                   fontSize: 18,
                   fontWeight: "bold",
                   color: colors.text,
-                  marginRight: 10,
-                  width: windowWidth * 0.3,
+                width:(windowWidth * 2)/5,
                   textAlign: "center",
                 }}
               >
                 Precio Venta
               </Text>
+              
             </View>
+            
           )}
           ListEmptyComponent={() => (
             <Text
@@ -217,13 +231,17 @@ const Inventario = () => {
               ? products.filter((item) =>
                   item.nombre.toLowerCase().includes(filter.toLowerCase())
                 )
-              : products
+              : prod
           }
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.codigo}
           renderItem={renderItem}
         />
       </ScrollView>
+     
+
+
+
       <View
         style={{
           flexDirection: "row",
@@ -232,27 +250,54 @@ const Inventario = () => {
           paddingBottom: 30,
         }}
       >
-        {page > 1 ? (
+
+{page > 1 ? (
           <Icon
-            color={colors.text}
+          reverse
+            color={colors.primary}
             name="chevron-left"
             type="feather"
-            onPress={() => decrement(page)}
+            onPress={() => decrement()}
           />
-        ) : null}
-        <Text style={{ color: colors.text }}>
+        ) : <Icon
+        reverse
+        color={"transparent"}
+          name="chevron-left"
+          type="feather"
+         disabledStyle={{display:"none"}}
+         disabled
+         
+        />}
+       
+        <Text style={{ color: colors.text,alignSelf:"center", }}>
           {page} de {totalPage}
         </Text>
 
         {page !== totalPage ? (
-          <Icon
-            color={colors.text}
-            name="chevron-right"
-            type="feather"
-            onPress={() => increment(page)}
-          />
-        ) : null}
+          
+            <Icon
+            reverse
+              color={colors.primary}
+              name="chevron-right"
+              type="feather"
+              onPress={() => increment()}
+            
+            />
+         
+        ) :   <Icon
+        reverse
+          color={"transparent"}
+          name="chevron-right"
+          type="feather"
+          disabledStyle={{display:"none"}}
+          disabled
+        
+        
+        />}
+
+       
       </View>
+      
 
       <PopUp
         visibility={popup}
@@ -347,11 +392,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   headerStyle: {
-    display: "flex",
+
     flexDirection: "row",
-    backgroundColor: "#A1D6E2",
+   
     height: 50,
-    justifyContent: "space-between",
+    
     alignItems: "center",
   },
   buttonDialog: {

@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, View, Text } from "react-native";
-import React, { useEffect, useState,  useContext } from "react";
+import { FlatList, StyleSheet, View, Text,RefreshControl } from "react-native";
+import React, { useEffect, useState, useContext } from "react";
 import { SearchBar } from "@rneui/themed";
 import Client from "../components/Client";
 import { FAB } from "@rneui/themed";
@@ -8,28 +8,21 @@ import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
 import { useTheme } from "@react-navigation/native";
 import UserContext from "../context/UserContext";
-
-const sortData = (arr) => {
-  const sortedArray = arr.sort(function (a, b) {
-    if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) {
-      return -1;
-    }
-    if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) {
-      return 1;
-    }
-    return 0;
-  });
-  return sortedArray;
-};
+import { sortData } from "../helpers/SortData";
 
 const Clients = ({ navigation }) => {
   const { setSpinner, throwError } = useContext(UserContext);
   const { bandera } = useContext(Context);
-
   const [filter, setFilter] = useState("");
   const [clientes, setClientes] = useState([]);
-
+  const [refresh, setRefresh] = useState(false);
   const { colors } = useTheme();
+
+  useEffect(() => {
+    setSpinner(true);
+    traerDatos();
+    console.log("clientes");
+  }, [bandera]);
 
   const traerDatos = async () => {
     try {
@@ -38,34 +31,25 @@ const Clients = ({ navigation }) => {
       querySnapshot.forEach((doc) => {
         array.push(doc.data());
       });
-      
+
       setClientes(array);
       setSpinner(false);
     } catch (e) {
       setSpinner(false);
-      throwError(e)
+      throwError(e);
     }
   };
 
-  useEffect(() => {
-    setSpinner(true);
-    traerDatos();
-  }, [bandera]);
-  //
-
-
+  const refreshClients=async ()=>{
+    setRefresh(true)
+        await traerDatos()
+        setRefresh(false)
+  }
 
   const renderItem = ({ item, index }) => {
-    return (
-      <Client
-        item={item}
-        
-        index={index}
-        textColor={ colors.text}
-        fontSz={20}
-      />
-    );
+    return <Client item={item} index={index} />;
   };
+
   return (
     <View
       style={[styles.viewContainer, { backgroundColor: colors.background }]}
@@ -92,20 +76,25 @@ const Clients = ({ navigation }) => {
       />
 
       <FlatList
-        removeClippedSubviews={true}
+        refreshControl={<RefreshControl
+          colors={[ colors.primary]}
+          refreshing={refresh}
+          onRefresh={()=>refreshClients()} />}
         overScrollMode={"never"}
         style={styles.flatlist}
-        data={clientes.length!==0?
-          sortData(clientes).filter(
-          (client) =>
-            client.firstName
-              .toLowerCase()
-              .includes(filter.toLocaleLowerCase()) ||
-            client.lastName.toLowerCase().includes(filter.toLocaleLowerCase())
-        )
-        :
-        clientes
-      }
+        data={
+          clientes.length !== 0
+            ? sortData(clientes).filter(
+                (client) =>
+                  client.firstName
+                    .toLowerCase()
+                    .includes(filter.toLocaleLowerCase()) ||
+                  client.lastName
+                    .toLowerCase()
+                    .includes(filter.toLocaleLowerCase())
+              )
+            : clientes
+        }
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
@@ -122,7 +111,7 @@ const Clients = ({ navigation }) => {
         icon={{ name: "add", color: colors.text }}
         color={colors.primary}
         placement="right"
-        onPress={() => navigation.navigate("NewClient")} 
+        onPress={() => navigation.navigate("NewClient")}
       />
     </View>
   );
@@ -134,7 +123,6 @@ const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#fff",
   },
   flatlist: {
     width: "100%",
@@ -142,19 +130,14 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
     width: "95%",
-    backgroundColor: "#fff",
     borderTopWidth: 0,
     borderBottomWidth: 0,
   },
   searchInput: {
     textAlign: "center",
-    backgroundColor: "#fff",
   },
   inputContainer: {
-    backgroundColor: "#fff",
-    borderColor: "#BCBABB",
     borderWidth: 1,
-    borderBottomColor: "#BCBABB",
     borderBottomWidth: 1,
   },
 });

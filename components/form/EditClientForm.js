@@ -9,14 +9,12 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/Config";
 import { Context } from "../../context/ContextProvider";
 import UserContext from "../../context/UserContext";
-import { color } from "react-native-reanimated";
 
 const EditClientForm = ({ client }) => {
+  const nav = useNavigation();
   const { colors } = useTheme();
   const { handleBandera, bandera } = useContext(Context);
   const { setSpinner, setError } = useContext(UserContext);
-  const nav = useNavigation();
-
   const [popup, setPopup] = useState(false);
 
   const submitForm = async (formData, clear) => {
@@ -174,13 +172,13 @@ const EditClientForm = ({ client }) => {
   );
 };
 export default EditClientForm;
+
 const styles = StyleSheet.create({
   form: {
     width: "90%",
   },
   textInput: {
     paddingHorizontal: 10,
-    backgroundColor: "#F1F1F2",
     height: 35,
     width: "100%",
     color: "#000000",
@@ -192,8 +190,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 50,
     width: 200,
-    backgroundColor: "#A1D6E2",
-    color: "#000000",
   },
   passwordInput: {
     flex: 1,
@@ -208,8 +204,8 @@ const styles = StyleSheet.create({
     textAlign: "left",
     flex: 1,
     marginVertical: "3%",
-    color: "#BCBABE",
     fontSize: 18,
+    fontWeight:"bold"
   },
   buttonContainer: {
     alignItems: "center",

@@ -10,12 +10,14 @@ import SelectDropdown from "react-native-select-dropdown";
 import { Icon } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 
-const ProductInput = ({ handleData, confirm, data }) => {
-  const [cantidad, setCantidad] = useState(1);
+const ProductInput = ({ handleData, confirm, data, id,state }) => {
   const { colors } = useTheme();
+
+  const [cantidad, setCantidad] = useState(1);
   const [producto, setProducto] = useState("");
   const [edit, setEdit] = useState(true);
   //console.log(data.map((item) => item.nombre));
+
   return (
     <View
       style={{
@@ -44,7 +46,8 @@ const ProductInput = ({ handleData, confirm, data }) => {
           searchInputTxtColor={colors.text}
           data={data.map((item) => item.nombre)}
           onSelect={(selectedItem, index) => {
-            setProducto(selectedItem);
+            handleData(selectedItem,null, id);
+            
           }}
           search
         />
@@ -65,7 +68,8 @@ const ProductInput = ({ handleData, confirm, data }) => {
             <TouchableOpacity
               style={{ backgroundColor: colors.primary, borderRadius: 5 }}
               onPress={() => {
-                edit && setCantidad((prev) => (prev <= 1 ? prev : prev - 1));
+                
+               handleData(null,"minus", id);
               }}
             >
               <Icon
@@ -89,12 +93,13 @@ const ProductInput = ({ handleData, confirm, data }) => {
                 },
               ]}
             >
-              {cantidad}
+              {state}
             </Text>
             <TouchableOpacity
               style={{ backgroundColor: colors.primary, borderRadius: 5 }}
               onPress={() => {
-                edit && setCantidad((prev) => prev + 1);
+               
+                handleData(null,"plus", id);
               }}
             >
               <Icon
@@ -114,19 +119,23 @@ const ProductInput = ({ handleData, confirm, data }) => {
           </Text>
 
           <TouchableOpacity
-            style={{ backgroundColor: colors.primary, borderRadius: 5,marginBottom:5 }}
+            style={{
+              backgroundColor: colors.primary,
+              borderRadius: 5,
+              marginBottom: 5,
+            }}
             onPress={() => {
               setEdit(false);
               confirm((prev) => prev + 1);
 
-              let i=data.map(item=>item.nombre).indexOf(producto)
-              let codigo=data[i].codigo 
-              handleData((prev) => [...prev, { producto, cantidad ,codigo}]);
+              let i = data.map((item) => item.nombre).indexOf(producto);
+              let codigo = data[i].codigo;
+              handleData((prev) => [...prev, { producto, cantidad, codigo }]);
             }}
           >
             <Icon
               style={{ padding: 5 }}
-              name={edit ? "checkmark": "checkmark-done" }
+              name={edit ? "checkmark" : "checkmark-done"}
               type="ionicon"
               color={colors.text}
             />
@@ -151,7 +160,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     flex: 1,
     borderRadius: 10,
-    width: "70%"
+    width: "70%",
   },
   button: {
     borderRadius: 10,

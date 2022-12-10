@@ -1,5 +1,4 @@
 import {
-  TouchableHighlight,
   TouchableOpacity,
   StyleSheet,
   Text,
@@ -7,33 +6,16 @@ import {
 } from "react-native";
 import { Avatar, Icon } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase/Config";
 import { useTheme } from "@react-navigation/native";
+import { getInitials } from "../helpers/getInitials";
 
-
-export const getInitials = (client) => {
-
-  const firstName = client.firstName[0].toUpperCase();
-  const firstLastName = client.lastName[0].toUpperCase();
-  return firstName + firstLastName;
-};
-
-
-
-
-
-const Client = ({ fontSz, textColor, item,  index }) => {
+const Client = ({ item,  index }) => {
   const {colors}=useTheme()
   const navigation = useNavigation();
   
-  
-
-
   return (
     <TouchableOpacity
       activeOpacity={0.2}
-      //onPressIn={isPress}
       onPress={() => {
         navigation.navigate("ClientDetail", item);
       }}
@@ -51,7 +33,7 @@ const Client = ({ fontSz, textColor, item,  index }) => {
           title={getInitials(item)}
           containerStyle={{ backgroundColor: "#676f72" }}
         />
-        <Text style={[styles.title, { color: textColor, fontSize: fontSz }]}>
+        <Text style={[styles.title, { color: colors.text, fontSize: 20 }]}>
           {item.firstName} {item.lastName}
         </Text>
       </View>
@@ -59,7 +41,7 @@ const Client = ({ fontSz, textColor, item,  index }) => {
         style={{ paddingRight: 10 }}
         name="chevron-right"
         type="feather"
-        color="#BCBABB"
+        color={colors.text}
       />
     </TouchableOpacity>
   );
