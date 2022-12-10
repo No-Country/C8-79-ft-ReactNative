@@ -16,13 +16,12 @@ import { useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/Config";
 
-
 const CustomMenu = (props) => {
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = auth.currentUser.uid;
   const [usuario, setUsuario] = useState();
-  const{colors}=useTheme()
+  const { colors } = useTheme();
 
   const datosUsuario = async () => {
     const docRef = doc(db, "Usuarios", uid);
@@ -60,31 +59,45 @@ const CustomMenu = (props) => {
                     uri: "https://res.cloudinary.com/dnont3pur/image/upload/v1670372416/Monshine/monshine_v9et2x.jpg",
                   }}
                 />
+                <View style={{ width: "50%", marginTop: 0 }}>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 20,
+                      textAlign: "center",
+                      color: colors.text,
+                      paddingVertical:10
+                    }}
+                  >
+                    Bienvenido
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 16,
 
-                <Text
-                  style={{
-                    fontSize: 18,
-                    flexWrap: "wrap",
-                    width: "50%",
-                    textAlign: "center",
-                    marginTop: 0,
-                    marginLeft: 10,
-                    color:colors.text
-                  }}
-                >
-                  Bienvenido {usuario?.userName}
-                </Text>
+                      textAlign: "center",
+
+                      color: colors.text,
+                    }}
+                  >
+                    {usuario?.userName}
+                  </Text>
+                </View>
               </View>
             </View>
           )}
           style={{
             width: "95%",
             height: 110,
-           
-          
           }}
         />
-        <View style={{ height:600, backgroundColor: colors.background, paddingTop: 10 }}>
+        <View
+          style={{
+            height: 600,
+            backgroundColor: colors.background,
+            paddingTop: 10,
+          }}
+        >
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
@@ -94,20 +107,26 @@ const CustomMenu = (props) => {
           paddingVertical: 10,
           borderTopWidth: 1,
           borderTopColor: "#ccc",
-          backgroundColor:colors.background
+          backgroundColor: colors.background,
         }}
       >
         <TouchableOpacity
           onPress={() => signOutUser()}
-          style={{ paddingVertical: 15 ,backgroundColor:colors.background}}
+          style={{ paddingVertical: 15, backgroundColor: colors.background }}
         >
-          <View style={{ flexDirection: "row", alignItems: "center",backgroundColor:colors.background }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: colors.background,
+            }}
+          >
             <Icon color={colors.text} name="exit" type="ionicon" />
             <Text
               style={{
                 fontSize: 15,
                 marginLeft: 30,
-                color:colors.text
+                color: colors.text,
               }}
             >
               Cerrar Sesion
@@ -119,6 +138,6 @@ const CustomMenu = (props) => {
   );
 };
 
-export default CustomMenu; 
+export default CustomMenu;
 
 const styles = StyleSheet.create({});

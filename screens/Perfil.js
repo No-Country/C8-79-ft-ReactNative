@@ -11,21 +11,27 @@ import UserContext from "../context/UserContext";
 import { color } from "react-native-reanimated";
 import { Context } from "../context/ContextProvider";
 import { Switch } from "@rneui/themed";
-import { getAuth, updateEmail, updatePassword } from "firebase/auth/react-native";
+import {
+  getAuth,
+  updateEmail,
+  updatePassword,
+} from "firebase/auth/react-native";
 import { useEffect } from "react";
+import ImagePicker from "../components/ImagePicker";
 
 export default function Perfil() {
   const { theme, setTheme } = useContext(UserContext);
   const [toggle, setToggle] = useState(false);
   const { colors } = useTheme();
   const [usuario, setUsuario] = useState();
-  const { handleBandera, bandera} = useContext(Context);
+  const { handleBandera, bandera } = useContext(Context);
   const { setSpinner, setError } = useContext(UserContext);
   const nav = useNavigation();
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = auth.currentUser.uid;
   const [popup, setPopup] = useState(false);
+  const [image, setImage] = useState(null);
 
   const datosUsuario = async () => {
     const docRef = doc(db, "Usuarios", uid);
@@ -38,8 +44,8 @@ export default function Perfil() {
   }, []);
 
   const submitForm = (values, resetForm) => {
-    setSpinner(true)
-    handleEdit(values, resetForm)
+    setSpinner(true);
+    handleEdit(values, resetForm);
   };
 
   const handleEdit = async (
@@ -52,28 +58,27 @@ export default function Perfil() {
       lastName: lastName ? lastName : usuario.lastName,
       email,
       phoneNumber: phone ? phone : usuario.phoneNumber,
-      password
-    }
-    
+      password,
+    };
+
     const usuarioDB = doc(db, "Usuarios", uid);
-    await setDoc(usuarioDB, data)
-    setSpinner(false)
-    updateEmail(auth.currentUser, data.email).then(() => {
-      console.log("email update")
-    }).catch((error) => {
-      console.log(error)
-    });
-    
+    await setDoc(usuarioDB, data);
+    setSpinner(false);
+    updateEmail(auth.currentUser, data.email)
+      .then(() => {
+        console.log("email update");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-    updatePassword(auth.currentUser, data.password).then(() => {
-      console.log("pass update")
-    }).catch((error) => {
-      console.log(error)
-    });
-
-    
-    
-    
+    updatePassword(auth.currentUser, data.password)
+      .then(() => {
+        console.log("pass update");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleTheme = () => {
@@ -101,14 +106,7 @@ export default function Perfil() {
         />
         <Icon name="moon" type="ionicon" color={colors.text} />
       </View>
-
-      <Avatar
-        size={150}
-        rounded
-        source={{ uri: "https://res.cloudinary.com/dnont3pur/image/upload/v1670372416/Monshine/monshine_v9et2x.jpg" }}
-      >
-        <Avatar.Accessory size={23} />
-      </Avatar>
+      <ImagePicker set={setImage} data={image} />
 
       <Formik
         initialValues={{
