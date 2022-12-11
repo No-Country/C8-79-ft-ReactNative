@@ -12,8 +12,7 @@ import { useTheme } from "@react-navigation/native";
 const ProductInput = ({ handleData,  data, id, state }) => {
   const { colors } = useTheme();
   const [selected, setSelected] = useState(false);
-console.log( state.length===0?false:
-  state.filter(obj=>obj.idInput===id)[0].producto)
+
   return (
     <View
       style={{
@@ -91,7 +90,7 @@ console.log( state.length===0?false:
                 },
               ]}
             >
-              {/* {selected ? state.filter(obj=>obj.idInput===id)[0].cantidad : null} */}
+              {selected ? state.filter(obj=>obj.idInput===id)[0].cantidad : null}
             </Text>
             <TouchableOpacity
               style={{ backgroundColor: colors.primary, borderRadius: 5 }}

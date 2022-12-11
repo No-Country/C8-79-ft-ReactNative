@@ -28,8 +28,8 @@ const Venta = () => {
   const { colors } = useTheme();
   const [productInput, setProductInput] = useState({ count: 1, arr: [1] });
   const [cliente, setCliente] = useState("");
-  const [productData, setProductData] = useState([]);
-  const [confirmation, setConfirmation] = useState(0);
+
+
   const [clientesFire, setClientesFire] = useState([]);
   const [productos, setProductos] = useState([]);
   const [idCodigo, setIdCodigo] = useState([]);
@@ -42,13 +42,14 @@ const Venta = () => {
 
   const submit = async (data) => {
     setSpinner(true);
-    console.log("desde submit", productData);
-    // console.log("desde submit",cliente)
-    console.log(productos2);
+    console.log(productos)
+    console.log("desde submit", inputsProducts);
+   
+
     let bandera = true;
 
-    for (let i = 0; i < productData.length; i++) {
-      bandera = productos.includes(productData[i].producto);
+    for (let i = 0; i < inputsProducts.length; i++) {
+      bandera = productos.includes(inputsProducts[i].producto);
       if (bandera == false) {
         break;
       }
@@ -59,31 +60,31 @@ const Venta = () => {
     const auxCliente = aux[0] + " " + aux[1];
     console.log(auxCliente);
     let arrayProductData = [];
-    for (let i = 0; i < productData.length; i++) {
+    for (let i = 0; i < inputsProducts.length; i++) {
       let indice = allProducts.findIndex(
-        (e) => e.nombre === productData[i].producto
+        (e) => e.nombre === inputsProducts[i].producto
       );
       const objeto = {
-        producto: productData[i].producto,
+        producto: inputsProducts[i].producto,
         nombre: allProducts[indice].nombre,
-        cantidad: productData[i].cantidad,
+        cantidad: inputsProducts[i].cantidad,
         precioUnitario: allProducts[indice].precioVenta,
         precioCompra: allProducts[indice].precioCompra,
-        total: productData[i].cantidad * allProducts[indice].precioVenta,
+        total: inputsProducts[i].cantidad * allProducts[indice].precioVenta,
       };
       arrayProductData.push(objeto);
       console.log(arrayProductData);
     }
 
-    console.log(confirmation, productInput, bandera);
-    if (confirmation === productInput && bandera === true) {
+    console.log( productInput, bandera);
+    if ( productInput && bandera === true) {
       const comprobante = {
         fecha: new Date(),
         cliente: auxCliente,
         productos: [...arrayProductData],
         id: ram,
       };
-
+console.log(comprobante)
       await setDoc(doc(db, "Facura", ram), comprobante);
 
       const docRef = doc(db, "Clientes", id);
@@ -91,7 +92,7 @@ const Venta = () => {
         cantidad: increment(1),
       });
 
-      productData.forEach(async (e) => {
+      inputsProducts.forEach(async (e) => {
         const docRef = doc(db, "Productos", e.codigo);
         await updateDoc(docRef, {
           cantidad: increment(-e.cantidad),
@@ -100,7 +101,7 @@ const Venta = () => {
       });
       handleBandera();
       setPopup(true);
-      reset();
+    
       setTimeout(() => {
         setPopup(false);
       }, 1000);
@@ -112,9 +113,9 @@ const Venta = () => {
   };
 
   const reset = () => {
-    setProductInput(0);
-    setConfirmation(0);
-    setProductData([]);
+   
+   setProductInput({ count: 1, arr: [1] })
+    setInputsProducts([]);
     setCliente("");
   };
 
@@ -178,6 +179,10 @@ const Venta = () => {
       setInputsProducts(temp);
       return;
     }
+
+    const i=productos2.map(item=>item.nombre).indexOf(product)
+   const codigo=productos2[i].codigo 
+
     const temp = inputsProducts.filter((item) => item.idInput === id);
 
     if (temp.length !== 0) {
@@ -186,6 +191,7 @@ const Venta = () => {
           ? {
               producto: product !== null ? product : item.producto,
               idInput: id,
+              codigo:codigo,
               cantidad:
                 quantity === "plus"
                   ? item.cantidad + 1
@@ -201,7 +207,7 @@ const Venta = () => {
     } else {
       setInputsProducts((prev) => [
         ...prev,
-        { producto: product, idInput: id, cantidad: 1 },
+        { producto: product, idInput: id, cantidad: 1,codigo:codigo },
       ]);
     }
   };
@@ -255,7 +261,7 @@ const Venta = () => {
               key={index}
               id={item}
               handleData={manageProductInput}
-              confirm={setConfirmation}
+             
               data={productos2}
               state={inputsProducts}
             />
@@ -263,13 +269,7 @@ const Venta = () => {
         })}
 
         <View style={styles.buttonContainer}>
-          <Button
-            titleStyle={{ color: colors.text, fontSize: 18 }}
-            buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
-            onPress={() => reset()}
-            title={"Reiniciar"}
-          />
-          <Button
+        <Button
             titleStyle={{ color: colors.text, fontSize: 18 }}
             buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
             onPress={() => {
@@ -285,6 +285,13 @@ const Venta = () => {
             }}
             title={"+ productos"}
           />
+          <Button
+            titleStyle={{ color: colors.text, fontSize: 18 }}
+            buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
+            onPress={() => reset()}
+            title={"Reiniciar"}
+          />
+          
           <Button
             titleStyle={{ color: colors.text, fontSize: 18 }}
             buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
