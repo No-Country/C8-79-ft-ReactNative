@@ -29,6 +29,7 @@ const Comprobante = ({ item, index }) => {
       >
         <Text
           style={{
+            fontSize:16,
             color: colors.text,
             marginLeft: 10,
             width: windowWidth * 0.3,
@@ -38,6 +39,7 @@ const Comprobante = ({ item, index }) => {
         </Text>
         <Text
           style={{
+            fontSize:16,
             color: colors.text,
             width: windowWidth * 0.7,
             textAlign: "center",
@@ -48,6 +50,7 @@ const Comprobante = ({ item, index }) => {
         </Text>
         <Text
           style={{
+            fontSize:16,
             //backgroundColor:"gray",
             color: colors.text,
             width: windowWidth * 0.6,
@@ -58,6 +61,7 @@ const Comprobante = ({ item, index }) => {
         </Text>
         <Text
           style={{
+            fontSize:16,
             paddingRight:30,
             color: colors.text,
             marginRight: 10,

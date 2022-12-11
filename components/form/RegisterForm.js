@@ -58,7 +58,7 @@ const RegisterForm = () => {
         setPopup(true);
         clear();
         setTimeout(() => {
-          setPopup(false), nav.navigate("Login");
+          setPopup(false) //nav.navigate("Login");
         }, 1000);
       })
       .catch((error) => {
