@@ -7,7 +7,7 @@ import moment from "moment";
 import { FlatList } from "react-native-gesture-handler";
 import Comprobante from "../components/Comprobante";
 import UserContext from "../context/UserContext";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs,deleteDoc ,doc} from "firebase/firestore";
 import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
 
@@ -43,7 +43,9 @@ const Comprobantes = () => {
       let arrayFecha = [];
       let date;
 
-      array.forEach((factura) => {
+      array.forEach(async (factura) => {
+
+        //await deleteDoc(doc(db, "Facura", factura.id));
      
         // auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
         //fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]

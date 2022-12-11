@@ -26,7 +26,7 @@ const Venta = () => {
   const { colors } = useTheme();
   const [inputsProducts, setInputsProducts] = useState([]);
   const [productInput, setProductInput] = useState({ count:0, arr: [1] });
-  const [cliente, setCliente] = useState(null);
+  const [cliente, setCliente] = useState("");
   const [clientesFire, setClientesFire] = useState([]);
   const [productos, setProductos] = useState([]);
   const [idCodigo, setIdCodigo] = useState([]);
@@ -35,7 +35,7 @@ const Venta = () => {
   const [productos2, setProductos2] = useState([]);
   const ram = random();
   const [popup, setPopup] = useState(false);
-  const changeChild=useRef(null)
+ 
   const submit = async (data) => {
     setSpinner(true);
     
@@ -101,6 +101,7 @@ const Venta = () => {
       });
       setSpinner(false)
       handleBandera();
+      reset()
       setPopup(true);
       setTimeout(() => {
         setPopup(false);
@@ -122,7 +123,7 @@ const Venta = () => {
    
     setProductInput({ count: 1, arr: [] });
     setInputsProducts([]);
-    setCliente(null);
+    setCliente("");
   
   };
 
@@ -215,8 +216,7 @@ const Venta = () => {
       ]);
     }
   };
- 
-console.log(changeChild)
+
   return (
     <View
       style={{
@@ -242,6 +242,7 @@ console.log(changeChild)
         <Text style={[styles.label, { color: colors.text }]}>Cliente</Text>
 
         <SelectDropdown
+     
           defaultButtonText="Selecciona un cliente"
           buttonStyle={{
             width: "100%",
@@ -268,7 +269,7 @@ console.log(changeChild)
               handleData={manageProductInput}
               data={productos2}
               state={inputsProducts}
-              ref={changeChild}
+              
             />
           );
         })}

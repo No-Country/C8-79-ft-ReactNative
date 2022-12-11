@@ -8,6 +8,7 @@ export const DarkTheme = {
       button:"#395B64",
       border: "#000",
       notification: "#fff",
+      arrow:"#1995AD"
     },
   };
 
@@ -21,6 +22,7 @@ export const DarkTheme = {
       button:"#fff",
       border: "#000",
       notification: "#000",
+      arrow:"#1995AD"
     },
   };
 
