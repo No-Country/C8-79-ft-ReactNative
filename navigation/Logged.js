@@ -4,6 +4,7 @@ import Menu from "./Menu";
 import Perfil from "../screens/Perfil";
 import Home from "../screens/Home";
 import { useTheme } from "@react-navigation/native";
+import Venta from "../screens/Venta";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,7 @@ const Logged = () => {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Home" component={Venta} />
         <Stack.Screen name="Menu" component={Menu} />
 
         <Stack.Screen

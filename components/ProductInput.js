@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  TextInput,
   Text,
   View,
   TouchableOpacity,
@@ -10,14 +9,11 @@ import SelectDropdown from "react-native-select-dropdown";
 import { Icon } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 
-const ProductInput = ({ handleData, confirm, data, id,state }) => {
+const ProductInput = ({ handleData,  data, id, state }) => {
   const { colors } = useTheme();
-
-  const [cantidad, setCantidad] = useState(1);
-  const [producto, setProducto] = useState("");
-  const [edit, setEdit] = useState(true);
-  //console.log(data.map((item) => item.nombre));
-
+  const [selected, setSelected] = useState(false);
+console.log( state.length===0?false:
+  state.filter(obj=>obj.idInput===id)[0].producto)
   return (
     <View
       style={{
@@ -32,7 +28,10 @@ const ProductInput = ({ handleData, confirm, data, id,state }) => {
         <Text style={[styles.label, { color: colors.text }]}>Producto</Text>
 
         <SelectDropdown
-          disabled={!edit ? true : false}
+        // defaultValue={state.length===0?false:
+        // state.filter(obj=>obj.idInput===id)[0].producto
+        
+        // }
           defaultButtonText="Selecciona un Producto"
           buttonStyle={{
             width: "100%",
@@ -46,8 +45,8 @@ const ProductInput = ({ handleData, confirm, data, id,state }) => {
           searchInputTxtColor={colors.text}
           data={data.map((item) => item.nombre)}
           onSelect={(selectedItem, index) => {
-            handleData(selectedItem,null, id);
-            
+            handleData(selectedItem, null, id);
+            setSelected(true);
           }}
           search
         />
@@ -68,8 +67,7 @@ const ProductInput = ({ handleData, confirm, data, id,state }) => {
             <TouchableOpacity
               style={{ backgroundColor: colors.primary, borderRadius: 5 }}
               onPress={() => {
-                
-               handleData(null,"minus", id);
+                handleData(null, "minus", id);
               }}
             >
               <Icon
@@ -93,13 +91,12 @@ const ProductInput = ({ handleData, confirm, data, id,state }) => {
                 },
               ]}
             >
-              {state}
+              {/* {selected ? state.filter(obj=>obj.idInput===id)[0].cantidad : null} */}
             </Text>
             <TouchableOpacity
               style={{ backgroundColor: colors.primary, borderRadius: 5 }}
               onPress={() => {
-               
-                handleData(null,"plus", id);
+                handleData(null, "plus", id);
               }}
             >
               <Icon
@@ -115,7 +112,7 @@ const ProductInput = ({ handleData, confirm, data, id,state }) => {
           <Text
             style={[styles.label, { color: colors.text, textAlign: "center" }]}
           >
-            {edit ? "Pendiente" : "Confirmado"}{" "}
+            {"Borrar"}
           </Text>
 
           <TouchableOpacity
@@ -125,19 +122,15 @@ const ProductInput = ({ handleData, confirm, data, id,state }) => {
               marginBottom: 5,
             }}
             onPress={() => {
-              setEdit(false);
-              confirm((prev) => prev + 1);
-
-              let i = data.map((item) => item.nombre).indexOf(producto);
-              let codigo = data[i].codigo;
-              handleData((prev) => [...prev, { producto, cantidad, codigo }]);
+             
+            selected&&  handleData(null, "delete", id);
             }}
           >
             <Icon
               style={{ padding: 5 }}
-              name={edit ? "checkmark" : "checkmark-done"}
+              name={"close"}
               type="ionicon"
-              color={colors.text}
+              color={"red"}
             />
           </TouchableOpacity>
         </View>

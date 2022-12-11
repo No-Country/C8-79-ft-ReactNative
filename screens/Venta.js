@@ -26,7 +26,7 @@ const windowWidth = Dimensions.get("window").width;
 const Venta = () => {
   const { setSpinner, setError } = useContext(UserContext);
   const { colors } = useTheme();
-  const [productInput, setProductInput] = useState(1);
+  const [productInput, setProductInput] = useState({ count: 1, arr: [1] });
   const [cliente, setCliente] = useState("");
   const [productData, setProductData] = useState([]);
   const [confirmation, setConfirmation] = useState(0);
@@ -166,6 +166,18 @@ const Venta = () => {
   }, [bandera]);
 
   const manageProductInput = (product = null, quantity = null, id) => {
+    if (quantity === "delete") {
+      const temp = inputsProducts.filter((item) => item.idInput !== id);
+    console.log(temp)
+    const prevPorductInput=productInput.arr.filter(item=>item!==id)
+    console.log(id)
+    console.log(prevPorductInput)
+      setProductInput((prev) => {
+        return {count:prev.count,arr:prevPorductInput};
+      });
+      setInputsProducts(temp);
+      return;
+    }
     const temp = inputsProducts.filter((item) => item.idInput === id);
 
     if (temp.length !== 0) {
@@ -237,11 +249,11 @@ const Venta = () => {
           search
         />
 
-        {Array.from(Array(productInput)).map((item, index) => {
+        {productInput.arr.map((item, index) => {
           return (
             <ProductInput
               key={index}
-              id={index}
+              id={item}
               handleData={manageProductInput}
               confirm={setConfirmation}
               data={productos2}
@@ -260,7 +272,17 @@ const Venta = () => {
           <Button
             titleStyle={{ color: colors.text, fontSize: 18 }}
             buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
-            onPress={() => setProductInput(productInput + 1)}
+            onPress={() => {
+              let temp = [...productInput.arr];
+
+              temp.push(productInput.count + 1);
+              setProductInput((prev) => {
+                return {
+                  count: prev.count + 1,
+                  arr: temp,
+                };
+              });
+            }}
             title={"+ productos"}
           />
           <Button
