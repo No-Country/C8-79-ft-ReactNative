@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
-import React, { useState } from "react";
-
+import React, { useState ,useRef} from "react";
 import { Button } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 import ProductInput from "../components/ProductInput";
@@ -16,7 +15,6 @@ import {
 import { db } from "../firebase/Config";
 import SelectDropdown from "react-native-select-dropdown";
 import { random } from "../helpers/random";
-import { color } from "react-native-reanimated";
 import UserContext from "../context/UserContext";
 import { Context } from "../context/ContextProvider";
 import PopUp from "../components/PopUp";
@@ -24,12 +22,11 @@ import PopUp from "../components/PopUp";
 const windowWidth = Dimensions.get("window").width;
 
 const Venta = () => {
-  const { setSpinner, setError } = useContext(UserContext);
+  const { setSpinner, throwError } = useContext(UserContext);
   const { colors } = useTheme();
-  const [productInput, setProductInput] = useState({ count: 1, arr: [1] });
-  const [cliente, setCliente] = useState("");
-
-
+  const [inputsProducts, setInputsProducts] = useState([]);
+  const [productInput, setProductInput] = useState({ count:0, arr: [1] });
+  const [cliente, setCliente] = useState(null);
   const [clientesFire, setClientesFire] = useState([]);
   const [productos, setProductos] = useState([]);
   const [idCodigo, setIdCodigo] = useState([]);
@@ -38,16 +35,11 @@ const Venta = () => {
   const [productos2, setProductos2] = useState([]);
   const ram = random();
   const [popup, setPopup] = useState(false);
-  const [inputsProducts, setInputsProducts] = useState([]);
-
+  const changeChild=useRef(null)
   const submit = async (data) => {
     setSpinner(true);
-    console.log(productos)
-    console.log("desde submit", inputsProducts);
-   
-
+    
     let bandera = true;
-
     for (let i = 0; i < inputsProducts.length; i++) {
       bandera = productos.includes(inputsProducts[i].producto);
       if (bandera == false) {
@@ -55,10 +47,19 @@ const Venta = () => {
       }
     }
 
+    if (!cliente) {
+      setSpinner(false)
+      return  throwError("falta") 
+    }
+    if (inputsProducts.length===0) {
+      setSpinner(false)
+      return  throwError("falta") 
+    }
+
     const aux = cliente.split(" ");
     const id = aux[aux.length - 1];
     const auxCliente = aux[0] + " " + aux[1];
-    console.log(auxCliente);
+
     let arrayProductData = [];
     for (let i = 0; i < inputsProducts.length; i++) {
       let indice = allProducts.findIndex(
@@ -73,18 +74,17 @@ const Venta = () => {
         total: inputsProducts[i].cantidad * allProducts[indice].precioVenta,
       };
       arrayProductData.push(objeto);
-      console.log(arrayProductData);
+     
     }
 
-    console.log( productInput, bandera);
-    if ( productInput && bandera === true) {
+    if (productInput && bandera === true) {
       const comprobante = {
         fecha: new Date(),
         cliente: auxCliente,
         productos: [...arrayProductData],
         id: ram,
       };
-console.log(comprobante)
+     try{
       await setDoc(doc(db, "Facura", ram), comprobante);
 
       const docRef = doc(db, "Clientes", id);
@@ -99,14 +99,20 @@ console.log(comprobante)
           totalVentas: increment(e.cantidad),
         });
       });
+      setSpinner(false)
       handleBandera();
       setPopup(true);
-    
       setTimeout(() => {
         setPopup(false);
       }, 1000);
-
       return comprobante;
+
+     }catch(e){
+      throwError(e)
+      setSpinner(false)
+     }
+     
+      
     } else {
       console.log("debe completar o su codigo de producto es invalido");
     }
@@ -114,9 +120,10 @@ console.log(comprobante)
 
   const reset = () => {
    
-   setProductInput({ count: 1, arr: [1] })
+    setProductInput({ count: 1, arr: [] });
     setInputsProducts([]);
-    setCliente("");
+    setCliente(null);
+  
   };
 
   const traerDatos = async () => {
@@ -169,19 +176,14 @@ console.log(comprobante)
   const manageProductInput = (product = null, quantity = null, id) => {
     if (quantity === "delete") {
       const temp = inputsProducts.filter((item) => item.idInput !== id);
-    console.log(temp)
-    const prevPorductInput=productInput.arr.filter(item=>item!==id)
-    console.log(id)
-    console.log(prevPorductInput)
+      const prevPorductInput = productInput.arr.filter((item) => item !== id);
+     
       setProductInput((prev) => {
-        return {count:prev.count,arr:prevPorductInput};
+        return { count: prev.count, arr: prevPorductInput };
       });
       setInputsProducts(temp);
       return;
     }
-
-    const i=productos2.map(item=>item.nombre).indexOf(product)
-   const codigo=productos2[i].codigo 
 
     const temp = inputsProducts.filter((item) => item.idInput === id);
 
@@ -191,7 +193,7 @@ console.log(comprobante)
           ? {
               producto: product !== null ? product : item.producto,
               idInput: id,
-              codigo:codigo,
+              codigo: item.codigo,
               cantidad:
                 quantity === "plus"
                   ? item.cantidad + 1
@@ -205,13 +207,16 @@ console.log(comprobante)
       );
       setInputsProducts(update);
     } else {
+      const i = productos2.map((item) => item.nombre).indexOf(product);
+      const codigo = productos2[i].codigo;
       setInputsProducts((prev) => [
         ...prev,
-        { producto: product, idInput: id, cantidad: 1,codigo:codigo },
+        { producto: product, idInput: id, cantidad: 1, codigo: codigo },
       ]);
     }
   };
-
+ 
+console.log(changeChild)
   return (
     <View
       style={{
@@ -255,21 +260,21 @@ console.log(comprobante)
           search
         />
 
-        {productInput.arr.map((item, index) => {
+        { productInput.arr.map((item, index) => {
           return (
             <ProductInput
               key={index}
               id={item}
               handleData={manageProductInput}
-             
               data={productos2}
               state={inputsProducts}
+              ref={changeChild}
             />
           );
         })}
 
         <View style={styles.buttonContainer}>
-        <Button
+          <Button
             titleStyle={{ color: colors.text, fontSize: 18 }}
             buttonStyle={[styles.button, { backgroundColor: colors.primary }]}
             onPress={() => {
@@ -291,7 +296,7 @@ console.log(comprobante)
             onPress={() => reset()}
             title={"Reiniciar"}
           />
-          
+
           <Button
             titleStyle={{ color: colors.text, fontSize: 18 }}
             buttonStyle={[styles.button, { backgroundColor: colors.primary }]}

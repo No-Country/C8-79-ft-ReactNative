@@ -1,17 +1,13 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useState ,useEffect,forwardRef} from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import { Icon } from "@rneui/themed";
-import { useTheme } from "@react-navigation/native";
+import { useFocusEffect, useTheme } from "@react-navigation/native";
 
-const ProductInput = ({ handleData,  data, id, state }) => {
+const ProductInput = forwardRef(({ handleData, data, id, state },ref) => {
   const { colors } = useTheme();
   const [selected, setSelected] = useState(false);
+  
 
   return (
     <View
@@ -27,10 +23,11 @@ const ProductInput = ({ handleData,  data, id, state }) => {
         <Text style={[styles.label, { color: colors.text }]}>Producto</Text>
 
         <SelectDropdown
-        // defaultValue={state.length===0?false:
-        // state.filter(obj=>obj.idInput===id)[0].producto
-        
-        // }
+          defaultValue={
+            selected 
+              ? state.filter((obj) => obj.idInput === id)[0].producto
+              : false
+          }
           defaultButtonText="Selecciona un Producto"
           buttonStyle={{
             width: "100%",
@@ -66,7 +63,7 @@ const ProductInput = ({ handleData,  data, id, state }) => {
             <TouchableOpacity
               style={{ backgroundColor: colors.primary, borderRadius: 5 }}
               onPress={() => {
-                handleData(null, "minus", id);
+                selected && handleData(null, "minus", id);
               }}
             >
               <Icon
@@ -90,12 +87,14 @@ const ProductInput = ({ handleData,  data, id, state }) => {
                 },
               ]}
             >
-              {selected ? state.filter(obj=>obj.idInput===id)[0].cantidad : null}
+              {selected
+                ? state.filter((obj) => obj.idInput === id)[0].cantidad
+                : null}
             </Text>
             <TouchableOpacity
               style={{ backgroundColor: colors.primary, borderRadius: 5 }}
               onPress={() => {
-                handleData(null, "plus", id);
+                selected && handleData(null, "plus", id);
               }}
             >
               <Icon
@@ -121,8 +120,7 @@ const ProductInput = ({ handleData,  data, id, state }) => {
               marginBottom: 5,
             }}
             onPress={() => {
-             
-            selected&&  handleData(null, "delete", id);
+              selected && handleData(null, "delete", id);
             }}
           >
             <Icon
@@ -136,7 +134,7 @@ const ProductInput = ({ handleData,  data, id, state }) => {
       </View>
     </View>
   );
-};
+})
 
 export default ProductInput;
 
