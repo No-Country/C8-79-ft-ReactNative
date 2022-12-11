@@ -10,6 +10,7 @@ import UserContext from "../context/UserContext";
 import { collection, getDocs,deleteDoc ,doc} from "firebase/firestore";
 import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
+import ArrowAnimated from "../components/AnimatedArrow";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -19,6 +20,8 @@ const Comprobantes = () => {
   const { bandera, handleBandera } = useContext(Context);
   const [facturas, setFacturas] = useState([]);
   const [comprobante, setComprobante] = useState();
+  const [loading, setLoading] = useState(false)
+
   
 
   const [filter, setFilter] = useState({
@@ -66,6 +69,7 @@ const Comprobantes = () => {
       setFilter((prev) => ({ ...prev, data: arrayFecha }));
       setComprobante(arrayFecha);
       setSpinner(false);
+      setLoading(false)
     } catch (e) {
       console.log(e);
       setSpinner(false);
@@ -74,6 +78,7 @@ const Comprobantes = () => {
   };
 
   useEffect(() => {
+    setLoading(true)
     setSpinner(true);
     traerDatos();
   }, [bandera]);
@@ -125,6 +130,8 @@ const Comprobantes = () => {
         close={closeFilter}
         handleFilter={handleFilter}
       ></DateRangeFilter>
+          {!loading?<ArrowAnimated/>:null}
+
      
       <View style={styles.topContainer}>
         <Icon
