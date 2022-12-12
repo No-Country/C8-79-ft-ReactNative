@@ -14,6 +14,9 @@ export const firebaseConfig = {
   storageBucket: "c8-79-react-native.appspot.com",
   messagingSenderId: "326484106808",
   appId: "1:326484106808:web:248533195fa692282510cd"
+
+  //REMPLAZAR POR LA DEL PROYECTO
+ // storageBucket:"gs://react-native-c23eb.appspot.com/"
 };
 
 
