@@ -5,6 +5,7 @@ const random=nanoid()
 
 export  const uploadImage=async (uri)=> {
     try {
+      console.log(uri.uri)
       const response = await fetch(uri.uri)
       const blobFile = await response.blob()
       const storageRef = ref(getStorage(),  `images/${random}`)

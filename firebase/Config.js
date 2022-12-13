@@ -12,9 +12,9 @@ import { FIREBASE_KEY,FauthDomain,FprojectId,FstorageBucket,FmessagingSenderId,F
 export const firebaseConfig = {
   apiKey: FIREBASE_KEY,
   authDomain:FauthDomain,
-  projectId:FprojectId,
-  storageBucket: FstorageBucket,////esta mal , Verificar en Storage Firebase
-  messagingSenderId: FmessagingSenderId,
+  projectId:FprojectId ,
+  storageBucket:FstorageBucket ,
+  messagingSenderId:FmessagingSenderId ,
   appId: FappId
 };
 

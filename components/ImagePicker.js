@@ -12,8 +12,9 @@ const ImagePicker = ({ set, data, defaultPic }) => {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      const image = await uploadImage(result.assets[0]);
+    if (!result.cancelled) {
+      console.log(result)
+      const image = await uploadImage(result);
 
       set(image);
     }

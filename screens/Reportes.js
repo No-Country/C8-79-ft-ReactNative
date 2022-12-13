@@ -13,6 +13,7 @@ import { Context } from "../context/ContextProvider";
 import PopUp from "../components/PopUp";
 import PrintPDF from "../components/PrintPDF";
 import ExcelExport from "../components/ExcelExport";
+import { pieChartHTML } from "../helpers/formatPieChartHTML";
 
 const Reportes = () => {
   const { colors } = useTheme();
@@ -36,7 +37,7 @@ const Reportes = () => {
     visibility: false,
     data: [],
   });
-  const [exportData, setExportData] = useState(null)
+
 
   const populate = (arr) => {
     const ingresoTemp = arr
@@ -242,19 +243,12 @@ const Reportes = () => {
   };
 
 
+  const setExportData=(d)=>{
 
-  const exportDetail = () => {
-    setPopup(true);
-  };
-
-  const confirmationExport = (ok, format = null) => {
-    ok
-      ? (setPopup(false),
-        format === "PDF" ? PrintPDF(exportData) : ExcelExport(exportData))
-      : setPopup(false);
-      setExportData(null)
-  };
-
+    const html=pieChartHTML(d)
+    
+    PrintPDF( html)
+  }
 
   return (
     <View style={{ height: "100%", backgroundColor: colors.background }}>
@@ -409,55 +403,6 @@ const Reportes = () => {
         </View> */}
       </ScrollView>
 
-      <PopUp
-        visibility={exportData!==null?true:false}
-        message={"Selecciona el formato para exportar"}
-        child={
-          <View style={[styles.buttonContainer]}>
-            <View style={styles.buttonHeader}>
-              <Button
-                titleStyle={[styles.buttonText, { color: colors.text }]}
-                buttonStyle={[
-                  styles.buttonDialog,
-                  {
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary,
-                  },
-                ]}
-                onPress={() => confirmationExport(true, "PDF")}
-              >
-                PDF
-              </Button>
-              <Button
-                titleStyle={[styles.buttonText, { color: colors.text }]}
-                buttonStyle={[
-                  styles.buttonDialog,
-                  {
-                    backgroundColor: colors.background,
-                    borderColor: colors.primary,
-                  },
-                ]}
-                onPress={() => confirmationExport(true, "XLS")}
-              >
-                XLS
-              </Button>
-            </View>
-            <Button
-              titleStyle={[styles.buttonText, { color: colors.text }]}
-              buttonStyle={[
-                styles.buttonBottom,
-                {
-                  backgroundColor: colors.primary,
-                  borderColor: colors.primary,
-                },
-              ]}
-              onPress={() => confirmationExport(false)}
-            >
-              CANCELAR
-            </Button>
-          </View>
-        }
-      />
     </View>
   );
 };
