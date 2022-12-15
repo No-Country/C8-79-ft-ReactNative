@@ -51,7 +51,7 @@ const NewClientForm = () => {
       setSpinner(false);
       throwError(error)
     });
-    
+
     setSpinner(false);
     handleBandera();
     setPopup(true);

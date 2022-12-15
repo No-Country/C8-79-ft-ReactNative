@@ -5,6 +5,7 @@ import Perfil from "../screens/Perfil";
 import Home from "../screens/Home";
 import { useTheme } from "@react-navigation/native";
 import Venta from "../screens/Venta";
+import Inventario from "../screens/Inventario";
 
 const Stack = createNativeStackNavigator();
 

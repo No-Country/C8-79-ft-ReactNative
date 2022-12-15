@@ -5,8 +5,9 @@ import {
   Text,
   Dimensions,
   ScrollView,
+  Animated
 } from "react-native";
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback ,useRef} from "react";
 import { SearchBar } from "@rneui/themed";
 import ItemDeInventario from "../components/ItemDeInventario";
 import { Icon, Button } from "@rneui/themed";
@@ -20,6 +21,8 @@ import { db } from "../firebase/Config";
 import UserContext from "../context/UserContext";
 import { TouchableOpacity } from "react-native";
 import { inventoryhtml } from "../helpers/formatReportHTML";
+import { set } from "react-native-reanimated";
+import ArrowAnimated from "../components/AnimatedArrow";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -33,6 +36,7 @@ const Inventario = () => {
   const [popup, setPopup] = useState(false);
   const [products, setProducts] = useState([]);
   const [hide, setHide] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const traerDatos = async () => {
     try {
@@ -41,16 +45,20 @@ const Inventario = () => {
       querySnapshot.forEach((doc) => {
         array.push(doc.data());
       });
+
       setProducts(array);
       pagination(array);
       setSpinner(false);
+      setLoading(false)
     } catch (error) {
+      
       throwError(error);
     }
   };
 
   useFocusEffect(
     useCallback(() => {
+      setLoading(true)
       setSpinner(true);
       traerDatos();
 
@@ -89,10 +97,13 @@ const Inventario = () => {
     return <ItemDeInventario item={item} index={index} />;
   };
 
+ 
+
   return (
     <View
       style={[styles.viewContainer, { backgroundColor: colors.background }]}
     >
+    {!loading?<ArrowAnimated/>:null}
       <SearchBar
         platform="default"
         containerStyle={[

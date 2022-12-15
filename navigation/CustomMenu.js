@@ -27,6 +27,7 @@ const CustomMenu = (props) => {
     const docRef = doc(db, "Usuarios", uid);
     const docSnap = await getDoc(docRef);
     setUsuario(docSnap.data());
+    
   };
 
   useEffect(() => {
@@ -56,7 +57,7 @@ const CustomMenu = (props) => {
                   size={100}
                   rounded
                   source={{
-                    uri: "https://res.cloudinary.com/dnont3pur/image/upload/v1670372416/Monshine/monshine_v9et2x.jpg",
+                    uri: usuario?.profilePic,
                   }}
                 />
                 <View style={{ width: "50%", marginTop: 0 }}>

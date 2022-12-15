@@ -19,6 +19,7 @@ import {
 import { useEffect } from "react";
 import ImagePicker from "../components/ImagePicker";
 
+
 export default function Perfil() {
   const { theme, setTheme } = useContext(UserContext);
   const [toggle, setToggle] = useState(false);
@@ -37,6 +38,8 @@ export default function Perfil() {
     const docRef = doc(db, "Usuarios", uid);
     const docSnap = await getDoc(docRef);
     setUsuario(docSnap.data());
+    console.log(docSnap.data())
+    setImage(docSnap.data()?.profilePic||null)
   };
 
   useEffect(() => {
@@ -57,6 +60,7 @@ export default function Perfil() {
       userName: user,
       lastName: lastName ? lastName : usuario.lastName,
       email,
+      profilePic:image,
       phoneNumber: phone ? phone : usuario.phoneNumber,
       password,
     };
@@ -106,7 +110,7 @@ export default function Perfil() {
         />
         <Icon name="moon" type="ionicon" color={colors.text} />
       </View>
-      <ImagePicker set={setImage} data={image} />
+      <ImagePicker set={setImage} data={image}  />
 
       <Formik
         initialValues={{

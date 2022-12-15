@@ -94,7 +94,7 @@ const Menu = ({ route }) => {
         headerShown: true,
         headerStyle: { backgroundColor: colors.primary },
       }}
-      useLegacyImplementation={true}
+      // useLegacyImplementation={true}
       initialRouteName={route.params}
     >
 

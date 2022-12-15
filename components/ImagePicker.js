@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import * as ImagePick from "expo-image-picker";
 import { Avatar } from "@rneui/themed";
+import { uploadImage } from "../firebase/storage";
 
-const ImagePicker = ({ set, data }) => {
+const ImagePicker = ({ set, data, defaultPic }) => {
   const pickImage = async () => {
     let result = await ImagePick.launchImageLibraryAsync({
       mediaTypes: ImagePick.MediaTypeOptions.All,
@@ -11,23 +12,16 @@ const ImagePicker = ({ set, data }) => {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      set(result.assets[0].uri);
+    if (!result.cancelled) {
+      console.log(result)
+      const image = await uploadImage(result);
+
+      set(image);
     }
   };
 
   return (
-    <Avatar
-      size={150}
-      rounded
-      source={
-        data
-          ? { uri: data, width: 200, height: 200 }
-          : {
-              uri: "https://res.cloudinary.com/dnont3pur/image/upload/v1670372416/Monshine/monshine_v9et2x.jpg",
-            }
-      }
-    >
+    <Avatar size={150} rounded source={{ uri: data }}>
       <Avatar.Accessory size={23} onPress={pickImage} />
     </Avatar>
   );

@@ -3,13 +3,13 @@ import { shareAsync } from "expo-sharing";
 
 
 
-const PrintPDF = (inventoryhtml) => {
+const PrintPDF = (d) => {
   
 
 
   let generatePdf = async () => {
     const file = await printToFileAsync({
-      html: inventoryhtml,
+      html: d,
       base64: false,
     });
 

@@ -4,7 +4,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import { Icon } from "@rneui/themed";
 import { useFocusEffect, useTheme } from "@react-navigation/native";
 
-const ProductInput = forwardRef(({ handleData, data, id, state },ref) => {
+const ProductInput = ({ handleData, data, id, state }) => {
   const { colors } = useTheme();
   const [selected, setSelected] = useState(false);
   
@@ -134,7 +134,7 @@ const ProductInput = forwardRef(({ handleData, data, id, state },ref) => {
       </View>
     </View>
   );
-})
+}
 
 export default ProductInput;
 

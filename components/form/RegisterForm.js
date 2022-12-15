@@ -51,6 +51,8 @@ const RegisterForm = () => {
           email,
           phoneNumber,
           password,
+          profilePic:"https://res.cloudinary.com/dnont3pur/image/upload/v1670372416/Monshine/monshine_v9et2x.jpg",
+
           id: auth.currentUser.uid,
         };
         console.log(auth.currentUser.uid);

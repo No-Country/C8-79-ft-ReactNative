@@ -7,9 +7,10 @@ import moment from "moment";
 import { FlatList } from "react-native-gesture-handler";
 import Comprobante from "../components/Comprobante";
 import UserContext from "../context/UserContext";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs,deleteDoc ,doc} from "firebase/firestore";
 import { db } from "../firebase/Config";
 import { Context } from "../context/ContextProvider";
+import ArrowAnimated from "../components/AnimatedArrow";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -19,6 +20,8 @@ const Comprobantes = () => {
   const { bandera, handleBandera } = useContext(Context);
   const [facturas, setFacturas] = useState([]);
   const [comprobante, setComprobante] = useState();
+  const [loading, setLoading] = useState(false)
+
   
 
   const [filter, setFilter] = useState({
@@ -43,7 +46,9 @@ const Comprobantes = () => {
       let arrayFecha = [];
       let date;
 
-      array.forEach((factura) => {
+      array.forEach(async (factura) => {
+
+        //await deleteDoc(doc(db, "Facura", factura.id));
      
         // auxFecha = String(new Date(factura?.fecha.seconds * 1000)).split(' ')
         //fechaReal = auxFecha[1]+'-'+auxFecha[2]+'-'+auxFecha[3]
@@ -64,6 +69,7 @@ const Comprobantes = () => {
       setFilter((prev) => ({ ...prev, data: arrayFecha }));
       setComprobante(arrayFecha);
       setSpinner(false);
+      setLoading(false)
     } catch (e) {
       console.log(e);
       setSpinner(false);
@@ -72,6 +78,7 @@ const Comprobantes = () => {
   };
 
   useEffect(() => {
+    setLoading(true)
     setSpinner(true);
     traerDatos();
   }, [bandera]);
@@ -123,6 +130,8 @@ const Comprobantes = () => {
         close={closeFilter}
         handleFilter={handleFilter}
       ></DateRangeFilter>
+          {!loading?<ArrowAnimated/>:null}
+
      
       <View style={styles.topContainer}>
         <Icon

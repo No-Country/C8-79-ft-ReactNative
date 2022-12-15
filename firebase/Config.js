@@ -3,17 +3,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth/react-native";
 import { getFirestore } from "firebase/firestore";
+import { FIREBASE_KEY,FauthDomain,FprojectId,FstorageBucket,FmessagingSenderId,FappId } from "@env";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 export const firebaseConfig = {
-  apiKey: "AIzaSyBVep0VBEbHu5hk7VXver5vE4d9BimudtA",
-  authDomain: "c8-79-react-native.firebaseapp.com",
-  projectId: "c8-79-react-native",
-  storageBucket: "c8-79-react-native.appspot.com",
-  messagingSenderId: "326484106808",
-  appId: "1:326484106808:web:248533195fa692282510cd"
+  apiKey: FIREBASE_KEY,
+  authDomain:FauthDomain,
+  projectId:FprojectId ,
+  storageBucket:FstorageBucket ,
+  messagingSenderId:FmessagingSenderId ,
+  appId: FappId
 };
 
 
